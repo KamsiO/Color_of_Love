@@ -2,3 +2,111 @@
 IMPORTANT: CSS styles across files can overwrite each other!
 Make sure to use specific IDs/classes.
 */
+:root {
+    /* colours */
+    --axis_line_stroke_color: #ddd;
+    --tooltip_bckg: white;
+    --tooltip_border_color: #ddd;
+    --font_color: black;
+    --interacial_color: blue;
+    --same_race_color: pink;
+    --married_color: transparent;
+    --stroke_color: black;
+    
+
+
+    /* text */
+    --axis_title_font_size: 13px;
+    --labels_font_size: 10px;
+    --shape_stroke_width: 2px;
+}
+
+
+
+/* legend */
+
+.dot {
+    height: 5px;
+    width: 5px;
+    border: 1px solid var(--stroke_color);
+    /* stroke-width: var(--shape_stroke_width); */
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#interracial {
+    background-color: var(--interacial_color);
+}
+
+#same_race {
+    background-color: var(--same_race_color);
+}
+
+#married {
+    background-color: var(--married_color);
+}
+
+label {
+    font-size: var(--labels_font_size);
+    /* margin-top: -20px; */
+}
+
+/* input {
+    width: 10px;
+    padding-top: 20px;
+} */
+
+
+/* Axes */
+.axis line {
+    fill: none;
+    stroke: var(--axis_line_stroke_color);
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: var(--labels_font_size);
+    fill: var(--font_color);
+}
+.axis-title {
+    font-size: var(--axis_title_font_size);
+    fill: var(--font_color);
+}
+
+/* removes the first tick */
+.y-axis .tick:first-child line {
+    stroke: #b1b1b1;
+}
+.y-axis .tick:first-child text {
+    display: none;
+}
+.x-axis .tick:first-child line {
+    display: none;
+}
+.axis path {
+    display: none;
+}
+
+
+/* Tooltip */
+#tooltip {
+    position: absolute;
+    display: none;
+    background: var(--tooltip_bckg);
+    box-shadow: 3px 3px 3px 0px rgb(92 92 92 / 0.5);
+    border: 1px solid var(--tooltip_border_color);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px;
+    min-width: 160px;
+    color: var(--font_color);
+}
+.tooltip-title {
+    color: var(--font_color);
+    font-size: 14px;
+    font-weight: 600;
+}
+#tooltip ul {
+    margin: 5px 0 0 0;
+    padding-left: 20px;
+}

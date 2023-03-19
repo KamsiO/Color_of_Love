@@ -17,10 +17,21 @@
     <h1 id="title">The Colour of Love</h1>
     <p id="overview">*add description here*</p>
 
-    <div id="beeswarm-plot"></div>
+    <div id="beeswarm-plot">
+        <!-- Filter Quality of Relationship:  -->
+        <!-- <input type="checkbox" id="same_race_box", name="Same Race", value="same_race"> -->
+        <span class="dot" id="interracial"></span>
+        <label for="same_race">Same Race</label> <br>
+        <!-- <input type="checkbox" id="interracial_box", name="Interracial", value="interracial"> -->
+        <span class="dot" id="same_race"></span>
+        <label for="interracial">Interracial</label> <br> 
+        <!-- <input type="checkbox" id="married_box", name="Married", value="Married"> -->
+        <span class="dot" id="married"></span>
+        <label for="married_box">Married</label> <br>
+    </div>
     <div id="bar-chart"></div>
     <div id="heat-map"></div>
-    
+    <div id="tooltip"></div>
 
     <!-- JavaScript links -->
     <script src="js/d3.v6.min.js"></script>
