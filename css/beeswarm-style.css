@@ -4,12 +4,13 @@ Make sure to use specific IDs/classes.
 */
 :root {
     /* colours */
-    --axis_line_stroke_color: #ddd;
+    --axis_line_stroke_color: black;
     --tooltip_bckg: white;
     --tooltip_border_color: #ddd;
     --font_color: black;
     --interacial_color: blue;
     --same_race_color: pink;
+    --refused_answer_race_color: yellow;
     --married_color: transparent;
     --stroke_color: black;
     
@@ -21,7 +22,11 @@ Make sure to use specific IDs/classes.
     --shape_stroke_width: 2px;
 }
 
-
+/* chart */
+#beeswarm-plot {
+    margin-bottom: 300px;
+    /* padding-bottom: 400px; */
+}
 
 /* legend */
 
@@ -40,6 +45,10 @@ Make sure to use specific IDs/classes.
 
 #same_race {
     background-color: var(--same_race_color);
+}
+
+#refused_answer_race {
+    background-color: var(--refused_answer_race_color);
 }
 
 #married {
@@ -72,22 +81,24 @@ label {
     font-size: var(--axis_title_font_size);
     fill: var(--font_color);
 }
-
+/* 
 /* removes the first tick */
 .y-axis .tick:first-child line {
     stroke: #b1b1b1;
+    display: none;
+
 }
 .y-axis .tick:first-child text {
     display: none;
 }
 .x-axis .tick:first-child line {
     display: none;
-}
-.axis path {
+} 
+/* .axis path {
     display: none;
-}
+} */
 
-
+/* 
 /* Tooltip */
 #tooltip {
     position: absolute;
@@ -109,4 +120,4 @@ label {
 #tooltip ul {
     margin: 5px 0 0 0;
     padding-left: 20px;
-}
+} 
