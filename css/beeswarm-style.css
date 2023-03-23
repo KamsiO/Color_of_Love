@@ -10,7 +10,7 @@ Make sure to use specific IDs/classes.
     --font_color: black;
     --interacial_color: blue;
     --same_race_color: pink;
-    --refused_answer_race_color: yellow;
+    /* --refused_answer_race_color: yellow; */
     --married_color: transparent;
     --stroke_color: black;
     
@@ -47,9 +47,9 @@ Make sure to use specific IDs/classes.
     background-color: var(--same_race_color);
 }
 
-#refused_answer_race {
+/* #refused_answer_race {
     background-color: var(--refused_answer_race_color);
-}
+} */
 
 #married {
     background-color: var(--married_color);

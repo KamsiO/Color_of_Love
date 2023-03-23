@@ -8,9 +8,9 @@ class BeeswarmPlot {
     constructor(_config, _data) {
       this.config = {
         parentElement: _config.parentElement,
-        containerWidth: _config.containerWidth || 500,
-        containerHeight: _config.containerHeight || 600,
-        margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 35},
+        containerWidth: _config.containerWidth || 1190,
+        containerHeight: _config.containerHeight || 750,
+        margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 100},
         tooltipPadding: _config.tooltipPadding || 15
       }
       
@@ -29,11 +29,11 @@ class BeeswarmPlot {
 
       // intialize the scale 
       vis.xScale = d3.scaleBand() // segments range into equal categories based on the num of domain
-        .range([0, vis.width])
-        .domain(["Very Poor", "Poor", "Fair", "Good", "Excellent", "Refused"]);
+        .range([-50, vis.width])
+        .domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
 
       vis.yScale = d3.scaleLinear()
-        .range([0, vis.height]);
+        .range([0, vis.height - 50]);
 
         // search beeswarm examples, jittering algorithm
       // intialize the axis
@@ -51,7 +51,7 @@ class BeeswarmPlot {
       // and position it according to the given margin config
       vis.chart = vis.svg.append('g')
         .attr('transform', `translate(${vis.config.margin.left},${vis.config.margin.top})`);
-
+      // vis.chartArea = 
       // Append empty x-axis group and move it to the bottom of the chart
       vis.xAxisG = vis.chart.append('g')
         .attr('class', 'axis x-axis')
@@ -100,7 +100,7 @@ class BeeswarmPlot {
 
       vis.interracialColour = 'blue';
       vis.nonInterracialColour = 'pink';
-      vis.refusedToAnswerRaceColor = 'yellow';
+      // vis.refusedToAnswerRaceColor = 'yellow';
 
       
       vis.renderVis();
@@ -109,15 +109,25 @@ class BeeswarmPlot {
   
     renderVis() {
       let vis = this;
+      vis.pointsPlotted = 0;
+      vis.totalPointsToPlot = 0;
 
       const circles = vis.chart.selectAll('.point')
-        .data(vis.data, d => d.CaseID)
+        .data(vis.data, d => {
+          vis.totalPointsToPlot += 1;
+          return d.CaseID; 
+        } )
         .join('circle')
-        // .filter()
+        .filter(d => {
+          if(d.interracial_5cat != "" && d.Q34 != "") {
+            vis.pointsPlotted += 1;
+            return d;
+          }
+        })
         .attr('class', 'point')
         .attr('r', vis.radius)
         .attr('cy', d => vis.yScale(d.CaseID)) // (d, index) => vis.arrayOfYValues[index])
-        .attr('cx', d => vis.xScale(vis.xValue(d)) + 38)
+        .attr('cx', d => vis.xScale(d.Q34))
         .attr('fill', d => {
           if (d.interracial_5cat == "yes") {
             return vis.interracialColour;
@@ -138,24 +148,27 @@ class BeeswarmPlot {
         .attr('fill-opacity', 0.5);
 
         
+      // add text explaining how many points were used.
+      document.getElementById("num-of-points-plotted").innerHTML = `${vis.pointsPlotted}/${vis.totalPointsToPlot} data points were plotted`;
+
         //credit for the simulation: https://www.chartfleau.com/tutorials/d3swarm
 
       let simulation = d3.forceSimulation(vis.data)
         .force("x", d3.forceX((d) => {
           // console.log(d);
           // console.log(vis.xValue(d));
-            return vis.xScale(vis.xValue(d)) + 38;
-            }).strength(0.2))
+            return vis.xScale(d.Q34) +  vis.xScale.bandwidth();
+            }).strength(0.050))
         
         .force("y", d3.forceY((d) => {
-            return vis.yScale(d.CaseID);
-            }).strength(-10))
+            return vis.height/2 + vis.height/1.75;
+            }).strength(0.015))
         
         .force("collision", d3.forceCollide(vis.radius))
 
-        .alphaDecay(0)
-        .alpha(0.3)
-        .on("tick", vis.tick(vis.xValue, vis.xScale, vis.yScale));
+        // .alphaDecay(0)
+        // .alpha(0.3)
+        .on("tick", vis.tick);
 
         setTimeout(function () {
           console.log("start alpha decay");
@@ -188,7 +201,7 @@ class BeeswarmPlot {
     }
 
     // controls the ticks for the force simulation on the circles
-    tick(xValue, xScale, yScale) {
+    tick() {
       // d3.selectAll(".point")
       //   .attr("cx", d => xScale(xValue(d)) + 38)
       //   .attr("cy",  d => yScale(d.CaseID));
