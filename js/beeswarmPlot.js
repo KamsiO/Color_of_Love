@@ -142,7 +142,9 @@ class BeeswarmPlot {
 
       let simulation = d3.forceSimulation(vis.data)
         .force("x", d3.forceX((d) => {
-            return vis.xScale(vis.xValue(d) + 38);
+          // console.log(d);
+          // console.log(vis.xValue(d));
+            return vis.xScale(vis.xValue(d)) + 38;
             }).strength(0.2))
         
         .force("y", d3.forceY((d) => {
@@ -187,13 +189,13 @@ class BeeswarmPlot {
 
     // controls the ticks for the force simulation on the circles
     tick(xValue, xScale, yScale) {
-      d3.selectAll(".point")
-        .attr("cx", d => xScale(xValue(d)) + 38)
-        .attr("cy",  d => yScale(d.CaseID));
-
       // d3.selectAll(".point")
-      //   .attr("cx", d => d.x)
-      //   .attr("cy",  d => d.y);
+      //   .attr("cx", d => xScale(xValue(d)) + 38)
+      //   .attr("cy",  d => yScale(d.CaseID));
+
+      d3.selectAll(".point")
+        .attr("cx", d => d.x)
+        .attr("cy",  d => d.y);
     }
 
 
