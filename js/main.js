@@ -5,7 +5,7 @@ d3.csv('data/dating.csv').then(data => {
 
     // Convert necessary columns to numerical values
     data.forEach(d => {
-
+        //stub
     });
 
     // Global data processing
