@@ -13,12 +13,14 @@ Make sure to use specific IDs/classes.
 
 .axis text {
   font-family: sans-serif;
-  font-size: 11px;
+  font-size: 0.15 em;
 }
 
 .bar {
-    fill: steelblue;
+    /* fill: steelblue; */
+    width: 3em;
     shape-rendering: crispEdges;
+
   }
 
 /* .axis text {
