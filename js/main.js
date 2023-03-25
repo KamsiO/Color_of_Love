@@ -11,12 +11,12 @@ d3.csv('data/dating.csv').then(data => {
     // Global data processing
 
     // initialize visualizations
-    const beeswarm = new BeeswarmPlot({
-        parentElement: '#beeswarm-plot',
-    }, data);
+    // const beeswarm = new BeeswarmPlot({
+    //     parentElement: '#beeswarm-plot',
+    // }, data);
 
     const barChart = new BarChart({
-        parentElement: '#bar-chart',
+        parentElement: '#bar-chart-plot',
     }, data);
 
     const heatMap = new HeatMap({

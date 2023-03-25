@@ -8,8 +8,10 @@ class BeeswarmPlot {
     constructor(_config, _data) {
       this.config = {
         parentElement: _config.parentElement,
-        containerWidth: _config.containerWidth || 1190,
-        containerHeight: _config.containerHeight || 750,
+        // containerWidth: _config.containerWidth || 1190,
+        // containerHeight: _config.containerHeight || 750,
+        containerWidth: _config.containerWidth || 2500,
+        containerHeight: _config.containerHeight || 400,
         margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 100},
         tooltipPadding: _config.tooltipPadding || 15
       }
@@ -153,28 +155,50 @@ class BeeswarmPlot {
 
         //credit for the simulation: https://www.chartfleau.com/tutorials/d3swarm
 
-      let simulation = d3.forceSimulation(vis.data)
-        .force("x", d3.forceX((d) => {
-          // console.log(d);
-          // console.log(vis.xValue(d));
-            return vis.xScale(d.Q34) +  vis.xScale.bandwidth();
-            }).strength(0.050))
+      // let simulation = d3.forceSimulation(vis.data)
+      //   .force("x", d3.forceX((d) => {
+      //     // console.log(d);
+      //     // console.log(vis.xValue(d));
+      //       return vis.xScale(d.Q34) +  vis.xScale.bandwidth();
+      //       }).strength(0.050))
         
-        .force("y", d3.forceY((d) => {
-            return vis.height/2 + vis.height/1.75;
-            }).strength(0.015))
+      //   .force("y", d3.forceY((d) => {
+      //       return vis.height/2 + vis.height/1.75;
+      //       }).strength(0.015))
         
-        .force("collision", d3.forceCollide(vis.radius))
+      //   .force("collision", d3.forceCollide(vis.radius))
 
-        // .alphaDecay(0)
-        // .alpha(0.3)
-        .on("tick", vis.tick);
+      //   // .alphaDecay(0)
+      //   // .alpha(0.3)
+      //   .on("tick", vis.tick);
 
-        setTimeout(function () {
-          console.log("start alpha decay");
-          simulation.alphaDecay(0.1);
-          }, 3000); // start decay after 3 seconds
+      //   setTimeout(function () {
+      //     console.log("start alpha decay");
+      //     simulation.alphaDecay(0.1);
+      //     }, 3000); // start decay after 3 seconds
 
+    let simulation = d3.forceSimulation(vis.data)
+          .force("x", d3.forceX((d) => {
+            // console.log(d);
+            // console.log(vis.xValue(d));
+              return vis.xScale(d.Q34) + vis.xScale.bandwidth()/2;
+              }).strength(0.0350))
+          
+          .force("y", d3.forceY((d) => {
+              return vis.height/2;
+              }).strength(0.0350))
+          
+          .force("collision", d3.forceCollide(vis.radius))
+
+          // .alphaDecay(0)
+          // .alpha(0.3)
+          .on("tick", vis.tick);
+
+          setTimeout(function () {
+            console.log("start alpha decay");
+            simulation.alphaDecay(0.1);
+            }, 3000); // start decay after 3 seconds
+      
 
 
       // // Tooltip event listeners
@@ -194,8 +218,8 @@ class BeeswarmPlot {
           });
 
       // Update the axes/gridlines
-      vis.xAxisG
-        .call(vis.xAxis);
+      // vis.xAxisG
+      //   .call(vis.xAxis);
         // .call(g => g.select('.domain').remove());
 
     }
@@ -277,7 +301,7 @@ class BeeswarmPlot {
           </ul>
         `);
       }
-      w6_subject_race
+      // w6_subject_race
 
 
 
