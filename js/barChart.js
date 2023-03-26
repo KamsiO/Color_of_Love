@@ -274,6 +274,8 @@ class BarChart {
       singleServeDataMap,
       businessTripDataMap,
       workNeighborsDataMap,
+      
+      // mutual connection
       familyDataMap,
       friendDataMap,
       neighborsDataMap,
