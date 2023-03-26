@@ -36,15 +36,12 @@ class BarChart {
       vis.config.margin.bottom;
 
     // Initialize scales and axes
-
     // Important: we flip array elements in the y output range to position the rectangles correctly
     vis.yScale = d3.scaleLinear().range([vis.height, 0]);
 
     vis.xScale = d3.scaleBand().range([0, vis.width]).paddingInner(0.2);
 
-    vis.xAxis = d3
-      .axisBottom(vis.xScale)
-      .tickSizeOuter(0);
+    vis.xAxis = d3.axisBottom(vis.xScale).tickSizeOuter(0);
 
     vis.yAxis = d3.axisLeft(vis.yScale).ticks(6).tickSizeOuter(0);
 
@@ -106,13 +103,184 @@ class BarChart {
   updateVis() {
     let vis = this;
 
-    vis.data.array.forEach(element => {
-      console.log(element)
-    });
-    vis.aggregatedData = Array.from(aggregatedDataMap, ([key, count]) => ({
-      key,
-      count,
-    }));
+    // Prepare data: count number of genders
+    const schoolDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_school
+    );
+
+    const collegeDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_college
+    );
+
+    const militaryDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_mil
+    );
+
+    const churchDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_church
+    );
+    // i fricking hate this
+    const volunteerDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_vol_org
+    );
+
+    const clientDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_customer
+    );
+
+    const restaurantDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_bar_restaurant
+    );
+
+    const partyDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_party
+    );
+
+    const internetOtherDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_internet_other
+    );
+
+    // dating app
+    const internetDatingDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_internet_dating
+    );
+
+    // instagram or smth
+    const socialNetworkDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_internet_soc_network
+    );
+
+    const gamingDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_internet_game
+    );
+
+    const chatDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_internet_chat
+    );
+
+    // internet site not dedicated to dating
+    const internetSiteDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_internet_org
+    );
+
+    // public place
+    const publicPlaceDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_public
+    );
+
+    const blindDateDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_blind_date
+    );
+
+    const vacationDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_vacation
+    );
+
+    // whatever this is
+    const singleServeDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_single_serve_nonint
+    );
+
+    const businessTripDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_business_trip
+    );
+
+    const workNeighborsDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_work_neighbors
+    );
+
+    const familyDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_met_through_family
+    );
+
+    const friendDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_met_through_friend
+    );
+
+    const neighborsDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_met_through_as_nghbrs
+    );
+
+    const coworkersDataMap = d3.rollups(
+      vis.data,
+      (v) => v.length,
+      (d) => d.hcm2017q24_met_as_through_cowork
+    );
+    vis.aggregatedData;
+    const mapArr = [
+      schoolDataMap,
+      collegeDataMap,
+      militaryDataMap,
+      churchDataMap,
+      volunteerDataMap,
+      clientDataMap,
+      restaurantDataMap,
+      partyDataMap,
+      internetOtherDataMap,
+      internetDatingDataMap,
+      socialNetworkDataMap,
+      gamingDataMap,
+      chatDataMap,
+      internetSiteDataMap,
+      publicPlaceDataMap,
+      blindDateDataMap,
+      vacationDataMap,
+      singleServeDataMap,
+      businessTripDataMap,
+      workNeighborsDataMap,
+      familyDataMap,
+      friendDataMap,
+      neighborsDataMap,
+      coworkersDataMap,
+    ];
+    const mergedMap = mapArr.flatMap(e => [...e])
+    console.log(mergedMap)
     // Specific accessor functions
     vis.xValue = (d) => d.key;
     vis.yValue = (d) => d.count;
@@ -139,9 +307,8 @@ class BarChart {
       .attr("width", vis.xScale.bandwidth())
       .attr("height", (d) => vis.height - vis.yScale(vis.yValue(d)))
       .attr("y", (d) => vis.yScale(vis.yValue(d)))
-      .attr("fill", vis.config.itemColour)
-        // :( i'm sorry
-
+      .attr("fill", vis.config.itemColour);
+    // :( i'm sorry
 
     // Update axes
     vis.xAxisG.call(vis.xAxis);
