@@ -256,33 +256,43 @@ class BarChart {
     const mapArr = [
       schoolDataMap,
       collegeDataMap,
+
       militaryDataMap,
       churchDataMap,
-      volunteerDataMap,
-      clientDataMap,
       restaurantDataMap,
       partyDataMap,
-      internetOtherDataMap,
-      internetDatingDataMap,
-      socialNetworkDataMap,
+
       gamingDataMap,
-      chatDataMap,
-      internetSiteDataMap,
       publicPlaceDataMap,
       blindDateDataMap,
-      vacationDataMap,
       singleServeDataMap,
-      businessTripDataMap,
+
+      // internet site (dating or otherwise)
+      internetSiteDataMap,
+      internetOtherDataMap,
+      internetDatingDataMap,
+
+      // professional relationship
       workNeighborsDataMap,
-      
+      clientDataMap,
+      volunteerDataMap,
+
+      // social networking
+      socialNetworkDataMap,
+      chatDataMap,
+
+      // abroad
+      businessTripDataMap,
+      vacationDataMap,
+
       // mutual connection
       familyDataMap,
       friendDataMap,
       neighborsDataMap,
       coworkersDataMap,
     ];
-    const mergedMap = mapArr.flatMap(e => [...e])
-    console.log(mergedMap)
+    const mergedMap = mapArr.flatMap((e) => [...e]);
+    console.log(mergedMap);
     // Specific accessor functions
     vis.xValue = (d) => d.key;
     vis.yValue = (d) => d.count;
