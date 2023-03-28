@@ -15,7 +15,7 @@ Make sure to use specific IDs/classes.
     --stroke_color: black;
     
     /* text */
-    --axis_title_font_size: 0.75em;
+    --axis_title_font_size: 0.8em;
     --labels_font_size: 14px;
     --shape_stroke_width: 2px;
 }
@@ -132,7 +132,7 @@ label {
 
 .column1 {
     /* padding-right: 1em; */
-    max-width: 40vw;
+    max-width: 30vw;
     max-height: 40v;
     white-space:nowrap;
 }
