@@ -167,6 +167,7 @@ class BarChart {
   
     renderVis() {
       let vis = this;
+      vis.specificBarClicked = '';
 
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const bars = vis.chart.selectAll('.bars')
@@ -184,10 +185,11 @@ class BarChart {
           .attr("transform", d => {
             return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`});
 
-      const bar = bars.selectAll('.bar')
+      const categories = bars.selectAll('.bar')
           .data (d => [d[1]])
-          .join('g')
-            .selectAll('g')
+          .join('g');
+
+      const bar = categories.selectAll('g')
             .data(d => d) // was d => [d]
               .join ('rect')
               .filter(d => {
@@ -227,6 +229,18 @@ class BarChart {
         })
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
+        }).on('click', function(event, d) {
+          // console.log(d);
+          vis.specificBarClicked = d[0];
+        });
+
+      // when a bar is clicked, filter the data displayed in the bubblechart
+      bars
+        .on('click', function(event, d) {
+          console.log(vis.specificBarClicked);
+          
+          vis.varForFilteringBubbleChart = d[0];
+          filterBubbleChartData(vis.varForFilteringBubbleChart, vis.specificBarClicked);
         });
     
       // Update the axes because the underlying scales might have changed

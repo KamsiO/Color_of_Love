@@ -1,4 +1,4 @@
-class BeeswarmPlot {
+class BubbleChart {
 
     /**
      * Class constructor with initial configuration
