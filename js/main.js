@@ -1,6 +1,6 @@
 let varForFilteringBubbleChart = "";
 let data;
-// let bubbleChart; 
+let bubbleChart; 
 
 
 /**
@@ -16,7 +16,7 @@ d3.csv('data/dating.csv').then(_data => {
     // Global data processing
 
     // initialize visualizations
-    let bubbleChart = new BubbleChart({
+    bubbleChart = new BubbleChart({
         parentElement: '#bubble-chart-plot',
     }, data);
 
@@ -36,8 +36,8 @@ d3.csv('data/dating.csv').then(_data => {
 
 /**
  * filter the data rendered in the bubble chart according to:
- * @param mainCategory
- * @param subCategory
+ * @param mainCategory the relationship ranking
+ * @param subCategory bar clidked (interracial or same race)
  */
 function filterBubbleChartData(mainCategory,subCategory){
     let filteredData = data.filter(d => d.Q34 == mainCategory && d.interracial_5cat == subCategory);

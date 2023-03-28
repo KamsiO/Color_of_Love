@@ -10,9 +10,9 @@ class BubbleChart {
         parentElement: _config.parentElement,
         // containerWidth: _config.containerWidth || 1190,
         // containerHeight: _config.containerHeight || 750,
-        containerWidth: _config.containerWidth || 2500,
-        containerHeight: _config.containerHeight || 400,
-        margin: _config.margin || {top: 25, right: 20, bottom: 20, left: 100},
+        containerWidth: _config.containerWidth || 375,
+        containerHeight: _config.containerHeight || 275,
+        margin: _config.margin || {top: 25, right: 20, bottom: 20, left:50},
         tooltipPadding: _config.tooltipPadding || 15
       }
       
@@ -66,7 +66,7 @@ class BubbleChart {
       .attr('x', vis.width + 10)
       .attr('dy', '.71em')
       .style('text-anchor', 'end')
-      .text('Quality of Relationship')
+      .text('Close up')
       .style('font-weight', 'bold');
 
       vis.updateVis();
@@ -100,8 +100,8 @@ class BubbleChart {
 
       vis.yScale.domain(d3.extent(vis.data.map(d => d.CaseID)));
 
-      vis.interracialColour = 'blue';
-      vis.nonInterracialColour = 'pink';
+      vis.interracialColour = 'pink';
+      vis.nonInterracialColour = 'blue';
       // vis.refusedToAnswerRaceColor = 'yellow';
 
       
@@ -111,18 +111,18 @@ class BubbleChart {
   
     renderVis() {
       let vis = this;
-      vis.pointsPlotted = 0;
-      vis.totalPointsToPlot = 0;
+      // vis.pointsPlotted = 0;
+      // vis.totalPointsToPlot = 0;
 
       const circles = vis.chart.selectAll('.point')
         .data(vis.data, d => {
-          vis.totalPointsToPlot += 1;
+          // vis.totalPointsToPlot += 1;
           return d.CaseID; 
         } )
         .join('circle')
         .filter(d => {
           if(d.interracial_5cat != "" && d.Q34 != "") {
-            vis.pointsPlotted += 1;
+            // vis.pointsPlotted += 1;
             return d;
           }
         })
@@ -185,7 +185,7 @@ class BubbleChart {
               }).strength(0.0350))
           
           .force("y", d3.forceY((d) => {
-              return vis.height/2;
+              return vis.height/2 + 50;
               }).strength(0.0350))
           
           .force("collision", d3.forceCollide(vis.radius))
@@ -197,7 +197,7 @@ class BubbleChart {
           setTimeout(function () {
             console.log("start alpha decay");
             simulation.alphaDecay(0.1);
-            }, 3000); // start decay after 3 seconds
+            }, 500); // start decay after 3 seconds
       
 
 
