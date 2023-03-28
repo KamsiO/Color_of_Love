@@ -9,7 +9,7 @@ class BarChart {
       this.config = {
         parentElement: _config.parentElement,
         containerWidth: _config.containerWidth || 400,
-        containerHeight: _config.containerHeight || 250,
+        containerHeight: _config.containerHeight || 300,
         margin: _config.margin || {top: 25, right: 20, bottom: 40, left: 50},
         tooltipPadding: _config.tooltipPadding || 15
       }
@@ -26,28 +26,27 @@ class BarChart {
       vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
       vis.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
 
+      // yes = couple is interracial
       vis.subgroupsCategory = ["yes", "no"];
 
 
       // intialize the scale 
       vis.xScale = d3.scaleBand() // segments range into equal categories based on the num of domain
         .range([0, vis.width])
-        .paddingInner(0.5);
+        .padding(0.60);
 
-        vis.xSubgroupScale = d3.scaleBand() // segments range into equal categories based on the num of domain
-        .range([0, vis.width])
-        // yes = couple is interracial
+      vis.xSubgroupScale = d3.scaleBand() // segments range into equal categories based on the num of domain
+        .range([0, vis.xScale.bandwidth()/2])
         .domain(vis.subgroupsCategory)
-        .range([0, vis.xScale.bandwidth()])
-        .padding(0.05)
+        .padding(0.7);
 
       vis.yScale = d3.scaleLinear()
         .range([vis.height, 0]);     
 
       // color palette = one color per subgroup
-      vis.colorScale = d3.scaleOrdinal()
-      .domain(vis.subgroupsCategory)
-      .range(['#e41a1c','#377eb8'])
+      // vis.colorScale = d3.scaleOrdinal()
+      // .domain(vis.subgroupsCategory)
+      // .range(['#e41a1c','#377eb8'])
          
 
       // intialize the axis
@@ -106,6 +105,9 @@ class BarChart {
       vis.sameRaceCoupleColor = "blue";
       vis.interracialCoupleColor = "red";
 
+      // keeps track of how many points were plotted
+      vis.pointsPlotted = 0;
+      vis.totalPointsToPlot = 0;
       
       // group data by relationship ranking, 
       // and count number of occurences of each ranking.
@@ -134,6 +136,9 @@ class BarChart {
           // console.log(innerMapAsArray[0].name);
 
           currMax = Math.max(innerMapAsArray[0].value, innerMapAsArray[1].value);
+          
+          // todo: fix this number
+          vis.totalPointsToPlot += currMax;
           if( currMax > max_num) {
             max_num = currMax;
           }
@@ -163,67 +168,47 @@ class BarChart {
     renderVis() {
       let vis = this;
 
-      vis.pointsPlotted = 0;
-      vis.totalPointsToPlot = 0;
-
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const bars = vis.chart.selectAll('.bars')
           .data(vis.groupedData)
           .join("g")
           .filter(d => {
-            console.log(d);
-            console.log(d[0]);
             //removes those that didn't share their race 
             // data with the rank section blank and those that refused to rank
             if( d[0] != "" && d[0] != "Refused") {
-              // vis.pointsPlotted += vis.groupedData.get(d);
               return d;
             }
           })
           .attr('class', 'bars')
+          // .attr('width', vis.xScale.bandwidth()/5)
           .attr("transform", d => {
-            // console.log(d[0]);
-          return `translate( ${vis.xScale(d[0])- vis.xScale.bandwidth()/2},0)`});
+            return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`});
 
       const bar = bars.selectAll('.bar')
           .data (d => [d[1]])
           .join('g')
             .selectAll('g')
-            .data(d => [d])
+            .data(d => d) // was d => [d]
               .join ('rect')
+              .filter(d => {
+                //removes those that didn't share their race 
+                // data with the rank section blank and those that refused to rank
+                if( d[0] != "") {
+                  vis.pointsPlotted += d[1];
+                  return d;
+                }
+                // seemes to still leave the third rect there without contencts
+              })
               .attr('class', 'bar')
-              .attr('x', (d, index)=>  {
-                console.log(d);
-                console.log(d.key);
-                if (index == 0) {
-                  console.log(vis.xSubgroupScale('no'));
-                  return vis.xSubgroupScale('no');
-                } else {
-                  return vis.xSubgroupScale('yes');
-                }           
-              })
-              .attr('y', (d, index) => {
-                if (index == 0) {
-                  console.log(vis.yScale(d.get('no')));
-                  return vis.yScale(d.get('no'));
-                } else {
-                  console.log(d.get('yes'));
-                  return vis.yScale(d.get('yes'));
-                }
-              })
+              .attr('x', d=> vis.xSubgroupScale(d[0]))
+              .attr('y', d => vis.yScale(d[1]))
               .attr('width', d => {
+                // return (1/12) * vis.x
                 // console.log(vis.xScale.bandwidth());
-                return vis.xSubgroupScale.bandwidth();
+                // console.log(d);
+                return vis.xSubgroupScale.bandwidth()/10;
               })
-              .attr('height', (d, index) => {
-                if (index == 0) {
-                  console.log(d.get('no'));
-                  return vis.height -  vis.yScale(d.get('no'));
-                } else {
-                  return vis.height -  vis.yScale(d.get('yes'));
-                }
-                return vis.yScale(d);
-              })
+              .attr('height', d => vis.height -  vis.yScale(d[1]))
               .attr("fill", (d, index) => {
                 if(index == 0) {
                   return vis.sameRaceCoupleColor;
@@ -231,8 +216,6 @@ class BarChart {
                   return vis.interracialCoupleColor;
                 }
               });
-        
-
 
       // add text explaining how many points were used.
       document.getElementById("num-of-points-plotted").innerHTML = `${vis.pointsPlotted}/${vis.totalPointsToPlot} data points were plotted`;
@@ -240,6 +223,7 @@ class BarChart {
       bar
         .on('mouseover', function (event,d) {
           vis.toolTipInfo(event,d);
+          console.log(d);
         })
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
@@ -257,69 +241,25 @@ class BarChart {
      */
    toolTipInfo(event,d) {
     let vis = this;
-    let length_of_relationship = d => {
-      if (d.w6_q21e_year != "" && d.w6_q21b_year != ""){
 
-        console.log ("start year " + d.w6_q21b_year)
-        console.log ("end year " + d.w6_q21e_year);
-        if( d.w6_q21e_year - d.w6_q21b_year < 1) {
-          return `<li>Length of relationship: less than 1 year</li>`;
-        }
-        return `<li>Length of relationship: ${d.w6_q21e_year - d.w6_q21b_year} + years`;
+    let subCatname = d => {
+      if (d[0] == "no") {
+        return "Same Race";
       } else {
-        return ``;
+        return "Interracial";
       }
-    }
-
-    let still_together = d => {
-      if (d.w6_q21e_year == ""){
-        return `<li>Still together: True</li>`;
-      } else {
-        return `<li>Still together: False</li>`;
-      }
-    }
-
-    let raceStr = d => {
-      let result = ``;
-      if (d.w6_subject_race != "") {
-        result  += `<li>Race: ${d.w6_subject_race}</li>`;
-      } 
-      if (d.w6_q6b != "") {
-        result  += `<li>Race of Partner: ${d.w6_q6b}</li>`;
-      }
-      return result;
     };
 
-    let ageStr = d => {
-      let result = ``;
-      if (d.ppage != "") {
-        result  += `<li>Age: ${d.ppage}</li>`;
-      } 
-      if (d.Q9 != "") {
-        result  += `<li>Age of Partner: ${d.Q9}</li>`;
-      } 
-      return result;
-    };
-    
 
     d3.select('#tooltip')
     .style('display', 'block')
     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
     .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
     .html(`
-      <div><i>Details</i></div>
-      <ul>
-      <li>Category: ${d.Q34}: ${vis.groupedData.get(d.Q34)} </li> 
-
-      ${ageStr(d)}
-        ${raceStr(d)}
-        <li>Met via: ____ </li> 
-        ${still_together(d)}
-        ${length_of_relationship(d)}
-      </ul>
+      <div><strong>${subCatname(d)}</strong></div>
+      <div>Count: ${d[1]} </div> 
     `);
   }
-  // w6_subject_race
 
   
 }
