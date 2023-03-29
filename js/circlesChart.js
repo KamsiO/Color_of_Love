@@ -24,7 +24,7 @@ class circlesChart {
     initVis() {
       let vis = this;
       vis.minCircSize = 10;
-      vis.maxCircSize = 45;
+      vis.maxCircSize = 100;
   
       // Calculate inner chart size. Margin specifies the space around the actual chart.
       vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
@@ -37,7 +37,7 @@ class circlesChart {
   
       // intialize the scales
       vis.luminanceScale = d3.scaleLinear()
-        .range([0,1])
+        .range([0.3,1])
         .domain([0,8]); // this is the index of the group in vis.raceCategories
 
 
@@ -46,7 +46,7 @@ class circlesChart {
         .domain(vis.raceCategories);
 
       vis.sizeScale = d3.scaleSqrt()
-        .range(vis.minCircSize, vis.maxCircSize);
+        .range([vis.minCircSize, vis.maxCircSize]);
 
          
       // // append axis title
@@ -107,7 +107,6 @@ class circlesChart {
 
       for (let i = 0; i < vis.groupedDataArr.length; i++){
         for (let j = 0; j < vis.groupedDataArr[i][1].length; j++){
-          // console.log(vis.groupedDataArr[i][1][j][1]);
           let currMax = vis.groupedDataArr[i][1][j][1];
           if ( currMax > maxCount){
             maxCount = currMax;
@@ -138,6 +137,8 @@ class circlesChart {
         vis.AsianAndOtherSum,  vis.WhiteAndOtherSum, vis.BlackAndAsianSum, vis.BlackAndOtherSum, vis.NativeAmericanAndOtherSum,
         vis.AsianAndWhiteSum];
 
+        console.log(vis.arrOfRacialCategorySum);
+
       vis.renderCircles();
 
       vis.getMax = (arr) => {
@@ -156,15 +157,22 @@ class circlesChart {
   
     renderCircles(){    
       let vis = this;  
-      for (let groupNum = 1; groupNum < vis.numOfCategories; groupNum++){
+      for (let groupNum = 1; groupNum <= vis.numOfCategories; groupNum++){
         let id = "dot-" + groupNum;
-        console.log(vis.arrOfRacialCategorySum[groupNum - 1]);
-        console.log(vis.sizeScale(vis.arrOfRacialCategorySum[groupNum - 1]));
-        document.getElementById(id).style.radius = vis.sizeScale(vis.arrOfRacialCategorySum[groupNum - 1]);
-        console.log( vis.colorScale(vis.raceCategories[groupNum -1]));
-        document.getElementById(id).style.color = vis.colorScale(vis.raceCategories[groupNum -1]);
-        console.log(vis.luminanceScale(groupNum -1));
+        document.getElementById(id).style.height = 2 * vis.sizeScale(vis.arrOfRacialCategorySum[groupNum - 1]) + "px";
+        // console.log(document.getElementById(id).style.height);
+        document.getElementById(id).style.width = 2 * vis.sizeScale(vis.arrOfRacialCategorySum[groupNum - 1]) + "px";
+        // console.log(document.getElementById(id).style.width);
+        // console.log( vis.colorScale(vis.raceCategories[groupNum -1]));
+        document.getElementById(id).style.background = vis.colorScale(vis.raceCategories[groupNum -1]);
+        // console.log(document.getElementById(id).style.background);
+        // console.log(vis.luminanceScale(groupNum -1));
         document.getElementById(id).style.opacity = vis.luminanceScale(groupNum -1);
+        document.getElementById(id).addEventListener("hover", function(event){
+          vis.toolTipInfo(event, groupNum)});
+          document.getElementById(id).addEventListener("hover", function(event, d){
+            d3.select('#tooltip').style('display', 'none');
+          });
       }
     }
 
@@ -235,53 +243,8 @@ class circlesChart {
     /**
      *  displays the tooltip information
      */
-      toolTipInfo(event,d) {
-        let vis = this;
-        let length_of_relationship = d => {
-          if (d.w6_q21e_year != "" && d.w6_q21b_year != ""){
-  
-            console.log ("start year " + d.w6_q21b_year)
-            console.log ("end year " + d.w6_q21e_year);
-            if( d.w6_q21e_year - d.w6_q21b_year < 1) {
-              return `<li>Length of relationship: less than 1 year</li>`;
-            }
-            return `<li>Length of relationship: ${d.w6_q21e_year - d.w6_q21b_year} + years`;
-          } else {
-            return ``;
-          }
-        }
-  
-        let still_together = d => {
-          if (d.w6_q21e_year == ""){
-            return `<li>Still together: True</li>`;
-          } else {
-            return `<li>Still together: False</li>`;
-          }
-        }
-  
-        let raceStr = d => {
-          let result = ``;
-          if (d.w6_subject_race != "") {
-            result  += `<li>Race: ${d.w6_subject_race}</li>`;
-          } 
-          if (d.w6_q6b != "") {
-            result  += `<li>Race of Partner: ${d.w6_q6b}</li>`;
-          }
-          return result;
-        };
-  
-        let ageStr = d => {
-          let result = ``;
-          if (d.ppage != "") {
-            result  += `<li>Age: ${d.ppage}</li>`;
-          } 
-          if (d.Q9 != "") {
-            result  += `<li>Age of Partner: ${d.Q9}</li>`;
-          } 
-          return result;
-        };
-        
-  
+      toolTipInfo(event,groupNum) {
+        let vis = this;  
         d3.select('#tooltip')
         .style('display', 'block')
         .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
@@ -289,11 +252,8 @@ class circlesChart {
         .html(`
           <div><i>Details</i></div>
           <ul>
-            ${ageStr(d)}
-            ${raceStr(d)}
-            <li>Met via: ____ </li> 
-            ${still_together(d)}
-            ${length_of_relationship(d)}
+            <li>Number of couples: ${vis.arrOfRacialCategorySum[groupNum-1]} </li>
+            <li>Percent of couples still together: ${vis.countOfCouplesStillTogether/vis.arrOfRacialCategorySum[groupNum - 1]}</li>
           </ul>
         `);
       }
