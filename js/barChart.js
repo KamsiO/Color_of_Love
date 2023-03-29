@@ -230,16 +230,16 @@ class BarChart {
           d3.select('#tooltip').style('display', 'none');
         }).on('click', function(event, d) {
           // console.log(d);
-          currBubbleChartSubCategory = d[0];
+          currcirclesChartSubCategory = d[0];
         });
 
-      // when a bar is clicked, filter the data displayed in the bubblechart
+      // when a bar is clicked, filter the data displayed in the circlesChart
       bars
         .on('click', function(event, d) {
-          currBubbleChartMainCategory = d[0];
-          console.log(currBubbleChartMainCategory);
+          currcirclesChartMainCategory = d[0];
+          console.log(currcirclesChartMainCategory);
 
-          filterBubbleChartData();
+          filtercirclesChartData();
         });
     
       // Update the axes because the underlying scales might have changed

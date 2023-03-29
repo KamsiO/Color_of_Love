@@ -1,8 +1,8 @@
-let varForFilteringBubbleChart = "";
-let currBubbleChartMainCategory = ""; // the relationship ranking
-let currBubbleChartSubCategory = ""; // the relationship ranking
+let varForFilteringcirclesChart = "";
+let currcirclesChartMainCategory = ""; // the relationship ranking
+let currcirclesChartSubCategory = ""; // the relationship ranking
 let data;
-let bubbleChart; 
+
 
 
 /**
@@ -18,8 +18,8 @@ d3.csv('data/dating.csv').then(_data => {
     // Global data processing
 
     // initialize visualizations
-    bubbleChart = new BubbleChart({
-        parentElement: '#bubble-chart-plot',
+    circlesChart = new circlesChart({
+        parentElement: '#circles-chart-plot',
     }, data);
 
     const barChart = new BarChart({
@@ -30,9 +30,9 @@ d3.csv('data/dating.csv').then(_data => {
         parentElement: '#heat-map',
     }, data);
 
-    currBubbleChartMainCategory = 'Excellent';
-    currBubbleChartSubCategory = 'no';
-    filterBubbleChartData();
+    currcirclesChartMainCategory = 'Excellent';
+    currcirclesChartSubCategory = 'no';
+    filtercirclesChartData();
 });
 
 
@@ -41,9 +41,9 @@ d3.csv('data/dating.csv').then(_data => {
  * @param mainCategory the relationship ranking
  * @param subCategory bar clidked (interracial or same race)
  */
-function filterBubbleChartData(){
-    let filteredData = data.filter(d => d.Q34 == currBubbleChartMainCategory && d.interracial_5cat == currBubbleChartSubCategory);
-    bubbleChart.data = filteredData;
-    bubbleChart.updateVis();
+function filtercirclesChartData(){
+    let filteredData = data.filter(d => d.Q34 == currcirclesChartMainCategory && d.interracial_5cat == currcirclesChartSubCategory);
+    circlesChart.data = filteredData;
+    circlesChart.updateVis();
 
 }

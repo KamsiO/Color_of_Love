@@ -3,25 +3,28 @@ IMPORTANT: CSS styles across files can overwrite each other!
 Make sure to use specific IDs/classes.
 */
 :root {
-    /* colours */
+    /* COLORS */
     --axis_line_stroke_color: black;
     --tooltip_bckg: white;
     --tooltip_border_color: #ddd;
     --font_color: black;
     --interacial_color: red;
     --same_race_color: blue;
-    /* --refused_answer_race_color: yellow; */
     --married_color: transparent;
     --stroke_color: black;
-    
+    /* border */
+    --border-color: purple;
+
     /* text */
     --axis_title_font_size: 0.8em;
     --labels_font_size: 14px;
     --shape_stroke_width: 2px;
+
+
 }
 
 /* chart */
-#bubble-chart-plot {
+#circles-chart-plot {
     margin-bottom: 3px;
     /* padding-bottom: 400px; */
 }
@@ -145,9 +148,21 @@ label {
 
 }
 
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
+  .cols {
+    float: left;
+    max-width: 33%;
+    padding: 0.5em;
+    border: solid 2px var(--border-color);
   }
+
+  .circ-rows {
+    max-width: 50vw;
+    
+  }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+      }

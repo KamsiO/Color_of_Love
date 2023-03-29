@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="data:;base64,iVBORwOKGO=" />
     <link rel="stylesheet" href="css/main-style.css">
-    <link rel="stylesheet" href="css/bubblechart-style.css">
+    <link rel="stylesheet" href="css/circlesChart-style.css">
     <link rel="stylesheet" href="css/barchart-style.css">
     <link rel="stylesheet" href="css/heatmap-style.css">
 
@@ -20,11 +20,11 @@
         <div class="row">
             <!-- Filter Quality of Relationship:  -->
             <span class="dot" id="interracial"></span>
-            <label for="same_race">Same Race</label> 
+            <label for="interracial">Same Race</label> 
             <span class="dot" id="same_race"></span>
-            <label for="interracial">Interracial</label> 
+            <label for="same_race">Interracial</label> 
             <span class="dot" id="married"></span>
-            <label for="married_box">Outlined points are a person that is married</label> <br>
+            <label for="married">Outlined points are a person that is married</label> <br>
    
             <p id="num-of-points-plotted"></p>
        </div>
@@ -34,7 +34,52 @@
                <svg id="bar-chart-plot"  class="barChart-plot-container margin-top"></svg>
            </div>
            <div class="column column2">
-               <svg id="bubble-chart-plot"  class="bubble-chart-plot-container margin-top"></svg>
+               <!-- <svg id="circles-chart-plot"  class="circles-chart-plot-container margin-top"></svg> -->
+               <div id="circ-rows circle-row-1">
+                    <div id="circle-col-1" class="cols">
+                        <span id="dot-1" class="dot"></span> <br>
+                        <label id = "label-dot-1" for="dot-1"></label> 
+                    </div>
+                    <div id="circle-col-2" class="cols">
+                        <span id="dot-2" class="dot"></span> <br>
+                        <label id = "label-dot-2" for="dot-2"></label> 
+                    </div>
+                    <div id="circle-col-3" class="cols">
+                        <span id="dot-3" class="dot"></span> <br>
+                        <label id = "label-dot-3" for="dot-3"></label> 
+                    </div>
+               </div>
+               <div id="circ-rows circle-row-2">
+                    <div id="circle-col-1" class="cols">
+                        <span id="dot-4" class="dot"></span> <br>
+                        <label id = "label-dot-4" for="dot-4"></label> 
+
+                    </div>
+                    <div id="circle-col-2" class="cols">
+                        <span id="dot-5" class="dot"></span> <br>
+                        <label id = "label-dot-5" for="dot-5"></label> 
+                    </div>
+                    <div id="circle-col-3" class="cols">
+                        <span id="dot-6" class="dot"></span> <br>
+                        <label  id = "label-dot-6" for="dot-6"></label> 
+                    </div>
+               </div>
+               <div id="circ-rows circle-row-3">
+                    <div id="circle-col-1" class="cols">
+                        <span id="dot-7" class="dot"></span> <br>
+                        <label id = "label-dot-7" for="dot-7"></label> 
+                    </div>
+                    <div id="circle-col-2" class="cols">
+                        <span id="dot-8" class="dot"></span> <br>
+                        <label id = "label-dot-8" for="dot-8"></label> 
+                    </div>
+                    <div id="circle-col-3" class="cols">
+                        <span id="dot-9" class="dot"></span> <br>
+                        <label  id = "label-dot-9" for="dot-9"></label> 
+                    </div>
+               </div>
+
+
            </div> 
        </div>
     </div>
@@ -45,7 +90,7 @@
 
     <!-- JavaScript links -->
     <script src="js/d3.v6.min.js"></script>
-    <script src="js/BubbleChart.js"></script>
+    <script src="js/circlesChart.js"></script>
     <script src="js/barChart.js"></script>
     <script src="js/heatMap.js"></script>
     <script src="js/main.js"></script>
