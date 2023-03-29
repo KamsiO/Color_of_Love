@@ -22,4 +22,8 @@ d3.csv('data/dating.csv').then(data => {
     const heatMap = new HeatMap({
         parentElement: '#heat-map',
     }, data);
+
+    const treeMap = new TreeMap({
+        parentElement: "#tree-map"
+    }, data)
 });

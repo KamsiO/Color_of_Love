@@ -107,173 +107,86 @@ class BarChart {
     const educationDataMap = d3.rollup(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_school,
-      (d) => d.hcm2017q24_college
+      (d) => d.hcm2017q24_school == "yes",
+      (d) => d.hcm2017q24_college == "yes"
     );
 
-    const militaryDataMap = d3.rollups(
+    // professional
+    const professionalSettingDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_mil
-    );
-
-    const churchDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_church
-    );
-
-    const volunteerDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_vol_org
-    );
-
-    const clientDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_customer
+      (d) => d.hcm2017q24_mil == "yes",
+      (d) => d.hcm2017q24_customer == "yes",
+      (d) => d.hcm2017q24_vol_org == "yes",
+      (d) => d.hcm2017q24_work_neighbors == "yes"
     );
 
     const socialSettingDataMap = d3.rollup(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_bar_restaurant,
-      (d) => d.hcm2017q24_party,
-      (d) => d.hcm2017q24_public,
-      (d) => d.hcm2017q24_church,
-      (d) => d.hcm2017q24_single_serve_nonint
-
-    )
-
-    const internetOtherDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_internet_other
+      (d) => d.hcm2017q24_bar_restaurant == "yes",
+      (d) => d.hcm2017q24_party == "yes",
+      (d) => d.hcm2017q24_public == "yes",
+      (d) => d.hcm2017q24_church == "yes",
+      (d) => d.hcm2017q24_single_serve_nonint == "yes" // like "singles night at the cafe"
     );
 
-    // dating app
-    const internetDatingDataMap = d3.rollups(
+    const internetSiteDataMap = d3.rollup(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_internet_dating
+      (d) => d.hcm2017q24_internet_other == "yes",
+      (d) => d.hcm2017q24_internet_dating == "yes", // dating app
+      (d) => d.hcm2017q24_internet_org == "yes" // internet site not dedicated to dating
     );
 
-    // instagram or smth
-    const socialNetworkDataMap = d3.rollups(
+    const onlineSocialNetworkingDataMap = d3.rollup(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_internet_soc_network
+      (d) => d.hcm2017q24_internet_soc_network == "yes", // instagram or smth
+      (d) => d.hcm2017q24_internet_game == "yes",
+      (d) => d.hcm2017q24_internet_chat == "yes"
     );
 
-    const gamingDataMap = d3.rollups(
+    const abroadDataMap = d3.rollup(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_internet_game
+      (d) => d.hcm2017q24_vacation == "yes",
+      (d) => d.hcm2017q24_business_trip == "yes"
     );
 
-    const chatDataMap = d3.rollups(
+    const mutualConnectionDataMap = d3.rollup(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_internet_chat
+      (d) => d.hcm2017q24_blind_date == "yes", // usually blind dates get set up by someone you know
+      (d) => d.hcm2017q24_met_through_family == "yes",
+      (d) => d.hcm2017q24_met_through_friend == "yes",
+      (d) => d.hcm2017q24_met_through_as_nghbrs == "yes",
+      (d) => d.hcm2017q24_met_as_through_cowork == "yes"
     );
 
-    // internet site not dedicated to dating
-    const internetSiteDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_internet_org
-    );
-
-
-    const blindDateDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_blind_date
-    );
-
-    const vacationDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_vacation
-    );
-
-    const businessTripDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_business_trip
-    );
-
-    const workNeighborsDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_work_neighbors
-    );
-
-    const familyDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_met_through_family
-    );
-
-    const friendDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_met_through_friend
-    );
-
-    const neighborsDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_met_through_as_nghbrs
-    );
-
-    const coworkersDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_met_as_through_cowork
-    );
     vis.aggregatedData;
-    const mightMap = {
+    const mightyMap = {
       // education
-      "Education": educationDataMap,
-      // collegeDataMap,
+      Education: educationDataMap,
 
-      // social setting
-      restaurantDataMap,
-      partyDataMap,
-      publicPlaceDataMap,
-      singleServeDataMap, // like "singles night at the cafe"
-      churchDataMap,
+      "Social Setting": socialSettingDataMap,
+
+      "Professional Setting": professionalSettingDataMap,
 
       // internet site (dating or otherwise)
-      internetSiteDataMap,
-      internetOtherDataMap,
-      internetDatingDataMap,
-
-      // professional relationship
-      workNeighborsDataMap,
-      clientDataMap,
-      volunteerDataMap,
-      militaryDataMap,
+      "Internet Website": internetSiteDataMap,
 
       // online social networking
-      socialNetworkDataMap,
-      chatDataMap,
-      gamingDataMap,
+      "Online Social Networking": onlineSocialNetworkingDataMap,
 
       // abroad
-      businessTripDataMap,
-      vacationDataMap,
+      Abroad: abroadDataMap,
 
       // mutual connection
-      familyDataMap,
-      friendDataMap,
-      neighborsDataMap,
-      coworkersDataMap,
-      blindDateDataMap, // someone usually sets you up on a blind date
+      "Mutual Connection": mutualConnectionDataMap,
     };
-    const mergedMap = mapArr.flatMap((e) => [...e]);
+    // const mergedMap = mapArr.flatMap((e) => [...e]);
+    console.log(mightyMap);
 
     vis.renderVis();
   }
