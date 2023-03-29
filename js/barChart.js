@@ -103,16 +103,11 @@ class BarChart {
   updateVis() {
     let vis = this;
 
-    // Prepare data: count number of genders
-    const schoolDataMap = d3.rollups(
+    // education
+    const educationDataMap = d3.rollup(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_school
-    );
-
-    const collegeDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
+      (d) => d.hcm2017q24_school,
       (d) => d.hcm2017q24_college
     );
 
@@ -127,7 +122,7 @@ class BarChart {
       (v) => v.length,
       (d) => d.hcm2017q24_church
     );
-    // i fricking hate this
+
     const volunteerDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
@@ -140,17 +135,16 @@ class BarChart {
       (d) => d.hcm2017q24_customer
     );
 
-    const restaurantDataMap = d3.rollups(
+    const socialSettingDataMap = d3.rollup(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_bar_restaurant
-    );
+      (d) => d.hcm2017q24_bar_restaurant,
+      (d) => d.hcm2017q24_party,
+      (d) => d.hcm2017q24_public,
+      (d) => d.hcm2017q24_church,
+      (d) => d.hcm2017q24_single_serve_nonint
 
-    const partyDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_party
-    );
+    )
 
     const internetOtherDataMap = d3.rollups(
       vis.data,
@@ -191,12 +185,6 @@ class BarChart {
       (d) => d.hcm2017q24_internet_org
     );
 
-    // public place
-    const publicPlaceDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_public
-    );
 
     const blindDateDataMap = d3.rollups(
       vis.data,
@@ -208,13 +196,6 @@ class BarChart {
       vis.data,
       (v) => v.length,
       (d) => d.hcm2017q24_vacation
-    );
-
-    // whatever this is
-    const singleServeDataMap = d3.rollups(
-      vis.data,
-      (v) => v.length,
-      (d) => d.hcm2017q24_single_serve_nonint
     );
 
     const businessTripDataMap = d3.rollups(
@@ -253,19 +234,17 @@ class BarChart {
       (d) => d.hcm2017q24_met_as_through_cowork
     );
     vis.aggregatedData;
-    const mapArr = [
-      schoolDataMap,
-      collegeDataMap,
+    const mightMap = {
+      // education
+      "Education": educationDataMap,
+      // collegeDataMap,
 
-      militaryDataMap,
-      churchDataMap,
+      // social setting
       restaurantDataMap,
       partyDataMap,
-
-      gamingDataMap,
       publicPlaceDataMap,
-      blindDateDataMap,
-      singleServeDataMap,
+      singleServeDataMap, // like "singles night at the cafe"
+      churchDataMap,
 
       // internet site (dating or otherwise)
       internetSiteDataMap,
@@ -276,10 +255,12 @@ class BarChart {
       workNeighborsDataMap,
       clientDataMap,
       volunteerDataMap,
+      militaryDataMap,
 
-      // social networking
+      // online social networking
       socialNetworkDataMap,
       chatDataMap,
+      gamingDataMap,
 
       // abroad
       businessTripDataMap,
@@ -290,15 +271,9 @@ class BarChart {
       friendDataMap,
       neighborsDataMap,
       coworkersDataMap,
-    ];
+      blindDateDataMap, // someone usually sets you up on a blind date
+    };
     const mergedMap = mapArr.flatMap((e) => [...e]);
-    console.log(mergedMap);
-    // Specific accessor functions
-    vis.xValue = (d) => d.key;
-    vis.yValue = (d) => d.count;
-    // Set the scale input domains
-    vis.xScale.domain(vis.aggregatedData.map(vis.xValue));
-    vis.yScale.domain([0, vis.staticYValue]);
 
     vis.renderVis();
   }
