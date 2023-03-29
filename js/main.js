@@ -1,4 +1,6 @@
 let varForFilteringBubbleChart = "";
+let currBubbleChartMainCategory = ""; // the relationship ranking
+let currBubbleChartSubCategory = ""; // the relationship ranking
 let data;
 let bubbleChart; 
 
@@ -28,9 +30,9 @@ d3.csv('data/dating.csv').then(_data => {
         parentElement: '#heat-map',
     }, data);
 
-    let defaultCategory = 'Excellent';
-    let defaultSubCategory = 'yes';
-    filterBubbleChartData(defaultCategory,defaultSubCategory);
+    currBubbleChartMainCategory = 'Excellent';
+    currBubbleChartSubCategory = 'no';
+    filterBubbleChartData();
 });
 
 
@@ -39,8 +41,8 @@ d3.csv('data/dating.csv').then(_data => {
  * @param mainCategory the relationship ranking
  * @param subCategory bar clidked (interracial or same race)
  */
-function filterBubbleChartData(mainCategory,subCategory){
-    let filteredData = data.filter(d => d.Q34 == mainCategory && d.interracial_5cat == subCategory);
+function filterBubbleChartData(){
+    let filteredData = data.filter(d => d.Q34 == currBubbleChartMainCategory && d.interracial_5cat == currBubbleChartSubCategory);
     bubbleChart.data = filteredData;
     bubbleChart.updateVis();
 

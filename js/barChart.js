@@ -36,7 +36,7 @@ class BarChart {
         .padding(0.60);
 
       vis.xSubgroupScale = d3.scaleBand() // segments range into equal categories based on the num of domain
-        .range([0, vis.xScale.bandwidth()/2])
+        .range([0, vis.xScale.bandwidth()/4])
         .domain(vis.subgroupsCategory)
         .padding(0.7);
 
@@ -102,21 +102,23 @@ class BarChart {
       let vis = this;
       vis.noInterracial = "no";
       vis.yesInterracial = "yes";
-      vis.sameRaceCoupleColor = "blue";
-      vis.interracialCoupleColor = "red";
+      vis.sameRaceCoupleColor = "red";
+      vis.interracialCoupleColor = "blue";
 
       // keeps track of how many points were plotted
       vis.pointsPlotted = 0;
       vis.totalPointsToPlot = 0;
       
+      // filters out data where there was no answer or someone refused to answer
+      vis.preprocessData();
+
       // group data by relationship ranking, 
       // and count number of occurences of each ranking.
       vis.groupedData = d3.rollup(vis.data, v => v.length, d => d.Q34, d => d.interracial_5cat);
-      console.log(vis.groupedData);
-           // todo: excludes the first and the last group in the groupedData
-        // to exclude people with no answer, or who refused to rank
-      // vis.groupedData.remove("\"\"");
-      //  vis.groupedData.remove("Refused");
+      vis.groupedData.delete('');
+      vis.groupedData.delete("Refused");
+      // console.log(vis.groupedData);
+
       vis.maxOccurenceCount = function (groupedData){
 
         // credit for iterator help: https://stackoverflow.com/a/55660647
@@ -173,26 +175,23 @@ class BarChart {
       const bars = vis.chart.selectAll('.bars')
           .data(vis.groupedData)
           .join("g")
-          .filter(d => {
-            //removes those that didn't share their race 
-            // data with the rank section blank and those that refused to rank
-            if( d[0] != "" && d[0] != "Refused") {
-              return d;
-            }
-          })
           .attr('class', 'bars')
           // .attr('width', vis.xScale.bandwidth()/5)
           .attr("transform", d => {
             return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`});
 
-      const categories = bars.selectAll('.bar')
+      const bar = bars.selectAll('.bar')
           .data (d => [d[1]])
-          .join('g');
-
-      const bar = categories.selectAll('g')
-            .data(d => d) // was d => [d]
+          .join('g')
+          .selectAll('g')
+            .data(d => {
+              d.delete("");
+              // console.log(d);
+              return d; }) // was d => [d]
               .join ('rect')
               .filter(d => {
+                // console.log(d);
+
                 //removes those that didn't share their race 
                 // data with the rank section blank and those that refused to rank
                 if( d[0] != "") {
@@ -225,22 +224,22 @@ class BarChart {
       bar
         .on('mouseover', function (event,d) {
           vis.toolTipInfo(event,d);
-          console.log(d);
+          // console.log(d);
         })
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
         }).on('click', function(event, d) {
           // console.log(d);
-          vis.specificBarClicked = d[0];
+          currBubbleChartSubCategory = d[0];
         });
 
       // when a bar is clicked, filter the data displayed in the bubblechart
       bars
         .on('click', function(event, d) {
-          console.log(vis.specificBarClicked);
-          
-          vis.varForFilteringBubbleChart = d[0];
-          filterBubbleChartData(vis.varForFilteringBubbleChart, vis.specificBarClicked);
+          currBubbleChartMainCategory = d[0];
+          console.log(currBubbleChartMainCategory);
+
+          filterBubbleChartData();
         });
     
       // Update the axes because the underlying scales might have changed
@@ -273,6 +272,12 @@ class BarChart {
       <div><strong>${subCatname(d)}</strong></div>
       <div>Count: ${d[1]} </div> 
     `);
+  }
+
+  preprocessData() {
+    let vis = this;
+    vis.data = vis.data.filter(d => d.Q34 !="" || d.Q34 != "Refused" || d.interracial_5cat != "");
+    // console.log(vis.data);
   }
 
   
