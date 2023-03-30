@@ -21,6 +21,25 @@ Make sure to use specific IDs/classes.
     --shape_stroke_width: 2px;
 }
 
+#circle-chart-title-row {
+    text-align: center;
+    width: 75vw;
+    height: 5vw;
+}
+
+#c-chart-title-col{
+    width: 50%;
+    float: right;
+    height: 100%;
+    /* padding-left: 4em; */
+}
+
+/* h4 {
+    margin: auto;
+    vertical-align: middle;
+} */
+
+
 /* chart */
 #circles-chart-plot {
     margin-bottom: 3px;

@@ -42,8 +42,11 @@ d3.csv('data/dating.csv').then(_data => {
  * @param subCategory bar clidked (interracial or same race)
  */
 function filtercirclesChartData(){
+    console.log (currcirclesChartMainCategory);
+    console.log(currcirclesChartSubCategory);
     let filteredData = data.filter(d => d.Q34 == currcirclesChartMainCategory && d.interracial_5cat == currcirclesChartSubCategory);
     circlesChart.data = filteredData;
+    console.log(filteredData);
     circlesChart.updateVis();
 
 }

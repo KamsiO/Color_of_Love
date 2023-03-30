@@ -21,7 +21,7 @@ class circlesChart {
     
     initVis() {
       let vis = this;
-      vis.minCircSize = 10;
+      vis.minCircSize = 5;
       vis.maxCircSize = 100;
   
       // Calculate inner chart size. Margin specifies the space around the actual chart.
@@ -84,6 +84,7 @@ class circlesChart {
           }
         }
       }
+      console.log(vis.groupedDataArr);
       console.log(maxCount);
 
       vis.sizeScale.domain([0,maxCount]);
@@ -276,6 +277,16 @@ class circlesChart {
      */
       toolTipInfo(event,groupNum) {
         let vis = this;  
+
+        let couplesStillTogether = function (){
+          let nums = vis.arrOfCountOfCouplesStillTogether[groupNum -1]/vis.arrOfRacialCategorySum[groupNum - 1];
+          if (nums){
+            return `<li>Percent of couples still together: ${nums.toFixed(2) * 100}%</li>`;
+          } else {
+            return ``;
+          }
+        };
+
         d3.select('#tooltip')
         .style('display', 'block')
         .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
@@ -284,7 +295,7 @@ class circlesChart {
           <div><i>Details</i></div>
           <ul>
             <li>Number of couples: ${vis.arrOfRacialCategorySum[groupNum-1]} </li>
-            <li>Percent of couples still together: ${vis.arrOfCountOfCouplesStillTogether[groupNum -1]/vis.arrOfRacialCategorySum[groupNum - 1]}</li>
+           ${couplesStillTogether()}
           </ul>
         `);
       }
