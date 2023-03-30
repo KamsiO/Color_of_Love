@@ -126,13 +126,14 @@ class TreeMap {
         d.hcm2017q24_met_through_as_nghbrs === "yes" ||
         d.hcm2017q24_met_as_through_cowork === "yes"
     );
-
+    console.log(mutualConnectionDataMap);
     vis.aggregatedData = new Map([
       // education
       ["Education", educationDataMap],
 
       ["Social Setting", socialSettingDataMap],
 
+      // at work
       ["Professional Setting", professionalSettingDataMap],
 
       // internet site (dating or otherwise)
@@ -157,7 +158,7 @@ class TreeMap {
       vis.nodes.push({
         name: key,
         parent: "root",
-        value: value.sort()[1][1],
+        value: value.length > 1 ? value.sort()[1][1] : 0,
       });
     }
 
@@ -203,7 +204,7 @@ class TreeMap {
       .attr("height", function (d) {
         return d["y1"] - d["y0"];
       })
-        .style("fill", "red")
+      .style("fill", "red")
       .on("mouseover", function (e, d) {
         // hovering over a treemap node shows the number of victims belonging to that group
         d3.select("#tree-map-tooltip")

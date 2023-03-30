@@ -48,6 +48,8 @@ d3.csv("data/dating.csv").then((_data) => {
 // the flag ensures that we don't re-filter the data if we don't need to
 let currSelection;
 d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
+  // Filter data accordingly and update vis
+
   if (currSelection !== e.target.value) {
     currSelection = e.target.value;
     if (currSelection == "all") {
@@ -55,19 +57,10 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
     } else {
       //   console.log(d.ppagecat);
       treeMap.data = data.filter(function (d) {
-        console.log(d.ppagecat === "75+" ? d.ppagecat : "nope");
+        // console.log(d.ppagecat === "75+" ? d.ppagecat : "nope");
         return d.ppagecat === currSelection;
       });
     }
     treeMap.updateVis();
   }
-  // Check which categories are active
-  //   let selectedCategory = [];
-  //   d3.selectAll(".legend-btn:not(.inactive)").each(function () {
-  //     selectedCategory.push(d3.select(this).attr("data-category"));
-  //   });
-
-  // Filter data accordingly and update vis
-
-  //   treeMap.updateVis();
 });
