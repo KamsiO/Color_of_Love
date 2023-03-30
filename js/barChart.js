@@ -38,7 +38,8 @@ class BarChart {
       vis.xSubgroupScale = d3.scaleBand() // segments range into equal categories based on the num of domain
         .range([0, vis.xScale.bandwidth()/4])
         .domain(vis.subgroupsCategory)
-        .padding(0.7);
+        .padding(0.7)
+        .paddingInner(2.5);
 
       vis.yScale = d3.scaleLinear()
         .range([vis.height, 0]);     
@@ -81,7 +82,7 @@ class BarChart {
       .attr('class', 'axis-title')
       .attr('y', vis.height - 15)
       .attr('x', vis.width + 10)
-      .attr('dy', '4em')
+      .attr('dy', '3.5em')
       .style('text-anchor', 'end')
       .text('Quality of Relationship')
       .style('font-weight', 'bold');
@@ -201,7 +202,7 @@ class BarChart {
                 // seemes to still leave the third rect there without contencts
               })
               .attr('class', 'bar')
-              .attr('x', d=> vis.xSubgroupScale(d[0]))
+              .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
               .attr('y', d => vis.yScale(d[1]))
               .attr('width', d => {
                 // return (1/12) * vis.x

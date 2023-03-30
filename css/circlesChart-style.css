@@ -16,11 +16,9 @@ Make sure to use specific IDs/classes.
     --border-color: purple;
 
     /* text */
-    --axis_title_font_size: 0.8em;
-    --labels_font_size: 14px;
+    /* --axis_title_font_size: 1em; */
+    --labels_font_size: 0.8em;
     --shape_stroke_width: 2px;
-
-
 }
 
 /* chart */
@@ -30,6 +28,7 @@ Make sure to use specific IDs/classes.
 }
 
 /* legend */
+
 
 .dot {
     height: 5px;
@@ -47,10 +46,6 @@ Make sure to use specific IDs/classes.
 #same_race {
     background-color: var(--same_race_color);
 }
-
-/* #refused_answer_race {
-    background-color: var(--refused_answer_race_color);
-} */
 
 #married {
     background-color: var(--married_color);
@@ -126,43 +121,61 @@ label {
 } 
 
 
-/* The row the views (bubble chart and bar chart) will be on */
+/* The columns in row the views (bubble chart and bar chart) will be on */
 .column {
-    float: left;
     width: 40vw;
-    /* padding: 2em; */
+    float: left;
+
   }
 
+/* column with the barchart view */
 .column1 {
-    /* padding-right: 1em; */
     max-width: 30vw;
     max-height: 40v;
     white-space:nowrap;
+
 }
   
+/* the column the circles are in */
 .column2 {
-    max-width:40vw;
+    width:40vw;
     max-height: 40vh;
-    /* padding-left: 1em; */
-    white-space:nowrap;
+    margin-left: 4em;
+    text-align: center;
+    align-items: center;
+    border: solid 2px var(--border-color);
 
 }
 
+
+/* the mini columns: one circle per column */
   .cols {
     float: left;
-    max-width: 33%;
+    width: 33%;
+    height: 100%;
     padding: 0.5em;
-    border: solid 2px var(--border-color);
-  }
+    display: block;
 
+}
+
+/* the rows of each circle*/
   .circ-rows {
-    max-width: 50vw;
-    
-  }
+    display: flex;
+    height: 33%;
+    width: 100%;
 
-    /* Clear floats after the columns */
+}
+
+.circle-label {
+    display: block;
+    text-align: center;
+        white-space:wrap;
+
+}
+
+    /* Clear floats after the columns
     .row:after {
         content: "";
         display: table;
         clear: both;
-      }
+      } */

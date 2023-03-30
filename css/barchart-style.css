@@ -2,7 +2,15 @@
 IMPORTANT: CSS styles across files can overwrite each other!
 Make sure to use specific IDs/classes.
 */
+:root {
+  /* text */
+  --axis_title_font_size: 0.8em;
+  --axis_label_font_size: 0.8em;
 
+
+}
+
+  /* Axes */
 
 .axis path,
 .axis line {
@@ -11,23 +19,19 @@ Make sure to use specific IDs/classes.
   shape-rendering: crispEdges;
 }
 
-.axis text {
+.axis text{
   font-family: sans-serif;
-  font-size: 0.15 em;
+  font-size: var(--axis_label_font_size);
 }
 
+.axis-title{
+  font-family: sans-serif;
+  font-size: var(--axis_title_font_size);
+  fill: var(--font_color);
+
+}
 .bar {
     /* fill: steelblue; */
-    width: 3em;
+    width: 12px;
     shape-rendering: crispEdges;
-
   }
-
-/* .axis text {
-    font-size: var(--labels_font_size);
-    fill: var(--font_color);
-} */
-/* .axis-title {
-    font-size: var(--axis_title_font_size);
-    fill: var(--font_color);
-} */
