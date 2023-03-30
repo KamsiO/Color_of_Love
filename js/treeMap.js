@@ -203,9 +203,7 @@ class TreeMap {
       .attr("height", function (d) {
         return d["y1"] - d["y0"];
       })
-      //   .style("fill", function (d) {
-      //     return vis.colourScale(d["id"]);
-      //   })
+        .style("fill", "red")
       .on("mouseover", function (e, d) {
         // hovering over a treemap node shows the number of victims belonging to that group
         d3.select("#tree-map-tooltip")
