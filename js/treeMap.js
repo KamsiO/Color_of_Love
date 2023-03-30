@@ -170,6 +170,8 @@ class TreeMap {
    */
   renderVis() {
     let vis = this;
+
+    // took code from https://www.students.cs.ubc.ca/~cs-436v/22Jan/fame/projects/project_g06/index.html
     // transforming data into hierarchy that can be used by the treemap
     const stratify = d3
       .stratify()
@@ -203,6 +205,28 @@ class TreeMap {
       })
       .style("fill", function (d) {
         return vis.colourScale(d["id"]);
+      })
+      .on("mouseover", function (e, d) {
+        // hovering over a treemap node shows the number of victims belonging to that group
+        d3.select("#tooltip")
+          .style("display", "block")
+          .style("left", `${e.pageX + globalStyles.tooltipPadding}px`)
+          .style("top", `${e.pageY + globalStyles.tooltipPadding}px`)
+          .html(
+            displayTooltip(
+              `Victims in the ${vis.getGroupName(d)} ${
+                vis.groupBy == "age_group" ? "age" : ""
+              } group`,
+              {
+                "Number of victims": d.data.value,
+                "Percent of victims":
+                  Math.ceil(100 * (d.data.value / d.parent.value)) + "%",
+              }
+            )
+          );
+      })
+      .on("mouseleave", function (e, d) {
+        d3.select("#tooltip").style("display", "none");
       });
   }
 }
