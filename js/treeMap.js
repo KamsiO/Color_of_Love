@@ -203,30 +203,27 @@ class TreeMap {
       .attr("height", function (d) {
         return d["y1"] - d["y0"];
       })
-      .style("fill", function (d) {
-        return vis.colourScale(d["id"]);
-      })
+      //   .style("fill", function (d) {
+      //     return vis.colourScale(d["id"]);
+      //   })
       .on("mouseover", function (e, d) {
         // hovering over a treemap node shows the number of victims belonging to that group
-        d3.select("#tooltip")
+        d3.select("#tree-map-tooltip")
           .style("display", "block")
-          .style("left", `${e.pageX + globalStyles.tooltipPadding}px`)
-          .style("top", `${e.pageY + globalStyles.tooltipPadding}px`)
+          .style("position", "absolute")
+          .style("background-color", "white")
+          .style("font-family", "arial")
+          .style("left", `${e.pageX + 10}px`)
+          .style("top", `${e.pageY + 10}px`)
           .html(
-            displayTooltip(
-              `Victims in the ${vis.getGroupName(d)} ${
-                vis.groupBy == "age_group" ? "age" : ""
-              } group`,
-              {
-                "Number of victims": d.data.value,
-                "Percent of victims":
-                  Math.ceil(100 * (d.data.value / d.parent.value)) + "%",
-              }
-            )
+            `<div>
+                <p>How they met: ${d["id"]}</p>
+                <p>Count: ${d["value"]}</p>
+            </div>`
           );
       })
       .on("mouseleave", function (e, d) {
-        d3.select("#tooltip").style("display", "none");
+        d3.select("#tree-map-tooltip").style("display", "none");
       });
   }
 }
