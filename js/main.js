@@ -53,7 +53,11 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
     if (currSelection == "all") {
       treeMap.data = data;
     } else {
-      treeMap.data = data.filter((d) => d.ppage === currSelection);
+      //   console.log(d.ppagecat);
+      treeMap.data = data.filter(function (d) {
+        console.log(d.ppagecat === "75+" ? d.ppagecat : "nope");
+        return d.ppagecat === currSelection;
+      });
     }
     treeMap.updateVis();
   }
