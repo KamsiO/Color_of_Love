@@ -4,6 +4,10 @@ Make sure to use specific IDs/classes.
 */
 
 /* Axes */
-#heat-map-chart .axis path {
+.heat-map-chart .axis path {
+    display: none;
+}
+
+#heatmap-cohabit-chart .axis.y-axis .tick text {
     display: none;
 }
