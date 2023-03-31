@@ -28,15 +28,8 @@ d3.csv('data/dating.csv').then(data => {
         let has_cohab_value = d.cohab_before_marriage != "";
         return responded_sex_freq && responded_religious && has_cohab_value;
     });
-    // group by cohabitation before marriage
-    let cohabit_groups = d3.group(heatmap_data, d => d.cohab_before_marriage);
-    console.log(cohabit_groups);
 
-    const heatMapNoCohabit = new HeatMap({
+    const heatMap = new HeatMap({
         parentElement: '#heat-map',
-    }, cohabit_groups.get("0"), "heatmap-no-cohabit-chart");
-    const heatMapCohabit = new HeatMap({
-        parentElement: '#heat-map',
-        margin: {top: 30, right: 150, bottom: 100, left: 0}
-    }, cohabit_groups.get("1"), "heatmap-cohabit-chart");
+    }, heatmap_data);
 });

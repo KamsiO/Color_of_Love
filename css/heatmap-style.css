@@ -4,10 +4,32 @@ Make sure to use specific IDs/classes.
 */
 
 /* Axes */
-.heat-map-chart .axis path {
+#heat-map-chart .axis path {
     display: none;
 }
 
-#heatmap-cohabit-chart .axis.y-axis .tick text {
-    display: none;
+/* Labels */
+#heat-map-chart .tick text {
+    fill: rgb(90, 90, 90);
+}
+
+#heat-map-chart .axis-label {
+    font-size: 14px;
+}
+
+#heat-map-chart .title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#heat-map-chart .subtitle {
+    font-size: 10px;
+    font-style: italic;
+    fill: rgb(139, 139, 139);
+}
+
+/* Interactivity */
+.box:hover {
+    stroke: rgb(65, 65, 65);
+    stroke-width: 2px;
 }
