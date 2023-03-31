@@ -1,8 +1,3 @@
-/* 
-IMPORTANT: CSS styles across files can overwrite each other!
-Make sure to use specific IDs/classes.
-*/
-
 /* Axes */
 #heat-map-chart .axis path {
     display: none;
@@ -15,17 +10,6 @@ Make sure to use specific IDs/classes.
 
 #heat-map-chart .axis-label {
     font-size: 14px;
-}
-
-#heat-map-chart .title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-#heat-map-chart .subtitle {
-    font-size: 10px;
-    font-style: italic;
-    fill: rgb(139, 139, 139);
 }
 
 /* Interactivity */

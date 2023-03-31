@@ -1,10 +1,26 @@
-/* 
-IMPORTANT: CSS styles across files can overwrite each other!
-Make sure to use specific IDs/classes.
-*/
-
 body {
     font-family: 'Open Sans', sans-serif;
+}
+
+.container {
+    padding-top: 20px;
+    margin-left: 30px;
+}
+
+#overview {
+    text-align: justify;
+}
+
+/* Chart Text */
+.title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 10px;
+    font-style: italic;
+    fill: rgb(139, 139, 139);
 }
 
 /* Tooltip */
@@ -17,8 +33,6 @@ body {
     border: 1px solid #ddd;
     font-size: 12px;
     padding: 8px;
-    /* color: #333;
-    font-weight: 500; */
     min-width: 100px;
     color: #333;
 }

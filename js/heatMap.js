@@ -50,8 +50,15 @@ class HeatMap {
     updateVis() {
       let vis = this;
 
+      // filter out data points where there was no response
+      vis.data = vis.data.filter(d => {
+        let responded_sex_freq = d.w6_sex_frequency != "" && d.w6_sex_frequency != "Refused";
+        let responded_religious = d.ppp20072 != "" && d.ppp20072 != "Refused";
+        let has_cohab_value = d.cohab_before_marriage != "";
+        return responded_sex_freq && responded_religious && has_cohab_value;
+      });
+
       vis.box_groups = d3.flatRollup(vis.data, v => v.length, d => d.ppp20072, d => d.w6_sex_frequency);
-      console.log(vis.box_groups);
 
       // Specify x-, y-, and color- accessor functions
       vis.xValue = d => d.ppp20072;
@@ -160,18 +167,10 @@ class HeatMap {
       vis.svg.append("text")
           .attr('class', 'title')
           .attr('x', 35)
-          .attr('y', vis.config.margin.top - 50)
+          .attr('y', vis.config.margin.top - 27)
           .attr('dy', '.71em')
           .attr("text-anchor", "left")
           .text("Sex Frequency by Religiousness");
-
-      vis.svg.append("text")
-          .attr('class', 'subtitle')
-          .attr('x', 35)
-          .attr('y', vis.config.margin.top - 25)
-          .attr('dy', '.71em')
-          .attr("text-anchor", "left")
-          .text("Hover over cells to see the exact number of people");
       
       vis.chart.append('text')
           .attr('class', 'axis-label')
