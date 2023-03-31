@@ -1,7 +1,17 @@
+
+const MEETING_METHODS = {
+  0: "Education",
+  1: "Professional Setting",
+  2: "Social Setting",
+  3: "Internet Website",
+  4: "Internet Website",
+  5: "Abroad",
+  6: "Mutual Connection",
+};
+
 /**
  * Load data from CSV file asynchronously and render charts
  */
-
 let treeMap, data;
 d3.csv("data/dating.csv").then((_data) => {
   data = _data;

@@ -40,8 +40,10 @@ class TreeMap {
       .append("svg")
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight)
-      .attr("id", "bar-chart");
+      .attr("id", "tree-map-container");
 
+    // Colour scale for categories
+    vis.colourScale = d3.scaleOrdinal(d3.schemeCategory10);
     // SVG Group containing the actual chart; D3 margin convention
     vis.chart = vis.svg
       .append("g")
@@ -65,7 +67,6 @@ class TreeMap {
       vis.data,
       (v) => v.length,
       (d) => d.hcm2017q24_school === "yes" || d.hcm2017q24_college === "yes"
-      // (d) => d.hcm2017q24_college
     );
 
     // professional
@@ -125,7 +126,7 @@ class TreeMap {
         d.hcm2017q24_met_through_as_nghbrs === "yes" ||
         d.hcm2017q24_met_as_through_cowork === "yes"
     );
-    console.log(mutualConnectionDataMap);
+
     vis.aggregatedData = new Map([
       // education
       ["Education", educationDataMap],
@@ -148,7 +149,8 @@ class TreeMap {
       ["Mutual Connection", mutualConnectionDataMap],
     ]);
 
-    console.log(vis.aggregatedData);
+    vis.colourScale.domain(Object.keys(MEETING_METHODS));
+
     vis.nodes = [];
     vis.nodes.push({ name: "root", parent: null, value: null });
     // https://www.hackinbits.com/articles/js/how-to-iterate-a-map-in-javascript---map-part-2
@@ -203,7 +205,7 @@ class TreeMap {
       .attr("height", function (d) {
         return d["y1"] - d["y0"];
       })
-      .style("fill", "red")
+      .style("fill", d => vis.colourScale(d["id"]))
       .on("mouseover", function (e, d) {
         // hovering over a treemap node shows the number of victims belonging to that group
         d3.select("#tree-map-tooltip")
