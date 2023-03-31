@@ -10,7 +10,7 @@ class DotMatrix {
         parentElement: _config.parentElement,
         containerWidth: _config.containerWidth || 700,
         containerHeight: _config.containerHeight || 275,
-        // margin: _config.margin || {top: 25, right: 20, bottom: 20, left:50},
+        margin: _config.margin || {top: 25, right: 20, bottom: 20, left:50},
         tooltipPadding: _config.tooltipPadding || 15
       }
       
@@ -56,12 +56,13 @@ class DotMatrix {
 
       vis.dotRadius = 5;
       vis.numOfCategories = 9;
-      vis.noOfCirclesInARow = 50;
+      vis.noOfCirclesInARow = 45;
+      console.log(vis.noOfCirclesInARow);
 
       vis.uniqueGroups = ['apple'];
       vis.maxNoOfLinesInGroup = 100;
 
-      vis.numberOfLines = vis.maxNoOfLinesInGroup * vis.uniqueGroups;
+      vis.numberOfLines = vis.maxNoOfLinesInGroup * vis.uniqueGroups.length;
 
       vis.padding = 5;
       vis.dotPaddingLeft = vis.padding;
@@ -92,7 +93,7 @@ class DotMatrix {
       // intialize the scales
         // Set the ranges
       vis.xScale = d3.scaleLinear().range([vis.margin.left, vis.width]);
-      vis.yScale = d3.scaleLinear().range([ vis.height, vis.margin.top]);
+      vis.yScale = d3.scaleLinear().range([vis.height, 0]);
 
       vis.xAxis = d3.axisBottom(vis.xScale)
 
@@ -107,50 +108,6 @@ class DotMatrix {
         .attr("width", vis.width + vis.margin.left + vis.margin.right)
         .attr("height",  vis.height + vis.margin.top + vis.margin.bottom)
         .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
-
-      //Create Y axis
-      vis.svg.append("g")
-        .attr("transform", "translate(" + (vis.margin.left - (vis.dotRadius*2)) + ",0)")
-        .attr("class", "y axis")
-        .call(vis.yAxis)
-        .selectAll("text")
-        .attr("y", -vis.dotRadius*5)
-        .attr("x", 0)
-        .attr("dy", ".35em")
-        .style("font-size", vis.dotRadius*3 + "px")
-        .attr("transform", "rotate(-90)")
-        .style("text-anchor", "start");
-
-      //Create Y axis
-      vis.svg
-        .append("line")
-        .attr("x1",vis.width)
-        .attr("y1",vis.margin.top)
-        .attr("x2",vis.width)
-        .attr("y2", vis.height)
-        .style("stroke","black")
-        .style("stroke-width",1)
-
-
-      // vis.yAxis = d3.vis.svg.axis()
-      //     .scale(vis.yScale)
-      //     .orient("left")
-      //     .tickFormat(function (d) {
-      //         return vis.uniqueGroups[d];
-      //     })
-      //     .ticks(vis.uniqueGroups.length)
-      //     .tickSize(-vis.width + vis.margin.left-(vis.dotRadius*2), 0, 0)
-
-                
-      // vis.luminanceScale = d3.scaleLinear()
-      //   .range([0.01,1]);
-
-      // vis.colorScale = d3.scaleOrdinal()
-      //   .range(d3.schemeCategory10)
-      //   .domain(vis.raceCategories);
-
-      // vis.sizeScale = d3.scaleSqrt()
-      //   .range([vis.minCircSize, vis.maxCircSize]);
   
       vis.updateVis();
     }
@@ -163,26 +120,6 @@ class DotMatrix {
       vis.partnerRace = d => d.w6_q6b;
 
       vis.groupedDataArr = d3.groups(vis.data, d => d.CaseID);
-      // console.log(vis.groupedDataArr);
-      // vis.maxCount = 0;
-
-      // vis.groupedDataArr = d3.rollups(vis.data, v => v.length, vis.subjectRace, vis.partnerRace) //second is partner
-      // console.log(vis.groupedDataArr);
-      // let maxCount = 0;
-
-      // for (let i = 0; i < vis.groupedDataArr.length; i++){
-      //   for (let j = 0; j < vis.groupedDataArr[i][1].length; j++){
-      //     let currMax = vis.groupedDataArr[i][1][j][1];
-      //     if ( currMax > maxCount){
-      //       maxCount = currMax;
-      //     }
-      //   }
-      // }
-      // console.log(vis.groupedDataArr);
-      // console.log(maxCount);
-
-      // vis.sizeScale.domain([0,maxCount]);
-      // vis.luminanceScale.domain([0,vis.maxCountOfThoseStillTogether]); 
 
       vis.xScale.domain([0,vis.noOfCirclesInARow]);
       vis.yScale.domain([0,1]);
@@ -207,13 +144,11 @@ class DotMatrix {
         vis.AsianAndOtherSum,  vis.WhiteAndOtherSum, vis.BlackAndAsianSum, vis.BlackAndOtherSum, vis.NativeAmericanAndOtherSum,
         vis.AsianAndWhiteSum];
 
-        vis.groups = vis.svg
-        // .selectAll("g.group")
-        // .data(vis.uniqueGroups)
-        //   .join('g')
-        //   .attr("class", "group");
+        let numPoints = -1;
+        let yCord = vis.dotRadius;
+        let xdivisor = Math.round(vis.width / 2 * vis.dotRadius);
 
-        vis.circleArray = vis.groups.selectAll(".circleArray")
+        vis.circleArray = vis.svg.selectAll(".circleArray")
         .data(vis.groupedDataArr, d => {
           // console.log(d[1]);
           return d[1];})
@@ -227,11 +162,28 @@ class DotMatrix {
             // console.log(d);
             return vis.getInterracialGroupColor(d[1]);})
           .attr("r", vis.dotRadius)
-          .attr("cx", (d,index) => index * 2 * vis.dotRadius)
-          .attr("cy",  (d,index) => (index * 2 * vis.dotRadius));
+          .attr("cx", (d,index) => {
+            // console.log((index * 2 * vis.dotRadius) % xdivisor);
+            return ((index * 2 * vis.dotRadius) % xdivisor + vis.dotRadius);
+          }) 
+          .attr("cy",  (d,index) => {
+            numPoints++;
+            if(numPoints >= vis.noOfCirclesInARow) {
+              // console.log(numPoints);
+              // console.log(vis.noOfCirclesInARow);
+              yCord += vis.dotRadius;
+              numPoints = 0;
+            }
+            return yCord;
+          })
+          .on('mouseover', function (event,d) {
+            console.log(d[1][0]);
+            vis.toolTipInfo(event,d[1][0]);
+          })
+          .on('mouseleave', () => {
+            d3.select('#tooltip').style('display', 'none');
+          });
 
-
-      // vis.renderCircles();
     }
   
 
@@ -281,46 +233,6 @@ class DotMatrix {
             return "red";
           }
     }
-
-    // /**
-    //  * Adjusts the attributes of the HTML dots
-    //  */ 
-    // renderCircles(){    
-    //   let vis = this;  
-    //   for (let groupNum = 1; groupNum <= vis.numOfCategories; groupNum++){
-    //     let id = "dot-" + groupNum;
-    //     document.getElementById(id).style.height = 2 * vis.sizeScale(vis.arrOfRacialCategorySum[groupNum - 1]) + "px";
-    //     // console.log(document.getElementById(id).style.height);
-    //     document.getElementById(id).style.width = 2 * vis.sizeScale(vis.arrOfRacialCategorySum[groupNum - 1]) + "px";
-    //     // console.log(document.getElementById(id).style.width);
-    //     // console.log( vis.colorScale(vis.raceCategories[groupNum -1]));
-    //     document.getElementById(id).style.background = vis.colorScale(vis.raceCategories[groupNum -1]);
-    //     // console.log(document.getElementById(id).style.background);
-    //     // console.log(vis.luminanceScale(groupNum -1));
-    //     document.getElementById(id).style.opacity = vis.luminanceScale(vis.arrOfCountOfCouplesStillTogether[groupNum-1]);
-    //             console.log(document.getElementById(id).style.opacity);
-    //     document.getElementById(id).addEventListener("mouseover", function(event){
-    //       vis.toolTipInfo(event, groupNum)});
-    //       document.getElementById(id).addEventListener("mouseleave", function(event, d){
-    //         d3.select('#tooltip').style('display', 'none');
-    //       });
-    //   }
-    // }
-
-    // /**
-    //  * Adds labels under the circles
-    //  */
-    // populateLabelsUnderDots(){
-    //   let vis = this;
-    //   for (let i = 0; i < vis.numOfCategories; i++) {
-    //     // credit for how to get label by id: https://stackoverflow.com/a/2599634
-    //     let id = "label-dot-" + (i + 1);
-    //     // console.log(id);
-    //     var element = document.getElementById(id);
-    //     // console.log(element);
-    //     element.innerHTML = vis.raceCategories[i];
-    //   }
-    // }
 
     /**
      * For each circle, count how many couples in the circle are still together
@@ -443,17 +355,17 @@ class DotMatrix {
     /**
      *  displays the tooltip information
      */
-      toolTipInfo(event,groupNum) {
+      toolTipInfo(event,d) {
         let vis = this;  
 
-        let couplesStillTogether = function (){
-          let nums = vis.arrOfCountOfCouplesStillTogether[groupNum -1]/vis.arrOfRacialCategorySum[groupNum - 1];
-          if (nums){
-            return `<li>Percent of couples still together: ${nums.toFixed(2) * 100}%</li>`;
-          } else {
-            return ``;
-          }
-        };
+        // let couplesStillTogether = function (){
+        //   let nums = vis.arrOfCountOfCouplesStillTogether[groupNum -1]/vis.arrOfRacialCategorySum[groupNum - 1];
+        //   if (nums){
+        //     return `<li>Percent of couples still together: ${nums.toFixed(2) * 100}%</li>`;
+        //   } else {
+        //     return ``;
+        //   }
+        // };
 
         d3.select('#tooltip')
         .style('display', 'block')
@@ -462,8 +374,9 @@ class DotMatrix {
         .html(`
           <div><i>Details</i></div>
           <ul>
-            <li>Number of couples: ${vis.arrOfRacialCategorySum[groupNum-1]} </li>
-           ${couplesStillTogether()}
+            <li>Age: ${d.ppage} </li>
+            <li>Race: ${vis.subjectRace(d)} </li>
+            <li>Partner's Race: ${vis.partnerRace(d)} </li>          
           </ul>
         `);
       }

@@ -1,0 +1,57 @@
+/* 
+IMPORTANT: CSS styles across files can overwrite each other!
+Make sure to use specific IDs/classes.
+*/
+:root {
+    /* COLORS */
+    --axis_line_stroke_color: black;
+    --tooltip_bckg: white;
+    --tooltip_border_color: #ddd;
+    --font_color: black;
+    --interacial_color: red;
+    --same_race_color: blue;
+    --stroke_color: black;
+    /* border */
+    --border-color: purple;
+
+    /* text */
+    /* --axis_title_font_size: 1em; */
+    --labels_font_size: 0.8em;
+    --shape_stroke_width: 2px;
+}
+
+/* The row the barchart and the circles chart are on*/
+#row-for-views {
+    height: 40vh;
+}
+/* The columns in row the views (bubble chart and bar chart) will be on */
+.column {
+    width: 40vw;
+    float: left;
+  }
+
+/* column with the barchart view */
+.column1 {
+    max-width: 30vw;
+    height: 100%;
+    white-space:nowrap;
+
+}
+  
+/* the column the circles are in */
+.column2 {
+    width:30vw;
+    height: 80%;
+    margin-left: 4em;
+    text-align: center;
+    align-items: center;
+    border: solid 2px var(--border-color);
+
+}
+
+
+#DotMatrixChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
