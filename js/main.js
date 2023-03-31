@@ -1,12 +1,12 @@
 
 const MEETING_METHODS = {
-  0: "Education",
-  1: "Professional Setting",
-  2: "Social Setting",
-  3: "Internet Website",
-  4: "Online Social Networking",
-  5: "Abroad",
-  6: "Mutual Connection",
+    0: "Education",
+    1: "Professional Setting",
+    2: "Social Setting",
+    3: "Internet Website",
+    4: "Online Social Networking",
+    5: "Abroad",
+    6: "Mutual Connection",
 };
 
 /**
@@ -14,43 +14,31 @@ const MEETING_METHODS = {
  */
 let treeMap, data;
 d3.csv("data/dating.csv").then((_data) => {
-  data = _data;
-  // Convert necessary columns to numerical values
-  data.forEach((d) => {
-    //stub
-  });
+    data = _data;
+    // Convert necessary columns to numerical values
+    data.forEach((d) => {
+        //Global data processing stub
+    });
 
-  // Global data processing
+    // initialize visualizations
+    const beeswarm = new BeeswarmPlot(
+        {
+            parentElement: "#beeswarm-plot",
+        },
+        data
+    );
 
-  // initialize visualizations
-  const beeswarm = new BeeswarmPlot(
-    {
-      parentElement: "#beeswarm-plot",
-    },
-    data
-  );
+    const treeMap = new TreeMap(
+        {
+            parentElement: "#tree-map",
+        },
+        data
+    );
 
-  const barChart = new BarChart(
-    {
-      parentElement: "#bar-chart",
-    },
-    data
-  );
+    const heatMap = new HeatMap({
+        parentElement: '#heat-map',
+    }, data);
 
-  const heatMap = new HeatMap(
-    {
-      parentElement: "#heat-map",
-    },
-    data
-  );
-
-  treeMap = new TreeMap(
-    {
-      parentElement: "#tree-map",
-    },
-    data
-  );
-});
 
 // https://stackoverflow.com/questions/24193593/d3-how-to-change-dataset-based-on-drop-down-box-selection
 // event listeners for the dropdown
@@ -58,19 +46,22 @@ d3.csv("data/dating.csv").then((_data) => {
 // the flag ensures that we don't re-filter the data if we don't need to
 let currSelection;
 d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
-  // Filter data accordingly and update vis
+    // Filter data accordingly and update vis
 
-  if (currSelection !== e.target.value) {
-    currSelection = e.target.value;
-    if (currSelection == "all") {
-      treeMap.data = data;
-    } else {
-      //   console.log(d.ppagecat);
-      treeMap.data = data.filter(function (d) {
-        // console.log(d.ppagecat === "75+" ? d.ppagecat : "nope");
-        return d.ppagecat === currSelection;
-      });
+    if (currSelection !== e.target.value) {
+        currSelection = e.target.value;
+        if (currSelection == "all") {
+            treeMap.data = data;
+            heatMap.data = data;
+        } else {
+            treeMap.data = data.filter(function (d) {
+                return d.ppagecat === currSelection;
+            });
+            heatMap.data = data.filter(d => d.ppagecat === currSelection);
+        }
+        treeMap.updateVis();
+        heatMap.updateVis();
     }
-    treeMap.updateVis();
-  }
+});
+
 });

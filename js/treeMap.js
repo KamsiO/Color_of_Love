@@ -9,9 +9,10 @@ class TreeMap {
     // Configuration object with defaults
     this.config = {
       parentElement: _config.parentElement,
-      containerWidth: _config.containerWidth || 600,
+      containerWidth: _config.containerWidth || 500,
       containerHeight: _config.containerHeight || 300,
-      margin: _config.margin || { top: 25, right: 220, bottom: 20, left: 40 },
+      tooltipPadding: 15,
+      margin: _config.margin || { top: 50, right: 175, bottom: 20, left: 40 },
     };
     this.data = _data;
 
@@ -44,6 +45,7 @@ class TreeMap {
 
     // Colour scale for categories
     vis.colourScale = d3.scaleOrdinal(d3.schemeCategory10);
+
     // SVG Group containing the actual chart; D3 margin convention
     vis.chart = vis.svg
       .append("g")
@@ -51,7 +53,13 @@ class TreeMap {
         "transform",
         `translate(${vis.config.margin.left},${vis.config.margin.top})`
       );
-    vis.title = vis.chart.append("text").text("How people met their partners");
+
+    vis.title = vis.chart.append("text")
+      .attr('class', 'title')
+      .attr('x', -5)
+      .attr('y', -15)
+      .text("How People Met Their Partners");
+    
     // doing the scale when initializing the visualization becuase it needs to be static
     vis.colourScale.domain(Object.keys(MEETING_METHODS));
     vis.legend = vis.chart
@@ -59,27 +67,27 @@ class TreeMap {
       .attr("transform", `translate(${vis.config.margin.left * 6.5},-50)`)
       .attr("class", "tree-map-legend");
 
-    // https://d3-graph-gallery.com/graph/custom_legend.html
-    // Add one dot in the legend for each name.
     vis.footnote = vis.chart
       .append("text")
-      .attr("transform", `translate(0,${vis.height + 10 })`)
-      .attr("class", "tree-map-footnote")
+      .attr("transform", `translate(-5,${vis.height + 15})`)
+      .attr("class", "subtitle")
       .attr("font-size", "11px")
       .text(
-        "*categories in the legend but not in the map means that there are no particpants that met like that"
+        "*Categories not shown in the map are not represented by the current age group"
       );
 
+    // https://d3-graph-gallery.com/graph/custom_legend.html
+    // Add one dot in the legend for each name.
     vis.legend
       .selectAll("mydots")
       .data(Object.values(MEETING_METHODS))
       .enter()
       .append("circle")
-      .attr("cx", 100)
+      .attr("cx", 45)
       .attr("cy", function (d, i) {
-        return 100 + i * 25;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .attr("r", 7)
+        return 90 + i * 25;
+      }) // 90 is where the first dot appears. 25 is the distance between dots
+      .attr("r", 6)
       .style("fill", function (d) {
         return vis.colourScale(d);
       });
@@ -90,11 +98,12 @@ class TreeMap {
       .data(Object.keys(MEETING_METHODS))
       .enter()
       .append("text")
-      .attr("x", 120)
+      .attr("x", 60)
       .attr("y", function (d, i) {
-        return 100 + i * 25;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .style("fill", "black")
+        return 90 + i * 25;
+      }) // 90 is where the first dot appears. 25 is the distance between dots
+      .style("fill", "rgb(90,90,90")
+      .style("font-size", "12px")
       .text(function (d) {
         return MEETING_METHODS[d];
       })
@@ -207,7 +216,6 @@ class TreeMap {
       });
     }
 
-    console.log(vis.nodes);
     vis.renderVis();
   }
 
@@ -252,24 +260,40 @@ class TreeMap {
       .style("fill", function (d) {
         return vis.colourScale(d["id"]);
       })
-      .on("mouseover", function (e, d) {
-        // hovering over a treemap node shows the number of victims belonging to that group
-        d3.select("#tree-map-tooltip")
-          .style("display", "block")
-          .style("position", "absolute")
-          .style("background-color", "white")
-          .style("font-family", "arial")
-          .style("left", `${e.pageX + 10}px`)
-          .style("top", `${e.pageY + 10}px`)
+      // .on("mouseover", function (e, d) {
+      //   // hovering over a treemap node shows the number of respondents belonging to that group
+      //   d3.select("#tree-map-tooltip")
+      //     .style("display", "block")
+      //     .style("position", "absolute")
+      //     .style("background-color", "white")
+      //     .style("font-family", "arial")
+      //     .style("left", `${e.pageX + 10}px`)
+      //     .style("top", `${e.pageY + 10}px`)
+      //     .html(
+      //       `<div>
+      //           <p>How they met: ${d["id"]}</p>
+      //           <p>Count: ${d["value"]}</p>
+      //       </div>`
+      //     );
+      // })
+      // .on("mouseleave", function (e, d) {
+      //   d3.select("#tree-map-tooltip").style("display", "none");
+      // });
+      .on('mouseover', (event, d) => {
+        d3.select('#tooltip')
+          .style('display', 'block')
           .html(
-            `<div>
-                <p>How they met: ${d["id"]}</p>
-                <p>Count: ${d["value"]}</p>
-            </div>`
+            `<div><b>How they met:</b> ${d["id"]}</div>
+             <div><b>Count:</b> ${d["value"]}</div>`
           );
       })
-      .on("mouseleave", function (e, d) {
-        d3.select("#tree-map-tooltip").style("display", "none");
+      .on('mousemove', (event) => {
+        d3.select('#tooltip')
+          .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
+          .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
+      })
+      .on('mouseleave', () => {
+        d3.select('#tooltip').style('display', 'none');
       });
   }
 }
