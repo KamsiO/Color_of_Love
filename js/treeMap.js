@@ -9,9 +9,9 @@ class TreeMap {
     // Configuration object with defaults
     this.config = {
       parentElement: _config.parentElement,
-      containerWidth: _config.containerWidth || 400,
+      containerWidth: _config.containerWidth || 600,
       containerHeight: _config.containerHeight || 300,
-      margin: _config.margin || { top: 25, right: 20, bottom: 20, left: 40 },
+      margin: _config.margin || { top: 25, right: 220, bottom: 20, left: 40 },
     };
     this.data = _data;
 
@@ -51,7 +51,55 @@ class TreeMap {
         "transform",
         `translate(${vis.config.margin.left},${vis.config.margin.top})`
       );
+    vis.title = vis.chart.append("text").text("How people met their partners");
+    // doing the scale when initializing the visualization becuase it needs to be static
+    vis.colourScale.domain(Object.keys(MEETING_METHODS));
+    vis.legend = vis.chart
+      .append("g")
+      .attr("transform", `translate(${vis.config.margin.left * 6.5},-50)`)
+      .attr("class", "tree-map-legend");
 
+    // https://d3-graph-gallery.com/graph/custom_legend.html
+    // Add one dot in the legend for each name.
+    vis.footnote = vis.chart
+      .append("text")
+      .attr("transform", `translate(0,${vis.height + 10 })`)
+      .attr("class", "tree-map-footnote")
+      .attr("font-size", "11px")
+      .text(
+        "*categories in the legend but not in the map means that there are no particpants that met like that"
+      );
+
+    vis.legend
+      .selectAll("mydots")
+      .data(Object.values(MEETING_METHODS))
+      .enter()
+      .append("circle")
+      .attr("cx", 100)
+      .attr("cy", function (d, i) {
+        return 100 + i * 25;
+      }) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("r", 7)
+      .style("fill", function (d) {
+        return vis.colourScale(d);
+      });
+
+    // Add one dot in the legend for each name.
+    vis.legend
+      .selectAll("mylabels")
+      .data(Object.keys(MEETING_METHODS))
+      .enter()
+      .append("text")
+      .attr("x", 120)
+      .attr("y", function (d, i) {
+        return 100 + i * 25;
+      }) // 100 is where the first dot appears. 25 is the distance between dots
+      .style("fill", "black")
+      .text(function (d) {
+        return MEETING_METHODS[d];
+      })
+      .attr("text-anchor", "left")
+      .style("alignment-baseline", "middle");
     this.updateVis();
   }
 
@@ -61,8 +109,6 @@ class TreeMap {
   updateVis() {
     let vis = this;
     // education
-    console.log(vis.data);
-
     const educationDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
@@ -149,8 +195,6 @@ class TreeMap {
       ["Mutual Connection", mutualConnectionDataMap],
     ]);
 
-    vis.colourScale.domain(Object.keys(MEETING_METHODS));
-
     vis.nodes = [];
     vis.nodes.push({ name: "root", parent: null, value: null });
     // https://www.hackinbits.com/articles/js/how-to-iterate-a-map-in-javascript---map-part-2
@@ -205,7 +249,9 @@ class TreeMap {
       .attr("height", function (d) {
         return d["y1"] - d["y0"];
       })
-      .style("fill", d => vis.colourScale(d["id"]))
+      .style("fill", function (d) {
+        return vis.colourScale(d["id"]);
+      })
       .on("mouseover", function (e, d) {
         // hovering over a treemap node shows the number of victims belonging to that group
         d3.select("#tree-map-tooltip")

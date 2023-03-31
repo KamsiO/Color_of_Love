@@ -4,7 +4,7 @@ const MEETING_METHODS = {
   1: "Professional Setting",
   2: "Social Setting",
   3: "Internet Website",
-  4: "Internet Website",
+  4: "Online Social Networking",
   5: "Abroad",
   6: "Mutual Connection",
 };
