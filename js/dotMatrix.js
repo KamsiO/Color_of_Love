@@ -92,7 +92,7 @@ class DotMatrix {
       // intialize the scales
         // Set the ranges
       vis.xScale = d3.scaleLinear().range([vis.margin.left, vis.width]);
-      vis.yScale = d3.scaleLinear().range([ vis.height, vis.margin.bottom]);
+      vis.yScale = d3.scaleLinear().range([ vis.height, vis.margin.top]);
 
       vis.xAxis = d3.axisBottom(vis.xScale)
 
@@ -215,16 +215,20 @@ class DotMatrix {
 
         vis.circleArray = vis.groups.selectAll(".circleArray")
         .data(vis.groupedDataArr, d => {
-          console.log(d[1]);
+          // console.log(d[1]);
           return d[1];})
         // .join('g')
-          // .append('g')
+        //   .selectAll(".circleArray")
+        //     .data(d => d[1])
+        //     // .append('g')
           .join("circle")
           .attr("class", "circleArray")
-          .style("fill", d => getInterracialGroupColor(d))
+          .style("fill", d => {
+            // console.log(d);
+            return vis.getInterracialGroupColor(d[1]);})
           .attr("r", vis.dotRadius)
-          .attr("cx", (d,index) => xScale(index * 2 * vis.dotRadius))
-          .attr("cy",  (d,index) => yScale(index * 2 * vis.dotRadius));
+          .attr("cx", (d,index) => index * 2 * vis.dotRadius)
+          .attr("cy",  (d,index) => (index * 2 * vis.dotRadius));
 
 
       // vis.renderCircles();
@@ -246,33 +250,35 @@ class DotMatrix {
       // let nativeAmericanAndOtherGroupFlag = false;
       // let AsianAndWhiteGroupFlag = false;
 
-      if (vis.subjectRace(d) == "White" && partnerRace(d) == "Black or African American" || 
-              partnerRace(d) == "White" && subjectRace(d) == "Black or African American"){
+      if (vis.subjectRace(d) == "White" && vis.partnerRace(d) == "Black or African American" || 
+              vis.partnerRace(d) == "White" && vis.subjectRace(d) == "Black or African American"){
               return vis.colorScale(vis.raceCategories[0]);
-          } else if(subjectRace(d) == "Black or African American" && partnerRace(d) == "American Indian, Aleut, or Eskimo" || 
-            partnerRace(d) == "Black or African American" && subjectRace(d) == "American Indian, Aleut, or Eskimo"){
+          } else if(vis.subjectRace(d) == "Black or African American" && vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" || 
+            vis.partnerRace(d) == "Black or African American" && vis.subjectRace(d) == "American Indian, Aleut, or Eskimo"){
               return vis.colorScale(vis.raceCategories[1]);
-          } else if(subjectRace(d) == "American Indian, Aleut, or Eskimo" && partnerRace(d) == "Asian or Pacific Islander" || 
-            partnerRace(d) == "American Indian, Aleut, or Eskimo" && subjectRace(d) == "Asian or Pacific Islander"){
+          } else if(vis.subjectRace(d) == "American Indian, Aleut, or Eskimo" && vis.partnerRace(d) == "Asian or Pacific Islander" || 
+            vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" && vis.subjectRace(d) == "Asian or Pacific Islander"){
               return vis.colorScale(vis.raceCategories[2]);
-          } else if(subjectRace(d) == "Asian or Pacific Islander" && partnerRace(d) == "Other (please specify)" || 
-            partnerRace(d) == "Asian or Pacific Islander" && subjectRace(d) == "Other (please specify)"){
+          } else if(vis.subjectRace(d) == "Asian or Pacific Islander" && vis.partnerRace(d) == "Other (please specify)" || 
+            vis.partnerRace(d) == "Asian or Pacific Islander" && vis.subjectRace(d) == "Other (please specify)"){
               return vis.colorScale(vis.raceCategories[3]);
-          } else if(subjectRace(d) == "White" && partnerRace(d) == "Other (please specify)" || 
-            partnerRace(d) == "White" && subjectRace(d) == "Other (please specify)"){
+          } else if(vis.subjectRace(d) == "White" && vis.partnerRace(d) == "Other (please specify)" || 
+            vis.partnerRace(d) == "White" && vis.subjectRace(d) == "Other (please specify)"){
               return vis.colorScale(vis.raceCategories[4]);
-          } else if(subjectRace(d) == "Black or African American" && partnerRace(d) == "Asian or Pacific Islander" || 
-            partnerRace(d) == "Black or African American" && subjectRace(d) == "Asian or Pacific Islander"){
+          } else if(vis.subjectRace(d) == "Black or African American" && vis.partnerRace(d) == "Asian or Pacific Islander" || 
+            vis.partnerRace(d) == "Black or African American" && vis.subjectRace(d) == "Asian or Pacific Islander"){
               return vis.colorScale(vis.raceCategories[5]);
-          } else if(subjectRace(d) == "Black or African American" && partnerRace(d) == "Other (please specify)" || 
-            partnerRace(d) == "Black or African American" && subjectRace(d) == "Other (please specify)"){
+          } else if(vis.subjectRace(d) == "Black or African American" && vis.partnerRace(d) == "Other (please specify)" || 
+            vis.partnerRace(d) == "Black or African American" && vis.subjectRace(d) == "Other (please specify)"){
               return vis.colorScale(vis.raceCategories[6]);
-          } else if(subjectRace(d) == "American Indian, Aleut, or Eskimo" && partnerRace(d) == "Other (please specify)" || 
-            partnerRace(d) == "American Indian, Aleut, or Eskimo" && subjectRace(d) == "Other (please specify)"){
+          } else if(vis.subjectRace(d) == "American Indian, Aleut, or Eskimo" && vis.partnerRace(d) == "Other (please specify)" || 
+            vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" && vis.subjectRace(d) == "Other (please specify)"){
               return vis.colorScale(vis.raceCategories[7]);
-          } else if(subjectRace(d) == "Asian or Pacific Islander" && partnerRace(d) == "White" || 
-            partnerRace(d) == "Asian or Pacific Islander" && subjectRace(d) == "White"){
+          } else if(vis.subjectRace(d) == "Asian or Pacific Islander" && vis.partnerRace(d) == "White" || 
+            vis.partnerRace(d) == "Asian or Pacific Islander" && vis.subjectRace(d) == "White"){
               return vis.colorScale(vis.raceCategories[8]);
+          } else {
+            return "red";
           }
     }
 
