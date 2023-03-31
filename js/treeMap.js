@@ -5,16 +5,15 @@ class TreeMap {
    * @param {Object}
    * @param {Array}
    */
-  constructor(_config, _data, _dispatcher) {
+  constructor(_config, _data) {
     // Configuration object with defaults
     this.config = {
       parentElement: _config.parentElement,
-      containerWidth: _config.containerWidth || 260,
+      containerWidth: _config.containerWidth || 400,
       containerHeight: _config.containerHeight || 300,
       margin: _config.margin || { top: 25, right: 20, bottom: 20, left: 40 },
     };
     this.data = _data;
-    this.dispatcher = _dispatcher;
 
     this.initVis();
   }
