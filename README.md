@@ -1,6 +1,11 @@
 # D3 Project Starter Template
 
 Chi:
-    - got code for creating checkboxes for beeswarm legend: https://www.w3schools.com/tags/att_input_type_checkbox.asp
-    - how to create and style circles: https://www.w3schools.com/howto/howto_css_circles.asp
-    - used code on how to make the force simulation: https://www.chartfleau.com/tutorials/d3swarm 
+    - credit for how to use the iterator on a map keys: https://stackoverflow.com/a/55660647
+    - credit for how to turn maps to array: https://stackoverflow.com/a/56795800
+    - code for the barchart is inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
+
+
+
+
+

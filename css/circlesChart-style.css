@@ -10,7 +10,6 @@ Make sure to use specific IDs/classes.
     --font_color: black;
     --interacial_color: red;
     --same_race_color: blue;
-    --married_color: transparent;
     --stroke_color: black;
     /* border */
     --border-color: purple;
@@ -27,11 +26,29 @@ Make sure to use specific IDs/classes.
     height: 5vw;
 }
 
-#c-chart-title-col{
+#circle-chart-title-col{
     width: 50%;
     float: right;
     height: 100%;
     /* padding-left: 4em; */
+}
+#bar-chart-title-col{
+    width: 50%;
+    display: flex;
+    float: left;
+    height: 100%;
+    /* padding-left: 4em; */
+}
+
+#bar-chart-legend {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    float: left;
+    /* height: ; */
+    /* vertical-align: middle; */
+    padding-top: 20px;
+    
 }
 
 /* h4 {
@@ -53,34 +70,24 @@ Make sure to use specific IDs/classes.
     height: 5px;
     width: 5px;
     border: 1px solid var(--stroke_color);
-    /* stroke-width: var(--shape_stroke_width); */
     border-radius: 50%;
     display: inline-block;
 }
 
 #interracial {
     background-color: var(--interacial_color);
+    margin-right: 4px;
 }
 
 #same_race {
     background-color: var(--same_race_color);
-}
-
-#married {
-    background-color: var(--married_color);
+    margin-right: 4px;
 }
 
 label {
     font-size: var(--labels_font_size);
     margin-right: 2em;
-
-    /* margin-top: -20px; */
 }
-
-/* input {
-    width: 10px;
-    padding-top: 20px;
-} */
 
 
 /* Axes */
@@ -139,26 +146,28 @@ label {
     padding-left: 20px;
 } 
 
-
+/* The row the barchart and the circles chart are on*/
+#row-for-views {
+    height: 40vh;
+}
 /* The columns in row the views (bubble chart and bar chart) will be on */
 .column {
     width: 40vw;
     float: left;
-
   }
 
 /* column with the barchart view */
 .column1 {
     max-width: 30vw;
-    max-height: 40v;
+    height: 100%;
     white-space:nowrap;
 
 }
   
 /* the column the circles are in */
 .column2 {
-    width:40vw;
-    max-height: 40vh;
+    width:30vw;
+    height: 80%;
     margin-left: 4em;
     text-align: center;
     align-items: center;

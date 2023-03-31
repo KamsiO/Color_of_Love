@@ -12,14 +12,18 @@ d3.csv('data/dating.csv').then(_data => {
     data = _data;
     // Convert necessary columns to numerical values
     data.forEach(d => {
-
+        if(d.w6_subject_race == d.w6_q6b){
+            d.interracial_5cat = "no";
+        } else {
+            d.interracial_5cat = "yes";
+        }
     });
 
     // Global data processing
 
     // initialize visualizations
-    circlesChart = new circlesChart({
-        parentElement: '#circles-chart-plot',
+    dotmatrix = new DotMatrix({
+        parentElement: '#DotMatrixChart',
     }, data);
 
     const barChart = new BarChart({
@@ -32,7 +36,7 @@ d3.csv('data/dating.csv').then(_data => {
 
     currcirclesChartMainCategory = 'Excellent';
     currcirclesChartSubCategory = 'no';
-    filtercirclesChartData();
+    filterDotMatrixChartData();
 });
 
 
@@ -41,12 +45,12 @@ d3.csv('data/dating.csv').then(_data => {
  * @param mainCategory the relationship ranking
  * @param subCategory bar clidked (interracial or same race)
  */
-function filtercirclesChartData(){
+function filterDotMatrixChartData(){
     console.log (currcirclesChartMainCategory);
     console.log(currcirclesChartSubCategory);
     let filteredData = data.filter(d => d.Q34 == currcirclesChartMainCategory && d.interracial_5cat == currcirclesChartSubCategory);
-    circlesChart.data = filteredData;
+    dotmatrix.highlightedData = filteredData;
     console.log(filteredData);
-    circlesChart.updateVis();
+    dotmatrix.updateVis();
 
 }

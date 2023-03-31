@@ -42,19 +42,14 @@ class BarChart {
         .paddingInner(2.5);
 
       vis.yScale = d3.scaleLinear()
-        .range([vis.height, 0]);     
-
-      // color palette = one color per subgroup
-      // vis.colorScale = d3.scaleOrdinal()
-      // .domain(vis.subgroupsCategory)
-      // .range(['#e41a1c','#377eb8'])
+        .range([vis.height, 0]);    
          
 
       // intialize the axis
       vis.xAxis = d3.axisBottom(vis.xScale)
         .tickSizeOuter(0);
 
-        vis.yAxis = d3.axisLeft(vis.yScale)
+      vis.yAxis = d3.axisLeft(vis.yScale)
         .ticks(6)
         .tickSizeOuter(0);
 
@@ -108,7 +103,7 @@ class BarChart {
 
       // keeps track of how many points were plotted
       vis.pointsPlotted = 0;
-      vis.totalPointsToPlot = 0;
+      vis.totalPointsToPlot = vis.data.length;
       
       // filters out data where there was no answer or someone refused to answer
       vis.preprocessData();
@@ -118,7 +113,7 @@ class BarChart {
       vis.groupedData = d3.rollup(vis.data, v => v.length, d => d.Q34, d => d.interracial_5cat);
       vis.groupedData.delete('');
       vis.groupedData.delete("Refused");
-      // console.log(vis.groupedData);
+      console.log(vis.groupedData);
 
       vis.maxOccurenceCount = function (groupedData){
 
@@ -130,18 +125,15 @@ class BarChart {
         while (!nextMapValues.done) {
           let currMax = 0;
           let innerMap = nextMapValues.value;
-
-          // turn map to array: https://stackoverflow.com/a/56795800
+          // credit for turning map to array: https://stackoverflow.com/a/56795800
           let innerMapAsArray = Array.from(innerMap, ([name, value]) => ({ name, value }));
           
-          // console.log(innerMapAsArray);
+          console.log(innerMapAsArray);
           // console.log(innerMapAsArray[0]);
           // console.log(innerMapAsArray[0].name);
 
           currMax = Math.max(innerMapAsArray[0].value, innerMapAsArray[1].value);
-          
-          // todo: fix this number
-          vis.totalPointsToPlot += currMax;
+
           if( currMax > max_num) {
             max_num = currMax;
           }
@@ -205,9 +197,6 @@ class BarChart {
               .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
               .attr('y', d => vis.yScale(d[1]))
               .attr('width', d => {
-                // return (1/12) * vis.x
-                // console.log(vis.xScale.bandwidth());
-                // console.log(d);
                 return vis.xSubgroupScale.bandwidth()/10;
               })
               .attr('height', d => vis.height -  vis.yScale(d[1]))
@@ -218,6 +207,14 @@ class BarChart {
                   return vis.interracialCoupleColor;
                 }
               });
+              // .attr('class', (d, index) => {
+              //   if(index == 0) {
+              //     return `same_race`;
+              //   } else {
+              //     return `interacial`;
+              //   }
+              // });
+
 
       // add text explaining how many points were used.
       document.getElementById("num-of-points-plotted").innerHTML = `${vis.pointsPlotted}/${vis.totalPointsToPlot} data points were plotted`;
@@ -240,7 +237,7 @@ class BarChart {
           currcirclesChartMainCategory = d[0];
           console.log(currcirclesChartMainCategory);
 
-          filtercirclesChartData();
+          filterDotMatrixChartData();
         });
     
       // Update the axes because the underlying scales might have changed

@@ -18,32 +18,35 @@
     <p id="overview">*add description here*</p>
     <div>
         <div class="row">
-            <p id="num-of-points-plotted"></p>
-            
-            <!-- Legend for Quality of Relationship:  -->
-            <span class="dot" id="interracial"></span>
-            <label class="circles-label" for="interracial">Same Race</label> 
-            <span class="dot" id="same_race"></span>
-            <label class="circles-label" for="same_race">Interracial</label> 
-            <!-- <span class="dot" id="married"></span>
-            <label class="circles-label" for="married">Outlined points are a person that is married</label> <br> -->
-   
+            <p id="num-of-points-plotted"></p>   
        </div>
    
        <div id="circle-chart-title-row" class="row">
-            <div>
+            <div id="bar-chart-title-col">
+                <h4>Relationship Rankings</h4>
             </div>
-            <div id="c-chart-title-col">
+            <div id="circle-chart-title-col">
                 <h4>Racial Combinations of the selected bar</h4>
             </div>
         </div>
-        <div class="row">
+        <div id="row-for-views" class="row">
            <div id="bar-chart" class="column column1">
                <svg id="bar-chart-plot"  class="barChart-plot-container margin-top"></svg>
-           </div>
+               <div id="bar-chart-legend">
+                <!-- Legend for Quality of Relationship:  -->
+                <span class="dot" id="interracial"></span>
+                <label class="circles-label" for="interracial">Same Race</label> 
+                <span class="dot" id="same_race"></span>
+                <label class="circles-label" for="same_race">Interracial</label> 
+                <!-- <span class="dot" id="married"></span>
+                <label class="circles-label" for="married">Outlined points are a person that is married</label> <br> -->
+            </div>
+            <svg id="#DotMatrixChart"  class="dot-chart"></svg>
 
-           <div class="column column2">
-               <!-- <svg id="circles-chart-plot"  class="circles-chart-plot-container margin-top"></svg> -->
+        </div>
+
+           <!-- <div class="column column2">
+               <svg id="circles-chart-plot"  class="circles-chart-plot-container margin-top"></svg>
                <div id= "circle-row-1"  class="circ-rows">
                     <div id="circle-col-1" class="cols">
                         <div>
@@ -125,7 +128,7 @@
                       
 
 
-           </div> 
+           </div>  -->
        </div>
     </div>
     
@@ -135,7 +138,8 @@
 
     <!-- JavaScript links -->
     <script src="js/d3.v6.min.js"></script>
-    <script src="js/circlesChart.js"></script>
+    <script src="js/dotMatrix.js"></script>
+    <!-- <script src="js/circlesChart.js"></script> -->
     <script src="js/barChart.js"></script>
     <script src="js/heatMap.js"></script>
     <script src="js/main.js"></script>

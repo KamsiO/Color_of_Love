@@ -22,7 +22,7 @@ class circlesChart {
     initVis() {
       let vis = this;
       vis.minCircSize = 5;
-      vis.maxCircSize = 100;
+      vis.maxCircSize = 20;
   
       // Calculate inner chart size. Margin specifies the space around the actual chart.
       vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
@@ -35,7 +35,7 @@ class circlesChart {
   
       // intialize the scales
       vis.luminanceScale = d3.scaleLinear()
-        .range([0.1,1]);
+        .range([0.01,1]);
 
       vis.colorScale = d3.scaleOrdinal()
         .range(d3.schemeCategory10)
