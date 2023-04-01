@@ -15,6 +15,7 @@ class BarChart {
       }
       
       this.data = _data;
+      this.highlightedData = [];
 
       this.initVis();
     }
@@ -113,7 +114,7 @@ class BarChart {
       vis.groupedData = d3.rollup(vis.data, v => v.length, d => d.Q34, d => d.interracial_5cat);
       vis.groupedData.delete('');
       vis.groupedData.delete("Refused");
-      console.log(vis.groupedData);
+      // console.log(vis.groupedData);
 
       vis.maxOccurenceCount = function (groupedData){
 
@@ -128,7 +129,7 @@ class BarChart {
           // credit for turning map to array: https://stackoverflow.com/a/56795800
           let innerMapAsArray = Array.from(innerMap, ([name, value]) => ({ name, value }));
           
-          console.log(innerMapAsArray);
+          // console.log(innerMapAsArray);
           // console.log(innerMapAsArray[0]);
           // console.log(innerMapAsArray[0].name);
 
@@ -154,7 +155,6 @@ class BarChart {
       vis.xScale.domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
       vis.yScale.domain([0,vis.maxOccurenceCount(vis.groupedData)]);
 
-      console.log(this.yScale(23));
       vis.renderVis();
       
     }
@@ -163,6 +163,7 @@ class BarChart {
     renderVis() {
       let vis = this;
       vis.specificBarClicked = '';
+      vis.highlightedDataColor = "black";
 
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const bars = vis.chart.selectAll('.bars')
@@ -206,14 +207,13 @@ class BarChart {
                 } else {
                   return vis.interracialCoupleColor;
                 }
+              })
+              .attr('stroke', d => {
+                if (vis.highlightedData != 0) {
+                  return vis.highlightedDataColor;
+                }
               });
-              // .attr('class', (d, index) => {
-              //   if(index == 0) {
-              //     return `same_race`;
-              //   } else {
-              //     return `interacial`;
-              //   }
-              // });
+            
 
 
       // add text explaining how many points were used.
@@ -235,7 +235,7 @@ class BarChart {
       bars
         .on('click', function(event, d) {
           currcirclesChartMainCategory = d[0];
-          console.log(currcirclesChartMainCategory);
+          // console.log(currcirclesChartMainCategory);
 
           filterDotMatrixChartData();
         });

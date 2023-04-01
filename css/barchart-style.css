@@ -48,3 +48,47 @@ Make sure to use specific IDs/classes.
     width: 12px;
     shape-rendering: crispEdges;
   }
+
+  #bar-chart-title-col{
+    width: 50%;
+    display: flex;
+    float: left;
+    height: 100%;
+    /* padding-left: 4em; */
+}
+
+/* legend */
+
+
+.dot {
+  height: 5px;
+  width: 5px;
+  border: 1px solid var(--stroke_color);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+#interracial {
+  background-color: var(--interacial_color);
+  margin-right: 4px;
+}
+
+#same_race {
+  background-color: var(--same_race_color);
+  margin-right: 4px;
+}
+
+label {
+  font-size: var(--labels_font_size);
+  margin-right: 2em;
+}
+
+#bar-chart-legend {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    float: left;
+    /* height: ; */
+    /* vertical-align: middle; */
+    padding-top: 20px;  
+}

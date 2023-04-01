@@ -2,6 +2,8 @@ let varForFilteringcirclesChart = "";
 let currcirclesChartMainCategory = ""; // the relationship ranking
 let currcirclesChartSubCategory = ""; // the relationship ranking
 let data;
+let relationshipRanking = d => d.Q34;
+let whetherInterracialOfSameRace = d => d.interracial_5cat;
 
 
 
@@ -26,7 +28,7 @@ d3.csv('data/dating.csv').then(_data => {
         parentElement: '#DotMatrixChart',
     }, data);
 
-    const barChart = new BarChart({
+    barChart = new BarChart({
         parentElement: '#bar-chart-plot',
     }, data);
 
@@ -34,9 +36,9 @@ d3.csv('data/dating.csv').then(_data => {
         parentElement: '#heat-map',
     }, data);
 
-    currcirclesChartMainCategory = 'Excellent';
-    currcirclesChartSubCategory = 'no';
-    filterDotMatrixChartData();
+    // currcirclesChartMainCategory = 'Excellent';
+    // currcirclesChartSubCategory = 'no';
+    // filterDotMatrixChartData();
 });
 
 
@@ -46,11 +48,25 @@ d3.csv('data/dating.csv').then(_data => {
  * @param subCategory bar clidked (interracial or same race)
  */
 function filterDotMatrixChartData(){
-    console.log (currcirclesChartMainCategory);
-    console.log(currcirclesChartSubCategory);
-    let filteredData = data.filter(d => d.Q34 == currcirclesChartMainCategory && d.interracial_5cat == currcirclesChartSubCategory);
+    // console.log (currcirclesChartMainCategory);
+    // console.log(currcirclesChartSubCategory);
+    let filteredData = dotmatrix.sampledData.filter(d => relationshipRanking(d) == currcirclesChartMainCategory && whetherInterracialOfSameRace(d) == currcirclesChartSubCategory);
     dotmatrix.highlightedData = filteredData;
     // console.log(filteredData);
     dotmatrix.updateVis();
 
+}
+
+/**
+ * highlights a bar that corresponds to the dot (if available) when a button is clicked
+ * @param dotClicked is the dot that was clicked.
+ */
+function filterBarChartData(dotClicked) {
+    console.log(dotClicked);
+    let filteredData = dotmatrix.sampledData.filter(d => relationshipRanking(d) == dotClicked.Q34 && whetherInterracialOfSameRace(d) == dotClicked.interracial_5cat);
+
+    barChart.highlightedData = filteredData;
+    console.log(filteredData);
+    
+    barChart.updateVis();
 }
