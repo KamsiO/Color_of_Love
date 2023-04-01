@@ -50,7 +50,7 @@ function filterDotMatrixChartData(){
     console.log(currcirclesChartSubCategory);
     let filteredData = data.filter(d => d.Q34 == currcirclesChartMainCategory && d.interracial_5cat == currcirclesChartSubCategory);
     dotmatrix.highlightedData = filteredData;
-    console.log(filteredData);
+    // console.log(filteredData);
     dotmatrix.updateVis();
 
 }
