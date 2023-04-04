@@ -3,48 +3,43 @@ IMPORTANT: CSS styles across files can overwrite each other!
 Make sure to use specific IDs/classes.
 */
 :root {
+  --bar-axis_title_font_size: 0.8em;
+  --bar-axis_label_font_size: 0.8em;
+  --tooltip_bckg: white;
+  --tooltip_border_color: #ddd;
+  --font_color: black;
+  --interacial_color: red;
+  --same_race_color: blue;
+  --stroke_color: black;
+  --highlighted-color: black;
 
-  /*colors*/
-  /* --interacial_color: red;
-  --same_race_color: blue; */
+  /* border */
+  --border-color: purple;
 
   /* text */
-  --axis_title_font_size: 0.8em;
-  --axis_label_font_size: 0.8em;
-
-
+  --labels_font_size: 0.8em;
+  --shape_stroke_width: 2px;
 }
 
-/* .interacial {
-  fill: var(--interacial_color);
-}
-
-.same_race {
-  fill: var(--same_race_color);
-} */
-
-  /* Axes */
-
-.axis path,
-.axis line {
+.bar-axis path,
+.bar-axis line {
   fill: none;
   stroke: #333;
   shape-rendering: crispEdges;
 }
 
-.axis text{
+.bar-axis text{
   font-family: sans-serif;
-  font-size: var(--axis_label_font_size);
+  font-size: var(--bar-axis_label_font_size);
 }
 
-.axis-title{
+.bar-axis-title{
   font-family: sans-serif;
-  font-size: var(--axis_title_font_size);
+  font-size: var(--bar-axis_title_font_size);
   fill: var(--font_color);
 
 }
 .bar {
-    /* fill: steelblue; */
     width: 12px;
     shape-rendering: crispEdges;
   }
@@ -54,13 +49,25 @@ Make sure to use specific IDs/classes.
     display: flex;
     float: left;
     height: 100%;
-    /* padding-left: 4em; */
 }
+
+.higlighted-bar {
+  stroke: var(--highlighted-color);
+  stroke-width: 5px;
+}
+
 
 /* legend */
 
+#bar-chart-legend {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  float: left;
+  padding-top: 20px;  
+}
 
-.dot {
+.barChart-legend-dot {
   height: 5px;
   width: 5px;
   border: 1px solid var(--stroke_color);
@@ -78,17 +85,8 @@ Make sure to use specific IDs/classes.
   margin-right: 4px;
 }
 
-label {
+.circles-label {
   font-size: var(--labels_font_size);
   margin-right: 2em;
 }
 
-#bar-chart-legend {
-    width: 50%;
-    display: flex;
-    align-items: center;
-    float: left;
-    /* height: ; */
-    /* vertical-align: middle; */
-    padding-top: 20px;  
-}

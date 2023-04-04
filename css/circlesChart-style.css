@@ -20,13 +20,13 @@ Make sure to use specific IDs/classes.
     --shape_stroke_width: 2px;
 }
 
-#circle-chart-title-row {
+#dotMatrix-chart-title-row {
     text-align: center;
     width: 75vw;
     height: 5vw;
 }
 
-#circle-chart-title-col{
+#dotMatrix-chart-title-col{
     width: 50%;
     float: right;
     height: 100%;

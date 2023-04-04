@@ -24,55 +24,31 @@ class DotMatrix {
     sampleData() {
       let vis = this;
       // code for sampling data gotten from: https://stackoverflow.com/a/38571132
-      let samplePercent = 0.25;
+      let samplePercent = 0.20;
       let numOfSampledData = samplePercent * vis.data.length;
       const shuffled = vis.data.sort(() => 0.5 - Math.random());
       // Get sub-array of first n elements after shuffled
       vis.sampledData = shuffled.slice(0, numOfSampledData);
-  
+      // add text explaining how many points were plotted in the dot chart
+      document.getElementById("num-of-points-plotted").innerHTML = `${numOfSampledData}/${vis.data.length} data points were plotted in the dot-matrix`;
+
     }
     
     initVis() {
       let vis = this;
-      // vis.minCircSize = 5;
-      // vis.maxCircSize = 20;
-      
+
       vis.countOfCouplesStillTogether = 0;
-
-      // sums of how many couples fall into each category
-      vis.whiteAndBlackSum = 0;
-      vis.blackAndNativeAmericanSum = 0;
-      vis.nativeAmericanAndAsianSum = 0;
-      vis.AsianAndOtherSum = 0;
-      vis.WhiteAndOtherSum = 0;
-      vis.BlackAndAsianSum = 0;
-      vis.BlackAndOtherSum = 0;
-      vis.NativeAmericanAndOtherSum = 0;
-      vis.AsianAndWhiteSum = 0;
-
-      // stores the highest number of couples still together amongst all the race groupings
-      vis.maxCountOfThoseStillTogether = 0;
-
-
       vis.dotRadius = 5;
       vis.numOfCategories = 9;
       vis.noOfCirclesInARow = 45;
 
-      vis.uniqueGroups = ['apple'];
-      vis.maxNoOfLinesInGroup = 100;
-
-      vis.numberOfLines = vis.maxNoOfLinesInGroup * vis.uniqueGroups.length;
-
+      //padding around the dots
       vis.padding = 5;
       vis.dotPaddingLeft = vis.padding;
       vis.dotPaddingRight = vis.padding;
       vis.dotPaddingTop = vis.padding;
       vis.dotPaddingBottom = vis.padding;
   
-      // // Calculate inner chart size. Margin specifies the space around the actual chart.
-      // vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
-      // vis.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
-
       // Set the dimensions of the canvas / graph
       vis.margin = {top: vis.dotRadius*10, right: vis.dotRadius*15, bottom: vis.dotRadius*10, left: vis.dotRadius*15};
 
@@ -89,43 +65,37 @@ class DotMatrix {
       .range(d3.schemeCategory10)
       .domain(vis.raceCategories);
      
-      // intialize the scales
-        // Set the ranges
+      // intialize the scales and axis
       vis.xScale = d3.scaleLinear().range([vis.margin.left, vis.width]);
-      vis.yScale = d3.scaleLinear().range([vis.height, 0]);
-
       vis.xAxis = d3.axisBottom(vis.xScale)
-
-      // vis.yAxis = d3.axisLeft(vis.yScale)
-      //     .tickFormat( d => vis.uniqueGroups[d])
-      //     .ticks(vis.uniqueGroups.length)
-      //     .tickSize(-vis.width + vis.margin.left-(vis.dotRadius*2), 0, 0);
 
       //Create SVG element
       vis.svg = d3.select("#DotMatrixChart")
-        .append("svg")
-        .attr("width", vis.width + vis.margin.left + vis.margin.right)
-        .attr("height",  vis.height + vis.margin.top + vis.margin.bottom)
+        .attr("width", "100%")
+        .attr("height",  "80%");
+
+      vis.legendSvg = d3.select("#DotMatrixChartLegend")
+        .attr("width", 200)
+        .attr("height", 210)
         .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
-      // takes a sample of the data
-      vis.sampleData();      
+  
+      // take a sample of the data
+      vis.sampleData();   
+
       vis.updateVis();
     }
-  
+    
     
     updateVis() {
       let vis = this;
 
+      // accessor functions
       vis.subjectRace = d => d.w6_subject_race;
       vis.partnerRace = d => d.w6_q6b;
 
-  
-
-
-      vis.groupedDataArr = d3.groups(vis.sampledData, d => d.CaseID);
-
+      // set domain of the scale
       vis.xScale.domain([0,vis.noOfCirclesInARow]);
-      // vis.yScale.domain([0,1]);
+
       vis.handleButton();
       vis.renderVis();
     }
@@ -171,14 +141,11 @@ class DotMatrix {
           })
           .attr("r", vis.dotRadius)
           .attr("cx", (d,index) => {
-            // console.log((index * 2 * vis.dotRadius) % xdivisor);
             return ((index * 2 * vis.dotRadius) % xdivisor) + (2 * vis.dotRadius);
           }) 
           .attr("cy",  (d,index) => {
             numPoints++;
             if(numPoints >= vis.noOfCirclesInARow) {
-              // console.log(numPoints);
-              // console.log(vis.noOfCirclesInARow);
               yCord += 3* vis.dotRadius;
               numPoints = 0;
             }
@@ -195,37 +162,29 @@ class DotMatrix {
             filterBarChartData(d);
           });
 
-          // // add legend
-          // vis.legend = d3.select(".dot-chart-legend")
-          // .data(vis.raceCategories, d => d)
-          // .join("g")
-          // .attr("class", "dot-chart-legend")
-          // .attr("transform", "translate(" + 0  + "," + (vis.margin.top+vis.dotRadius) + ")");
 
-          vis.xPosition = (d, index) => (index* 4);
-          vis.yPostion = d => vis.height/4;
+          vis.legendItemWidth = 200;
+          let xPosition = (2* vis.dotRadius);
+          let yPostion = (d, index) => ((index + 1) * (4 * vis.dotRadius));
           
           vis.legend = d3.select("#DotMatrixChartLegend").selectAll(".dot-matrix-legend-circles")
-          .data(vis.raceCategories, d => d)
-          // .join("g")
-          // .attr("class", "dot-chart-legend")
-          // .attr("transform", "translate(" + 0  + "," + (vis.margin.top+vis.dotRadius) + ")");
           .data(vis.raceCategories, d => d)
             .join("circle")
             .attr ('class', 'dot-matrix-legend-circles')
             .attr("r", vis.dotRadius)
-            .attr("cx", (d,index)  => {
-              return vis.xPosition(d,index); })
-            .attr("cy", d => vis.yPostion(d))
+            .attr("cx", xPosition)
+            .attr("cy", (d,index) => yPostion(d, index))
             .style("fill", (d, index)  => vis.colorScale(vis.raceCategories[index]));
 
-          vis.legend
-            .selectAll(".legendText")
+          d3.select("#DotMatrixChartLegend").selectAll(".legendText")
+            .data(vis.raceCategories, d => {
+              // console.log(d);
+              return d;})
             .join('text')
             .attr('class', "legendText")
-            .attr("x", d => vis.xPosition(d))
+            .attr("x", xPosition + 10)
             .attr("text-anchor",'start')
-            .attr("y", d => vis.yPostion(d))
+            .attr("y", (d,index) => yPostion(d, index) + 5)
             .style("font-size", vis.dotRadius*3 + "px")
             .text((d, index) => vis.raceCategories[index]);
 
@@ -235,24 +194,22 @@ class DotMatrix {
   
     /**
      * Handles action events for the button.
-     * should resample the data when called.
+     * should resample the data when button is clicked.
      */
     handleButton(){
       let vis = this;
       const button = document.getElementById("resample-button");
-      // button.addEventListener('mouseover', function (event) {
-      //   d3.select(this).attr("class", "button-hover");
-      // });
-    //  button.addEventListener('mouseleave', () => {
-    //     d3.select('#tooltip').style('display', 'none');
-    //   });
       button.addEventListener("click", () => {
-        vis.initVis();
+        // gets a new sample and render the dots
+        vis.sampleData();      
+        vis.updateVis();
       });
 
     }
+
+
 /**
- * checks which interracial group a person is in
+ * checks which interracial group a person is in and returns a unique color for that.
  */
     getInterracialGroupColor(d) {
       let vis = this;
@@ -292,11 +249,10 @@ class DotMatrix {
 
 
     /**
-     * For each circle, count how many couples in the circle are still together
+     * Group the sample data by which racial group pairs (of subject and their partner) each data falls into.
      */
     groupDataByRacialGroups() {
       let vis = this;
-      // let arrOfCouplesTogether = vis.data.filter(d => d.partnership_status == 1 || d.partnership_status == 2);
      
       // grouping datapoints by the couple's races
       let countWhiteAndBlack = [];
@@ -344,155 +300,17 @@ class DotMatrix {
           }
       });
 
-        // console.log(countWhiteAndBlack);
-        // console.log(countBlackAndNativeAmerican);
-        // console.log(countNativeAmericanAndAsian);
-        // console.log(countAsianAndOther);
-        // console.log(countWhiteAndOther);
-        // console.log(countBlackAndAsian);
-        // console.log(countBlackAndOther);
-        // console.log(countNativeAmericanAndOther);
-        // console.log(countAsianAndWhite);
-        // console.log(countSameRace);
-
-
       vis.dataGroupedByRacialGroups = vis.dataGroupedByRacialGroups.concat(countWhiteAndBlack,countBlackAndNativeAmerican, countNativeAmericanAndAsian, 
         countAsianAndOther, countWhiteAndOther, countBlackAndAsian, countBlackAndOther, countNativeAmericanAndOther, countAsianAndWhite, countSameRace);
     }
 
-
-    // /**
-    //  * For each circle, count how many couples in the circle are still together
-    //  */
-    // updateCountOfCouplesStillTogether() {
-    //   let vis = this;
-    //   // let arrOfCouplesTogether = vis.data.filter(d => d.partnership_status == 1 || d.partnership_status == 2);
-     
-    //   let countWhiteAndBlackStillTogether = 0;
-    //   let countBlackAndNativeAmericanStillTogether = 0;
-    //   let countNativeAmericanAndAsianStillTogether = 0;
-    //   let countAsianAndOtherStillTogether = 0;
-    //   let countWhiteAndOtherStillTogether = 0;
-    //   let countBlackAndAsianStillTogether = 0;
-    //   let countBlackAndOtherStillTogether = 0;
-    //   let countNativeAmericanAndOtherStillTogether = 0;
-    //   let countAsianAndWhiteStillTogether = 0;
-
-    //   for (let i = 0; i < vis.groupedDataArr.length; i++){
-    //     let subject_race = vis.groupedDataArr[i][0];
-
-    //     for (let j = 0; j < vis.groupedDataArr[i][1].length; j++){
-    //       let subject_partner_race = vis.groupedDataArr[i][1][j][0];
-
-    //       if (subject_race == "White" && subject_partner_race == "Black or African American" || 
-    //           subject_partner_race == "White" && subject_race == "Black or African American"){
-    //           countWhiteAndBlackStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       } else if(subject_race == "Black or African American" && subject_partner_race == "American Indian, Aleut, or Eskimo" || 
-    //         subject_partner_race == "Black or African American" && subject_race == "American Indian, Aleut, or Eskimo"){
-    //           countBlackAndNativeAmericanStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       } else if(subject_race == "American Indian, Aleut, or Eskimo" && subject_partner_race == "Asian or Pacific Islander" || 
-    //         subject_partner_race == "American Indian, Aleut, or Eskimo" && subject_race == "Asian or Pacific Islander"){
-    //           countNativeAmericanAndAsianStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       } else if(subject_race == "Asian or Pacific Islander" && subject_partner_race == "Other (please specify)" || 
-    //         subject_partner_race == "Asian or Pacific Islander" && subject_race == "Other (please specify)"){
-    //           countAsianAndOtherStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       } else if(subject_race == "White" && subject_partner_race == "Other (please specify)" || 
-    //         subject_partner_race == "White" && subject_race == "Other (please specify)"){
-    //           countWhiteAndOtherStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       } else if(subject_race == "Black or African American" && subject_partner_race == "Asian or Pacific Islander" || 
-    //         subject_partner_race == "Black or African American" && subject_race == "Asian or Pacific Islander"){
-    //           countBlackAndAsianStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       } else if(subject_race == "Black or African American" && subject_partner_race == "Other (please specify)" || 
-    //         subject_partner_race == "Black or African American" && subject_race == "Other (please specify)"){
-    //           countBlackAndOtherStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       } else if(subject_race == "American Indian, Aleut, or Eskimo" && subject_partner_race == "Other (please specify)" || 
-    //         subject_partner_race == "American Indian, Aleut, or Eskimo" && subject_race == "Other (please specify)"){
-    //           countNativeAmericanAndOtherStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       } else if(subject_race == "Asian or Pacific Islander" && subject_partner_race == "White" || 
-    //         subject_partner_race == "Asian or Pacific Islander" && subject_race == "White"){
-    //           countAsianAndWhiteStillTogether = vis.CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race);
-    //       }
-    //     }
-    //   }
-
-    //   vis.arrOfCountOfCouplesStillTogether = [countWhiteAndBlackStillTogether, countBlackAndNativeAmericanStillTogether, 
-    //     countNativeAmericanAndAsianStillTogether, countAsianAndOtherStillTogether, countWhiteAndOtherStillTogether, countBlackAndAsianStillTogether,
-    //     countBlackAndOtherStillTogether, countNativeAmericanAndOtherStillTogether, countAsianAndWhiteStillTogether];
-    // }
-
-  //   /**
-  //    * 
-  //    * @param {*} subject_race race of the person interviewed
-  //    * @param {*} subject_partner_race race of the interviewee's partner
-  //    * @returns 
-  //    */
-  //   CountThoseTogetherInEachRaceCategory(subject_race, subject_partner_race) {
-  //     let vis = this;
-  //     let tempData = vis.data;
-  //     let couplesOfSpecifiedRace = tempData.filter(d => (vis.subjectRace(d) == subject_race && vis.partnerRace(d) == subject_partner_race
-  //       && (d => d.partnership_status == 1 || d.partnership_status == 2)));
-  //       if(vis.maxCountOfThoseStillTogether < couplesOfSpecifiedRace.length) vis.maxCountOfThoseStillTogether = couplesOfSpecifiedRace.length;
-  //     return couplesOfSpecifiedRace.length;
-  //   }
-
-  //   /**
-  //    * Counts how many couples are in each of the 9 racial combos
-  //    * and stores the count in the corresponding array
-  //    */
-  //   updateCountOfRacialGroups () {
-  //     let vis = this;
-
-  //     for (let i = 0; i < vis.groupedDataArr.length; i++){
-  //       let subject_race = vis.groupedDataArr[i][0];
-
-  //       for (let j = 0; j < vis.groupedDataArr[i][1].length; j++){
-  //         let subject_partner_race = vis.groupedDataArr[i][1][j][0];
-  //         if (subject_race == "White" && subject_partner_race == "Black or African American" || 
-  //           subject_partner_race == "White" && subject_race == "Black or African American"){
-  //             vis.whiteAndBlackSum += vis.groupedDataArr[i][1][j][1];
-  //         } else if(subject_race == "Black or African American" && subject_partner_race == "American Indian, Aleut, or Eskimo" || 
-  //         subject_partner_race == "Black or African American" && subject_race == "American Indian, Aleut, or Eskimo"){
-  //           vis.blackAndNativeAmericanSum += vis.groupedDataArr[i][1][j][1];
-  //         } else if(subject_race == "American Indian, Aleut, or Eskimo" && subject_partner_race == "Asian or Pacific Islander" || 
-  //           subject_partner_race == "American Indian, Aleut, or Eskimo" && subject_race == "Asian or Pacific Islander"){
-  //             vis.nativeAmericanAndAsianSum += vis.groupedDataArr[i][1][j][1];
-  //         } else if(subject_race == "Asian or Pacific Islander" && subject_partner_race == "Other (please specify)" || 
-  //           subject_partner_race == "Asian or Pacific Islander" && subject_race == "Other (please specify)"){
-  //             vis.AsianAndOtherSum += vis.groupedDataArr[i][1][j][1];
-  //         } else if(subject_race == "White" && subject_partner_race == "Other (please specify)" || 
-  //           subject_partner_race == "White" && subject_race == "Other (please specify)"){
-  //             vis.WhiteAndOtherSum += vis.groupedDataArr[i][1][j][1];
-  //         } else if(subject_race == "Black or African American" && subject_partner_race == "Asian or Pacific Islander" || 
-  //           subject_partner_race == "Black or African American" && subject_race == "Asian or Pacific Islander"){
-  //             vis.BlackAndAsianSum += vis.groupedDataArr[i][1][j][1];
-  //         } else if(subject_race == "Black or African American" && subject_partner_race == "Other (please specify)" || 
-  //           subject_partner_race == "Black or African American" && subject_race == "Other (please specify)"){
-  //             vis.BlackAndOtherSum += vis.groupedDataArr[i][1][j][1];
-  //         } else if(subject_race == "American Indian, Aleut, or Eskimo" && subject_partner_race == "Other (please specify)" || 
-  //           subject_partner_race == "American Indian, Aleut, or Eskimo" && subject_race == "Other (please specify)"){
-  //             vis.NativeAmericanAndOtherSum += vis.groupedDataArr[i][1][j][1];
-  //         } else if(subject_race == "Asian or Pacific Islander" && subject_partner_race == "White" || 
-  //           subject_partner_race == "Asian or Pacific Islander" && subject_race == "White"){
-  //             vis.AsianAndWhiteSum += vis.groupedDataArr[i][1][j][1];
-  //         }
-  //     }
-  //   }
-  // }
-
     /**
-     *  displays the tooltip information
+     *  displays the tooltip information when you hover over the dots.
      */
       toolTipInfo(event,d) {
         let vis = this;  
-
-        // let couplesStillTogether = function (){
-        //   let nums = vis.arrOfCountOfCouplesStillTogether[groupNum -1]/vis.arrOfRacialCategorySum[groupNum - 1];
-        //   if (nums){
-        //     return `<li>Percent of couples still together: ${nums.toFixed(2) * 100}%</li>`;
-        //   } else {
-        //     return ``;
-        //   }
-        // };
+        
+        let particpantAge = d.ppage;
 
         d3.select('#tooltip')
         .style('display', 'block')
@@ -501,7 +319,7 @@ class DotMatrix {
         .html(`
           <div><i>Details</i></div>
           <ul>
-            <li>Age: ${d.ppage} </li>
+            <li>Age: ${particpantAge} </li>
             <li>Race: ${vis.subjectRace(d)} </li>
             <li>Partner's Race: ${vis.partnerRace(d)} </li>          
           </ul>

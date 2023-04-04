@@ -32,11 +32,11 @@ class BarChart {
 
 
       // intialize the scale 
-      vis.xScale = d3.scaleBand() // segments range into equal categories based on the num of domain
+      vis.xScale = d3.scaleBand()
         .range([0, vis.width])
         .padding(0.60);
 
-      vis.xSubgroupScale = d3.scaleBand() // segments range into equal categories based on the num of domain
+      vis.xSubgroupScale = d3.scaleBand()
         .range([0, vis.xScale.bandwidth()/4])
         .domain(vis.subgroupsCategory)
         .padding(0.7)
@@ -64,18 +64,18 @@ class BarChart {
       vis.chart = vis.svg.append('g')
         .attr('transform', `translate(${vis.config.margin.left},${vis.config.margin.top})`);
 
-        // Append empty x-axis group and move it to the bottom of the chart
+      // Append empty bar-x-axis group and move it to the bottom of the chart
       vis.xAxisG = vis.chart.append('g')
-        .attr('class', 'axis x-axis')
+        .attr('class', 'bar-axis bar-x-axis')
         .attr('transform', `translate(0,${vis.height})`);
       
-       // Append y-axis group 
+       // Append bar-y-axis group 
       vis.yAxisG = vis.chart.append('g')
-      .attr('class', 'axis y-axis');
+      .attr('class', 'bar-axis bar-y-axis');
 
       // append axis titles
       vis.chart.append('text')
-      .attr('class', 'axis-title')
+      .attr('class', 'bar-axis-title')
       .attr('y', vis.height - 15)
       .attr('x', vis.width + 10)
       .attr('dy', '3.5em')
@@ -84,7 +84,7 @@ class BarChart {
       .style('font-weight', 'bold');
 
       vis.chart.append('text')
-      .attr('class', 'axis-title')
+      .attr('class', 'bar-axis-title')
       .attr('y', 0)
       .attr('x', vis.config.margin.left + 23)
       .style('text-anchor', 'end')
@@ -102,6 +102,10 @@ class BarChart {
       vis.sameRaceCoupleColor = "red";
       vis.interracialCoupleColor = "blue";
 
+      // global accessor functions
+      vis.relationshipRanking = d => d.Q34;
+      vis.whetherPartOfInterracialCouple = d => d.interracial_5cat;
+      
       // keeps track of how many points were plotted
       vis.pointsPlotted = 0;
       vis.totalPointsToPlot = vis.data.length;
@@ -114,10 +118,9 @@ class BarChart {
       vis.groupedData = d3.rollup(vis.data, v => v.length, d => d.Q34, d => d.interracial_5cat);
       vis.groupedData.delete('');
       vis.groupedData.delete("Refused");
-      // console.log(vis.groupedData);
 
+      // get max number for domain of y-scale
       vis.maxOccurenceCount = function (groupedData){
-
         // credit for iterator help: https://stackoverflow.com/a/55660647
         let mapValuesIterator = groupedData.values();
         let nextMapValues = mapValuesIterator.next();
@@ -128,13 +131,8 @@ class BarChart {
           let innerMap = nextMapValues.value;
           // credit for turning map to array: https://stackoverflow.com/a/56795800
           let innerMapAsArray = Array.from(innerMap, ([name, value]) => ({ name, value }));
-          
-          // console.log(innerMapAsArray);
-          // console.log(innerMapAsArray[0]);
-          // console.log(innerMapAsArray[0].name);
 
           currMax = Math.max(innerMapAsArray[0].value, innerMapAsArray[1].value);
-
           if( currMax > max_num) {
             max_num = currMax;
           }
@@ -143,100 +141,76 @@ class BarChart {
         return max_num;
       }
 
-      // console.log(vis.maxOccurenceCount(vis.groupedData));
-
-      // Specificy x- and y-accessor functions
-      vis.xValue = d => d.Q34;
-      vis.yValue = d => {
-        // console.log(vis.groupedData.get(d.Q34));
-        return vis.groupedData.get(d.Q34);
-      };
+      // Specificy x- and y-value accessor functions
+      vis.xValue = d => vis.relationshipRanking(d);
+      vis.yValue = d => vis.groupedData.get(vis.relationshipRanking(d));
     
+      // set the domain of xScale to be the relationship rankings
       vis.xScale.domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
       vis.yScale.domain([0,vis.maxOccurenceCount(vis.groupedData)]);
 
       vis.renderVis();
-      
     }
   
   
     renderVis() {
       let vis = this;
       vis.specificBarClicked = '';
-      vis.highlightedDataColor = "black";
 
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
-      const bars = vis.chart.selectAll('.bars')
-          .data(vis.groupedData)
-          .join("g")
-          .attr('class', 'bars')
-          // .attr('width', vis.xScale.bandwidth()/5)
-          .attr("transform", d => {
-            return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`});
+      const barGroup = vis.chart.selectAll('.bars')
+        .data(vis.groupedData)
+        .join("g")
+        .attr('class', 'bars')
+        .attr("transform", d => {
+          return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
+        });
 
-      const bar = bars.selectAll('.bar')
-          .data (d => [d[1]])
-          .join('g')
-          .selectAll('g')
-            .data(d => {
-              d.delete("");
-              // console.log(d);
-              return d; }) // was d => [d]
-              .join ('rect')
-              .filter(d => {
-                // console.log(d);
+      const individualBars = barGroup.selectAll('.bar')
+        .data (d => [d[1]])
+        .join('g')
+        .selectAll('g')
+          .data(d => {
+            d.delete("");
+            return d; }) 
+            .join ('rect')
+            .attr('class', 'bar')
+            .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
+            .attr('y', d => vis.yScale(d[1]))
+            .attr('width', d => {
+              return vis.xSubgroupScale.bandwidth()/10;
+            })
+            .attr('height', d => vis.height -  vis.yScale(d[1]))
+            .attr("fill", (d, index) => {
+              // might be the issue with why the bars change colors when refreshed
+              if(index == 0) {
+                return vis.sameRaceCoupleColor;
+              } else {
+                return vis.interracialCoupleColor;
+              }
+            });
+            // .attr('class', d => {
+            //   if (vis.highlightedData.length != 0) {
+            //     return `higlighted-bar`;
+            //   } else {
+            //     return ``;
+            //   }
+            // });
 
-                //removes those that didn't share their race 
-                // data with the rank section blank and those that refused to rank
-                if( d[0] != "") {
-                  vis.pointsPlotted += d[1];
-                  return d;
-                }
-                // seemes to still leave the third rect there without contencts
-              })
-              .attr('class', 'bar')
-              .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
-              .attr('y', d => vis.yScale(d[1]))
-              .attr('width', d => {
-                return vis.xSubgroupScale.bandwidth()/10;
-              })
-              .attr('height', d => vis.height -  vis.yScale(d[1]))
-              .attr("fill", (d, index) => {
-                if(index == 0) {
-                  return vis.sameRaceCoupleColor;
-                } else {
-                  return vis.interracialCoupleColor;
-                }
-              })
-              .attr('stroke', d => {
-                if (vis.highlightedData != 0) {
-                  return vis.highlightedDataColor;
-                }
-              });
-            
-
-
-      // add text explaining how many points were used.
-      document.getElementById("num-of-points-plotted").innerHTML = `${vis.pointsPlotted}/${vis.totalPointsToPlot} data points were plotted`;
-
-      bar
+      individualBars
         .on('mouseover', function (event,d) {
           vis.toolTipInfo(event,d);
-          // console.log(d);
         })
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
         }).on('click', function(event, d) {
-          // console.log(d);
           currcirclesChartSubCategory = d[0];
         });
 
       // when a bar is clicked, filter the data displayed in the circlesChart
-      bars
+      barGroup
         .on('click', function(event, d) {
           currcirclesChartMainCategory = d[0];
-          // console.log(currcirclesChartMainCategory);
-
           filterDotMatrixChartData();
         });
     
@@ -246,9 +220,8 @@ class BarChart {
     }
 
 
-
    /**
-     *  displays the tooltip information
+     *  displays the tooltip information of the individual bars
      */
    toolTipInfo(event,d) {
     let vis = this;
@@ -261,7 +234,6 @@ class BarChart {
       }
     };
 
-
     d3.select('#tooltip')
     .style('display', 'block')
     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
@@ -272,10 +244,13 @@ class BarChart {
     `);
   }
 
+  /**
+   * Filters the data for people who left the answer blank, refused to answer, for either of the questions 
+   * regarding their relationship ranking, or whether they are part of an interracial couple.
+   */
   preprocessData() {
     let vis = this;
-    vis.data = vis.data.filter(d => d.Q34 !="" || d.Q34 != "Refused" || d.interracial_5cat != "");
-    // console.log(vis.data);
+    vis.data = vis.data.filter(d => vis.relationshipRanking(d) !="" || vis.relationshipRanking(d) != "Refused" || vis.whetherPartOfInterracialCouple(d) != "");
   }
 
   
