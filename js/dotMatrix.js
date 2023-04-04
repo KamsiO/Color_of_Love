@@ -79,9 +79,14 @@ class DotMatrix {
         .attr("height", 210)
         .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
   
+      
+      // accessor functions
+      vis.subjectRace = d => d.w6_subject_race;
+      vis.partnerRace = d => d.w6_q6b;
+
+      vis.preprocessData();
       // take a sample of the data
       vis.sampleData();   
-
       vis.updateVis();
     }
     
@@ -89,9 +94,6 @@ class DotMatrix {
     updateVis() {
       let vis = this;
 
-      // accessor functions
-      vis.subjectRace = d => d.w6_subject_race;
-      vis.partnerRace = d => d.w6_q6b;
 
       // set domain of the scale
       vis.xScale.domain([0,vis.noOfCirclesInARow]);
@@ -326,10 +328,15 @@ class DotMatrix {
         `);
       }
   
-  
-  
-  
-  
+
+    /**
+   * Filters the data for people who left the answer blank (or refused to answer) for their race or their partner's race
+   */
+    preprocessData() {
+      let vis = this;
+      vis.data = vis.data.filter(d => vis.subjectRace(d) !="" || vis.partnerRace(d) != "" || vis.subjectRace(d) !="Other (please specify)" ||  vis.partnerRace(d) != "Other (please specify)" ||
+      vis.subjectRace(d) !="Refused" ||  vis.partnerRace(d) != "Refused");
+    }
   
   
   }

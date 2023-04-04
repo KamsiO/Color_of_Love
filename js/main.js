@@ -14,13 +14,15 @@ d3.csv('data/dating.csv').then(_data => {
     data = _data;
     
     // Global data processing
-    // Convert necessary columns to numerical values
     data.forEach(d => {
         if(d.w6_subject_race == d.w6_q6b){
             d.interracial_5cat = "no";
         } else {
             d.interracial_5cat = "yes";
         }
+        // if(relationshipRanking(d) !="" || vis.relationshipRanking(d) != "Refused" || vis.whetherPartOfInterracialCouple(d) != "") {
+        //     return d;
+        // }
     });
 
     // initialize visualizations
@@ -44,7 +46,8 @@ d3.csv('data/dating.csv').then(_data => {
  * @param subCategory bar clidked (interracial or same race)
  */
 function filterDotMatrixChartData(){
-    let filteredData = dotmatrix.sampledData.filter(d => relationshipRanking(d) == currcirclesChartMainCategory && whetherInterracialOfSameRace(d) == currcirclesChartSubCategory);
+    let filteredData = dotmatrix.sampledData.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOfSameRace(d) == currcirclesChartSubCategory));
+    console.log(filteredData);
     dotmatrix.highlightedData = filteredData;
     dotmatrix.updateVis();
 
