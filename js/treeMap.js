@@ -44,7 +44,7 @@ class TreeMap {
       .attr("id", "tree-map-container");
 
     // Colour scale for categories
-    vis.colourScale = d3.scaleOrdinal(d3.schemeCategory10);
+    vis.colourScale = d3.scaleOrdinal(d3.schemeTableau10);
 
     // SVG Group containing the actual chart; D3 margin convention
     vis.chart = vis.svg
@@ -260,25 +260,6 @@ class TreeMap {
       .style("fill", function (d) {
         return vis.colourScale(d["id"]);
       })
-      // .on("mouseover", function (e, d) {
-      //   // hovering over a treemap node shows the number of respondents belonging to that group
-      //   d3.select("#tree-map-tooltip")
-      //     .style("display", "block")
-      //     .style("position", "absolute")
-      //     .style("background-color", "white")
-      //     .style("font-family", "arial")
-      //     .style("left", `${e.pageX + 10}px`)
-      //     .style("top", `${e.pageY + 10}px`)
-      //     .html(
-      //       `<div>
-      //           <p>How they met: ${d["id"]}</p>
-      //           <p>Count: ${d["value"]}</p>
-      //       </div>`
-      //     );
-      // })
-      // .on("mouseleave", function (e, d) {
-      //   d3.select("#tree-map-tooltip").style("display", "none");
-      // });
       .on('mouseover', (event, d) => {
         d3.select('#tooltip')
           .style('display', 'block')

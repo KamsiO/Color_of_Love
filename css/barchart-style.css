@@ -2,3 +2,91 @@
 IMPORTANT: CSS styles across files can overwrite each other!
 Make sure to use specific IDs/classes.
 */
+:root {
+  --bar-axis_title_font_size: 0.8em;
+  --bar-axis_label_font_size: 0.8em;
+  --tooltip_bckg: white;
+  --tooltip_border_color: #ddd;
+  --font_color: black;
+  --interacial_color: red;
+  --same_race_color: blue;
+  --stroke_color: black;
+  --highlighted-color: black;
+
+  /* border */
+  --border-color: purple;
+
+  /* text */
+  --labels_font_size: 0.8em;
+  --shape_stroke_width: 2px;
+}
+
+.bar-axis path,
+.bar-axis line {
+  fill: none;
+  stroke: #333;
+  shape-rendering: crispEdges;
+}
+
+.bar-axis text{
+  font-family: sans-serif;
+  font-size: var(--bar-axis_label_font_size);
+}
+
+.bar-axis-title{
+  font-family: sans-serif;
+  font-size: var(--bar-axis_title_font_size);
+  fill: var(--font_color);
+
+}
+.bar {
+    width: 12px;
+    shape-rendering: crispEdges;
+  }
+
+  #bar-chart-title-col{
+    width: 50%;
+    /* display: flex; */
+    float: left;
+    height: 100%;
+}
+
+.higlighted-bar {
+  stroke: var(--highlighted-color);
+  stroke-width: 5px;
+}
+
+
+/* legend */
+
+/* #bar-chart-legend {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  float: left;
+  padding-top: 20px;  
+} */
+
+.barChart-legend-dot {
+  height: 10px;
+  width: 10px;
+  border: 1px solid var(--stroke_color);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+#interracial {
+  background-color: var(--interacial_color);
+  margin-right: 4px;
+}
+
+#same_race {
+  background-color: var(--same_race_color);
+  margin-right: 4px;
+}
+
+.circles-label {
+  font-size: var(--labels_font_size);
+  margin-right: 2em;
+}
+

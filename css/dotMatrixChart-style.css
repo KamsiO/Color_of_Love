@@ -1,0 +1,132 @@
+/* 
+IMPORTANT: CSS styles across files can overwrite each other!
+Make sure to use specific IDs/classes.
+*/
+:root {
+    /* COLORS */
+    --resample-button-color: lightblue;
+    --resample-button-hover-color: lightgreen;
+    --button-font-color: white;
+    --tooltip_bckg: white;
+    --tooltip_border_color: #ddd;
+    --font_color: black;
+    --interacial_color: red;
+    --same_race_color: blue;
+    --stroke_color: black;
+    /* border */
+    --border-color: purple;
+
+    /* text */
+    /* --axis_title_font_size: 1em; */
+    --labels_font_size: 0.8em;
+    --shape_stroke_width: 2px;
+}
+
+.matrix-dot.inactive {
+    fill-opacity: 0.3;
+}
+.matrix-dot:hover {
+    stroke: rgb(65, 65, 65);
+    stroke-width: 3px;
+}
+
+/* 
+/* Tooltip */
+#tooltip {
+    position: absolute;
+    display: none;
+    background: var(--tooltip_bckg);
+    box-shadow: 3px 3px 3px 0px rgb(92 92 92 / 0.5);
+    border: 1px solid var(--tooltip_border_color);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px;
+    min-width: 160px;
+    color: var(--font_color);
+}
+.tooltip-title {
+    color: var(--font_color);
+    font-size: 14px;
+    font-weight: 600;
+}
+#tooltip ul {
+    margin: 5px 0 0 0;
+    padding-left: 20px;
+} 
+
+#dotMatrix-chart-title-row {
+    /* text-align: left; */
+    width: 75vw;
+    height: 5vw;
+}
+
+#dotMatrix-chart-title-col{
+    width: 50%;
+    float: right;
+    height: 100%;
+    /* padding-left: 4em; */
+}
+/* The row the barchart and the circles chart are on*/
+#row-for-views {
+    height: 40vh;
+}
+/* The columns in row the views (bubble chart and bar chart) will be on */
+.column {
+    width: 40vw;
+    float: left;
+  }
+
+/* column with the barchart view */
+.dotMatrix-global-column1 {
+    max-width: 30vw;
+    height: 100%;
+    white-space:nowrap;
+
+}
+  
+/* the column the circles are in */
+.dotMatrix-global-column2 {
+    width:80vw;
+    height: 100%;
+    /* margin-left: 4em; */
+    text-align: center;
+    align-items: left;
+    /* border: solid 2px var(--border-color); */
+
+}
+
+#DotMatrixChart {
+    /* width: 100% !important;
+    height: 80% !important; */
+    float: left;
+}
+
+#DotMatrixChartLegend{
+    /* width: 100% !important;
+    height: 10% !important; */
+    background-color: darkgrey;
+    float: left;
+}
+
+/* button styling*/
+
+#resample-button:hover {
+    background-color: var(--resample-button-hover-color);
+}
+
+#resample-button {
+    margin-right: 55%;
+    margin-bottom: 1em;
+    margin-top: 5em;
+    background-color: var(--resample-button-color);
+    color: var(--font_color);
+
+}
+
+#dot-matrix-legend-col {
+    width: 20%;
+}
+
+#dot-matrix-chart-col {
+    width: 80%; 
+}

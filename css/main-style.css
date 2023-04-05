@@ -2,14 +2,38 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+/* Responsive Layout */
 .container {
     padding-top: 20px;
     margin-left: 30px;
 }
 
+.row.btm {
+    margin-top: 70px;
+}
+
+.col-lg-8 {
+    min-width: 880px;
+}
+
+.col-lg-5 {
+    min-width: 550px;
+}
+
+.col-lg-4 {
+    min-width: 440px;
+}
+
+.col-lg-3 {
+    min-width: 330px;
+}
+
+
+
 #overview {
     text-align: justify;
 }
+
 
 /* Chart Text */
 .title {
@@ -36,3 +60,22 @@ body {
     min-width: 100px;
     color: #333;
 }
+
+
+
+/* :root {
+    /* COLORS */
+    /* --tooltip_bckg: white;
+    --tooltip_border_color: #ddd;
+    --font_color: black;
+    --interacial_color: red;
+    --same_race_color: blue;
+    --stroke_color: black; */
+    /* border */
+    /* --border-color: purple; */
+
+    /* text */
+    /* --axis_title_font_size: 1em; */
+    /* --labels_font_size: 0.8em;
+    --shape_stroke_width: 2px; */
+
