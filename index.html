@@ -16,54 +16,23 @@
     <!-- Add HTML content, SVG drawing area, ... -->
     <h1 id="title">The Colour of Love</h1>
     <p id="overview">*add description here*</p>
-    <div>
-        <div class="dotMatrix-global-row">
-            <p id="num-of-points-plotted"></p>   
-       </div>
-   
-       <div id="dotMatrix-chart-title-row" class="dotMatrix-global-row">
-            <div id="bar-chart-title-col">
-                <h4>Relationship Rankings</h4>
-            </div>
-            <div id="dotMatrix-chart-title-col">
-                <h4>Sample of participants</h4>
-            </div>
-        </div>
-        <div id="row-for-views" class="dotMatrix-global-row">
-           <div id="bar-chart" class="dotMatrix-global-column dotMatrix-global-column1">
-               <svg id="bar-chart-plot"  class="barChart-plot-container margin-top"></svg>
-               <div id="bar-chart-legend">
-                    <!-- Legend for Quality of Relationship:  --> 
-                    <span class="barChart-legend-dot" id="interracial"></span>
-                    <label class="circles-label" for="interracial">Same Race</label> 
-                    <span class="barChart-legend-dot" id="same_race"></span>
-                    <label class="circles-label" for="same_race">Interracial</label> 
-                </div>
-            </div>
-            <div id="dot-matrix-chart-group-col" class="dotMatrix-global-column dotMatrix-global-column2">
-                <!-- <div id="dot-matrix-chart-group-row"> -->
-                    <button id="resample-button" type="button" name="sampling-button" value="1">Click to resample dot matrix</button>
-                    <!-- <div id = "dot-matrix-chart-col"> -->
-                        <svg id="DotMatrixChart"  class="dot-chart"></svg>
-                    <!-- </div> -->
-                    <!-- <div id="dot-matrix-legend-col"> -->
-                        <svg id="DotMatrixChartLegend"  class="dot-chart-legend"></svg>
-                    <!-- </div> -->
-                <!-- </div> -->
-                
-            </div>
-
-        </div>
-           </div>  
-       </div>
-    </div>
     
-    
+    <div id="dot-matrix"></div>
+    <div id="bar-chart" class="dotMatrix-global-column dotMatrix-global-column1">
+        <svg id="bar-chart-plot"  class="barChart-plot-container margin-top"></svg>
+        <div id="bar-chart-legend">
+             <!-- Legend for Quality of Relationship:  --> 
+             <span class="barChart-legend-dot" id="interracial"></span>
+             <label class="circles-label" for="interracial">Same Race</label> 
+             <span class="barChart-legend-dot" id="same_race"></span>
+             <label class="circles-label" for="same_race">Interracial</label> 
+         </div>
+     </div>
     <div id="heat-map"></div>
     <div id="tooltip"></div>
 
     <!-- JavaScript links -->
-    <script src="js/d3.v6.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="js/dotMatrix.js"></script>
     <!-- <script src="js/circlesChart.js"></script> -->
     <script src="js/barChart.js"></script>

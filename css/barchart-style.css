@@ -68,8 +68,8 @@ Make sure to use specific IDs/classes.
 }
 
 .barChart-legend-dot {
-  height: 5px;
-  width: 5px;
+  height: 10px;
+  width: 10px;
   border: 1px solid var(--stroke_color);
   border-radius: 50%;
   display: inline-block;

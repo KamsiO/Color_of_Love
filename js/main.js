@@ -27,7 +27,7 @@ d3.csv('data/dating.csv').then(_data => {
 
     // initialize visualizations
     dotmatrix = new DotMatrix({
-        parentElement: '#DotMatrixChart',
+        parentElement: '#dot-matrix',
     }, data);
 
     barChart = new BarChart({
@@ -46,7 +46,7 @@ d3.csv('data/dating.csv').then(_data => {
  * @param subCategory bar clidked (interracial or same race)
  */
 function filterDotMatrixChartData(){
-    let filteredData = dotmatrix.sampledData.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOfSameRace(d) == currcirclesChartSubCategory));
+    let filteredData = dotmatrix.data.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOfSameRace(d) == currcirclesChartSubCategory));
     console.log(filteredData);
     dotmatrix.highlightedData = filteredData;
     dotmatrix.updateVis();
@@ -58,8 +58,10 @@ function filterDotMatrixChartData(){
  * @param dotClicked is the dot that was clicked.
  */
 function filterBarChartData(dotClicked) {
-    let relationshipRankingOfPersonClicked = d => dotClicked.Q34;
-    let whetherRelationshipIsInterracial = d => dotClicked.interracial_5cat
+    //console.log(dotClicked);
+    let relationshipRankingOfPersonClicked = dotClicked.Q34;
+    // console.log(relationshipRankingOfPersonClicked);
+    let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
     let filteredData = barChart.data.filter(d =>  relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOfSameRace(d) == whetherRelationshipIsInterracial);
     console.log(filteredData);
     barChart.highlightedData = filteredData;    
