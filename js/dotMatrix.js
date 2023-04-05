@@ -9,14 +9,13 @@ class DotMatrix {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 1000,
-      containerHeight: _config.containerHeight || 340,
-      margin: _config.margin || { top: 25, right: 20, bottom: 20, left: 50 },
+      containerHeight: _config.containerHeight || 365,
+      margin: _config.margin || { top: 35, right: 20, bottom: 45, left: 50},
       tooltipPadding: _config.tooltipPadding || 15
     }
 
     this.highlightedData = [];
     this.data = _data;
-
 
     this.initVis();
   }
@@ -34,24 +33,37 @@ class DotMatrix {
       .attr('height', vis.config.containerHeight)
       .attr('id', 'dot-matrix-chart');
 
+    vis.svg.append("text")
+      .attr('class', 'title')
+      .attr('x', vis.width + 10)
+      .attr('y', vis.config.margin.top - 27)
+      .attr('dy', '.71em')
+      .attr("text-anchor", "end")
+      .text("Meet the Participants");
+
+
     vis.chart = vis.svg.append('g')
       .attr('transform', `translate(${vis.config.margin.left},${vis.config.margin.top})`);
+
+    vis.footnote = vis.chart
+      .append("text")
+      .attr("transform", `translate(-5,${vis.height + 40})`)
+      .attr("class", "subtitle")
+      .attr("font-size", "11px")
+      .text(
+        "*Categories not shown in the map are not represented by the current age group"
+    );
 
     vis.legend = vis.chart.append('g')
       .attr('transform', `translate(${vis.config.margin.left},${vis.height - 30})`);
 
-     // name the race categories
-    vis.raceCategories = ["White & Black", "Black & Native American", "Native American & Asian",
-      "Asian & Other", "White & Other", "Black & Asian", "Black & Other", "Native American & Other", "Asian & White", "Same Race"];
-
-
-    vis.subjectRace = d => d.w6_subject_race;
-    vis.partnerRace = d => d.w6_q6b;
-    vis.preprocessData();
-    vis.assignRelationshipRace();
+    // name the race categories
+    vis.raceCategories = ["White & Black", "Black & Asian", "Native American & Asian", "Black & Other", "Same Race",
+    "Black & Native American", "Asian & Other", "White & Other", "Asian & White", "Native American & Other"];
 
     vis.colorScale = d3.scaleOrdinal()
-      .range(d3.schemeCategory10);
+      .range(d3.schemeCategory10)
+      .domain(vis.raceCategories);
 
     vis.updateVis();
   }
@@ -60,13 +72,15 @@ class DotMatrix {
   updateVis() {
     let vis = this;
 
+    vis.subjectRace = d => d.w6_subject_race;
+    vis.partnerRace = d => d.w6_q6b;
+    vis.preprocessData();
+    vis.assignRelationshipRace();
+
     vis.groupedByRace = d3.group(vis.data, d => d.relRaceCat);
     //console.log(vis.groupedByRace);
 
-    // set domain of the scale
-    vis.colorScale.domain(vis.raceCategories);
-
-    vis.colorValue = d => vis.colorScale.domain().indexOf(d.relRaceCat);
+    vis.colorValue = d => d.relRaceCat;
 
     vis.renderVis();
   }
@@ -113,33 +127,33 @@ class DotMatrix {
         });
 
 
-    vis.yLegendCount = 0;
+    vis.yLegendCount = -1;
     vis.xLegendCount = -1;
     vis.yLegend = 0;
     vis.xLegend = 0;
 
     vis.legend.selectAll(".dot-matrix-legend-circles")
-        .data(vis.groupedByRace)
+        .data(vis.raceCategories)
       .join("circle")
         .attr('class', 'dot-matrix-legend-circles')
         .attr("r", 6)
         .attr("cy", function () {
-          vis.ycount += 1;
-          return vis.ycount % 5 == 0 ? vis.yLegend += vis.dotRadius * 5 : vis.yLegend;
+          vis.yLegendCount += 1;
+          return vis.yLegendCount % 5 == 0 ? vis.yLegend += vis.dotRadius * 5 : vis.yLegend;
         })
         .attr("cx", function () {
           vis.xLegendCount += 1;
           return vis.xLegendCount % 5 == 0 ? vis.xLegend = 0 : vis.xLegend += 165;
         })
-        .style("fill", d => vis.colorScale(vis.colorScale.domain().indexOf(d[0])));
+        .style("fill", d => vis.colorScale(d));
 
-    vis.yLegendCount = 0;
+    vis.yLegendCount = -1;
     vis.xLegendCount = -1;
-    vis.yLegend = 3;
+    vis.yLegend = 4;
     vis.xLegend = 10;
 
     vis.legend.selectAll(".legendText")
-        .data(vis.groupedByRace)
+        .data(vis.raceCategories)
       .join('text')
         .attr('class', "legendText")
         .attr("x", function () {
@@ -147,11 +161,11 @@ class DotMatrix {
           return vis.xLegendCount % 5 == 0 ? vis.xLegend = 10 : vis.xLegend += 165;
         })
         .attr("y", function () {
-          vis.ycount += 1;
-          return vis.ycount % 5 == 0 ? vis.yLegend += vis.dotRadius * 5 : vis.yLegend;
+          vis.yLegendCount += 1;
+          return vis.yLegendCount % 5 == 0 ? vis.yLegend += vis.dotRadius * 5 : vis.yLegend;
         })
         .style("font-size", vis.dotRadius * 3 + "px")
-        .text(d => d[0]);
+        .text(d => d);
 
 
 
@@ -207,12 +221,9 @@ class DotMatrix {
       .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
       .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
       .html(`
-          <div><i>Details</i></div>
-          <ul>
-            <li>Age: ${particpantAge} </li>
-            <li>Race: ${vis.subjectRace(d)} </li>
-            <li>Partner's Race: ${vis.partnerRace(d)} </li>          
-          </ul>
+          <div><b>Age</b>: ${particpantAge}</div>
+          <div><b>Race:</b> ${vis.subjectRace(d)}</div>
+          <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
         `);
   }
 

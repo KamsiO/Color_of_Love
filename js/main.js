@@ -30,13 +30,10 @@ d3.csv("data/dating.csv").then((_data) => {
         } else {
             d.interracial_5cat = "yes";
         }
-        // if(relationshipRanking(d) !="" || vis.relationshipRanking(d) != "Refused" || vis.whetherPartOfInterracialCouple(d) != "") {
-        //     return d;
-        // }
     });
 
     // initialize visualizations
-    dotmatrix = new DotMatrix({
+    const dotmatrix = new DotMatrix({
         parentElement: '#dot-matrix',
     }, data);
 
@@ -44,7 +41,7 @@ d3.csv("data/dating.csv").then((_data) => {
         parentElement: "#tree-map",
     }, data);
 
-    barChart = new BarChart({
+    const barChart = new BarChart({
         parentElement: '#bar-chart-plot',
     }, data);
 
@@ -66,14 +63,19 @@ d3.csv("data/dating.csv").then((_data) => {
             if (currSelection == "all") {
                 treeMap.data = data;
                 heatMap.data = data;
+                dotmatrix.data = data;
+                //barChart.data = data;
             } else {
-                treeMap.data = data.filter(function (d) {
-                    return d.ppagecat === currSelection;
-                });
-                heatMap.data = data.filter(d => d.ppagecat === currSelection);
+                let ageData = data.filter(d => d.ppagecat === currSelection);
+                treeMap.data = ageData;
+                heatMap.data = ageData;
+                dotmatrix.data = ageData;
+                //barChart.data = ageData;
             }
             treeMap.updateVis();
             heatMap.updateVis();
+            dotmatrix.updateVis();
+            //barChart.updateVis();
         }
     });
 

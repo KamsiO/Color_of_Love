@@ -10,9 +10,9 @@ class TreeMap {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 500,
-      containerHeight: _config.containerHeight || 300,
+      containerHeight: _config.containerHeight || 310,
       tooltipPadding: 15,
-      margin: _config.margin || { top: 50, right: 175, bottom: 20, left: 40 },
+      margin: _config.margin || { top: 50, right: 175, bottom: 25, left: 40 },
     };
     this.data = _data;
 
@@ -69,7 +69,7 @@ class TreeMap {
 
     vis.footnote = vis.chart
       .append("text")
-      .attr("transform", `translate(-5,${vis.height + 15})`)
+      .attr("transform", `translate(-5,${vis.height + 20})`)
       .attr("class", "subtitle")
       .attr("font-size", "11px")
       .text(

@@ -9,7 +9,7 @@ body {
 }
 
 .row.btm {
-    margin-top: 70px;
+    margin-top: 55px;
 }
 
 .col-lg-8 {
@@ -47,6 +47,11 @@ body {
     fill: rgb(139, 139, 139);
 }
 
+.tick text {
+    fill: rgb(90, 90, 90);
+}
+
+
 /* Tooltip */
 #tooltip {
     position: absolute;
@@ -60,22 +65,4 @@ body {
     min-width: 100px;
     color: #333;
 }
-
-
-
-/* :root {
-    /* COLORS */
-    /* --tooltip_bckg: white;
-    --tooltip_border_color: #ddd;
-    --font_color: black;
-    --interacial_color: red;
-    --same_race_color: blue;
-    --stroke_color: black; */
-    /* border */
-    /* --border-color: purple; */
-
-    /* text */
-    /* --axis_title_font_size: 1em; */
-    /* --labels_font_size: 0.8em;
-    --shape_stroke_width: 2px; */
 

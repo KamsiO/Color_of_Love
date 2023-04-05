@@ -10,7 +10,7 @@ class BarChart {
         parentElement: _config.parentElement,
         containerWidth: _config.containerWidth || 400,
         containerHeight: _config.containerHeight || 300,
-        margin: _config.margin || {top: 25, right: 20, bottom: 40, left: 50},
+        margin: _config.margin || {top: 47, right: 20, bottom: 40, left: 50},
         tooltipPadding: _config.tooltipPadding || 15
       }
       
@@ -37,10 +37,10 @@ class BarChart {
         .padding(0.60);
 
       vis.xSubgroupScale = d3.scaleBand()
-        .range([0, vis.xScale.bandwidth()/4])
+        .range([0, vis.xScale.bandwidth()/5])
         .domain(vis.subgroupsCategory)
-        .padding(0.7)
-        .paddingInner(2.5);
+        // .paddingOuter(5)
+        .paddingInner(.85);
 
       vis.yScale = d3.scaleLinear()
         .range([vis.height, 0]);    
@@ -48,7 +48,9 @@ class BarChart {
 
       // intialize the axis
       vis.xAxis = d3.axisBottom(vis.xScale)
-        .tickSizeOuter(0);
+        .tickSize(0)
+        .tickSizeOuter(0)
+        .tickPadding(8);
 
       vis.yAxis = d3.axisLeft(vis.yScale)
         .ticks(6)
@@ -71,25 +73,33 @@ class BarChart {
       
        // Append bar-y-axis group 
       vis.yAxisG = vis.chart.append('g')
-      .attr('class', 'bar-axis bar-y-axis');
+        .attr('class', 'bar-axis bar-y-axis');
 
       // append axis titles
       vis.chart.append('text')
-      .attr('class', 'bar-axis-title')
-      .attr('y', vis.height - 15)
-      .attr('x', vis.width + 10)
-      .attr('dy', '3.5em')
-      .style('text-anchor', 'end')
-      .text('Quality of Relationship')
-      .style('font-weight', 'bold');
+        .attr('class', 'axis-label')
+        .attr('y', vis.height - 10)
+        .attr('x', vis.width + 10)
+        .attr('dy', '3.5em')
+        .style('text-anchor', 'end')
+        .style('font-size', '13px')
+        .text('Quality of Relationship')
 
-      vis.chart.append('text')
-      .attr('class', 'bar-axis-title')
-      .attr('y', 0)
-      .attr('x', vis.config.margin.left + 23)
-      .style('text-anchor', 'end')
-      .text('Frequency of Rank')
-      .style('font-weight', 'bold');
+      // vis.chart.append('text')
+      // .attr('class', 'bar-axis-title')
+      // .attr('y', 0)
+      // .attr('x', vis.config.margin.left + 23)
+      // .style('text-anchor', 'end')
+      // .text('Frequency of Rank')
+      // .style('font-weight', 'bold');
+
+      vis.svg.append("text")
+          .attr('class', 'title')
+          .attr('x', 35)
+          .attr('y', vis.config.margin.top - 29)
+          .attr('dy', '.71em')
+          .attr("text-anchor", "left")
+          .text("Relationship Quality by Race");
       
       vis.updateVis();
     }
@@ -174,21 +184,11 @@ class BarChart {
             d.delete("");
             return d; }) 
             .join ('rect')
-            .attr('class', 'bar')
+            .attr('class', d => `bar ${d[0]}`)
             .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
             .attr('y', d => vis.yScale(d[1]))
-            .attr('width', d => {
-              return vis.xSubgroupScale.bandwidth()/10;
-            })
+            .attr('width', 20)
             .attr('height', d => vis.height -  vis.yScale(d[1]))
-            .attr("fill", (d, index) => {
-              // might be the issue with why the bars change colors when refreshed
-              if(index == 0) {
-                return vis.sameRaceCoupleColor;
-              } else {
-                return vis.interracialCoupleColor;
-              }
-            });
             // .attr('class', d => {
             //   if (vis.highlightedData.length != 0) {
             //     return `higlighted-bar`;
@@ -200,6 +200,11 @@ class BarChart {
       individualBars
         .on('mouseover', function (event,d) {
           vis.toolTipInfo(event,d);
+        })
+        .on('mousemove', (event) => {
+          d3.select('#tooltip')
+            .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
+            .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
         })
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
