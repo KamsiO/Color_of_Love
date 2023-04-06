@@ -213,7 +213,7 @@ class BarChart {
           currcirclesChartMainCategory = d[0];
           console.log("got here2");
           console.log(currcirclesChartMainCategory);
-          filterDotMatrixChartData();
+          barChartFilterDotMatrixChartData();
         });
     
       // Update the axes because the underlying scales might have changed

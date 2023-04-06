@@ -5,6 +5,8 @@ let relationshipRanking = d => d.Q34;
 let whetherInterracialOrSameRace = d => d.interracial_5cat;
 let subjectRace = d => d.w6_subject_race;
 let partnerRace = d => d.w6_q6b;
+let sexFrequency = d => d.w6_sex_frequency;
+let religiousity = d => d.ppp20072;
 
 const MEETING_METHODS = {
     0: "Education",
@@ -20,7 +22,7 @@ const MEETING_METHODS = {
 /**
  * Load data from CSV file asynchronously and render charts
  */
-let treeMap, barChart, dotmatrix, heatmap, data;
+let treeMap, barChart, dotmatrix, heatMap, data;
 d3.csv('data/dating.csv').then(_data => {
     data = _data;
     
@@ -38,7 +40,7 @@ d3.csv('data/dating.csv').then(_data => {
         parentElement: '#dot-matrix',
     }, data);
 
-    const treeMap = new TreeMap({
+    treeMap = new TreeMap({
         parentElement: "#tree-map",
     }, data);
 
@@ -46,7 +48,7 @@ d3.csv('data/dating.csv').then(_data => {
         parentElement: '#bar-chart-plot',
     }, data);
 
-    const heatMap = new HeatMap({
+    heatMap = new HeatMap({
         parentElement: '#heat-map',
     }, data);
 
@@ -84,16 +86,35 @@ d3.csv('data/dating.csv').then(_data => {
 
 
 /**
- * filter the data rendered in the bubble chart according to:
- * @param mainCategory the relationship ranking
- * @param subCategory bar clidked (interracial or same race)
+ * filter the data rendered in the dot matrix chart according to:
+ * mainCategory the relationship ranking
+ * subCategory bar clidked (interracial or same race)
  */
-function filterDotMatrixChartData() {
+function barChartFilterDotMatrixChartData() {
     let filteredData = dotmatrix.data.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOrSameRace(d) == currcirclesChartSubCategory));
     console.log(filteredData);
     dotmatrix.highlightedData = filteredData;
     dotmatrix.updateVis();
 
+}
+
+/**
+ * filter the data rendered in the dot matrix chart according to:
+ * @param sexFreq the y-value of the cell in the heat map
+ * @param attendance the x-value of the cell in the heat map
+ */
+function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
+    let filteredData = dotmatrix.data.filter(d => (sexFrequency(d) == sexFreq) && (religiousity(d) == attendance));
+    console.log(filteredData);
+    dotmatrix.highlightedData = filteredData;
+    dotmatrix.updateVis();
+}
+
+/**
+ * filter the data rendered in the dot matrix chart according to:
+ */
+function TreeMapfilterDotMatrixChartData() {
+//
 }
 
 /**

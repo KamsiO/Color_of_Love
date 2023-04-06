@@ -213,9 +213,7 @@ class DotMatrix {
     let vis = this;
 
     let particpantAge = d.ppage;
-    let relationshipRanking = d.Q34;
-    let sexFrequency = d.w6_sex_frequency;
-    let religiousity = d.ppp20072;
+
     //let howTheyMet = // fill with Guramrit's function return value;
 
 
@@ -227,9 +225,9 @@ class DotMatrix {
           <div><b>Age</b>: ${particpantAge}</div>
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
-          <div><b>Relationship Quality:</b> ${relationshipRanking}</div> 
-          <div><b>Sex Frequency:</b> ${sexFrequency}</div> 
-          <div><b>Religious Service Attendance:</b> ${religiousity}</div> 
+          <div><b>Relationship Quality:</b> ${relationshipRanking(d)}</div> 
+          <div><b>Sex Frequency:</b> ${sexFrequency(d)}</div> 
+          <div><b>Religious Service Attendance:</b> ${religiousity(d)}</div> 
         `);
   }
 
