@@ -16,6 +16,7 @@ class HeatMap {
         legendHeight: 100
       }
       this.data = _data;
+      this.selectedCategories = [];
       
       this.initVis();
     }
@@ -87,7 +88,11 @@ class HeatMap {
           .attr('ry', 2)
           .attr('width', vis.xScale.bandwidth())
           .attr('height', vis.yScale.bandwidth())
-          .style('fill', d => vis.colorScale(vis.colorValue(d)));
+          .style('fill', d => vis.colorScale(vis.colorValue(d)))
+          .classed('selected', d => vis.selectedCategories.length > 0 && vis.selectedCategories[0] === d[0] && vis.selectedCategories[1] === d[1])
+          .on('click', function(event, d) {
+            heatMapfilterDotMatrixChartData(d[0], d[1]);
+          })
 
       vis.tooltipEventListener(boxes);
 
@@ -123,11 +128,11 @@ class HeatMap {
 
       vis.xScale = d3.scaleBand()
           .range([0, vis.width])
-          .padding(0.02);
+          .padding(0.03);
 
       vis.yScale = d3.scaleBand()
           .range([vis.height, 0])
-          .padding(0.02);
+          .padding(0.03);
 
       vis.colorScale = d3.scaleSequential()
           .interpolator(d3.interpolateRdPu);

@@ -126,6 +126,7 @@ class DotMatrix {
         .on('click', (event, d) => {
           console.log(d);
           filterBarChartData(d);
+          selectHeatMapCell(d);
         });
 
 
