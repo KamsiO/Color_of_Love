@@ -7,6 +7,16 @@ const MEETING_METHODS = {
   5: "Abroad",
   6: "Mutual Connection",
 };
+
+const MEETING_METHODS_CHECKS_MAPPING = {
+  Education: checkEducationMethod,
+  "Professional Setting": checkProfessionalSettingMethod,
+  "Social Setting": checkSocialSettingMethod,
+  "Internet Website": checkInternetSiteMethod,
+  "Online Social Networking": checkOnlineSocialNetworkingMethod,
+  Abroad: checkAbroadMethod,
+  "Mutual Connection:": checkMutualConnectionMethod,
+};
 let varForFilteringcirclesChart = "";
 let currcirclesChartMainCategory = ""; // the relationship ranking
 let currcirclesChartSubCategory = ""; // whether the person is part of an interracial couple
@@ -16,7 +26,7 @@ let whetherInterracialOfSameRace = (d) => d.interracial_5cat;
 /**
  * Load data from CSV file asynchronously and render charts
  */
-let treeMap, data;
+let treeMap, data, dotmatrix, barChart, heatMap;
 d3.csv("data/dating.csv").then((_data) => {
   data = _data;
 
@@ -30,14 +40,14 @@ d3.csv("data/dating.csv").then((_data) => {
   });
 
   // initialize visualizations
-  const dotmatrix = new DotMatrix(
+  dotmatrix = new DotMatrix(
     {
       parentElement: "#dot-matrix",
     },
     data
   );
 
-  const treeMap = new TreeMap(
+  treeMap = new TreeMap(
     {
       parentElement: "#tree-map",
     },
@@ -52,13 +62,13 @@ d3.csv("data/dating.csv").then((_data) => {
       checkMutualConnectionMethod,
     }
   );
-  const barChart = new BarChart(
+  barChart = new BarChart(
     {
       parentElement: "#bar-chart-plot",
     },
     data
   );
-  const heatMap = new HeatMap(
+  heatMap = new HeatMap(
     {
       parentElement: "#heat-map",
     },
@@ -93,20 +103,34 @@ d3.csv("data/dating.csv").then((_data) => {
       //barChart.updateVis();
     }
   });
-
-  /**
-   * Use bar chart as filter and update scatter plot accordingly
-   */
-  // function filterData() {
-  //     if (difficultyFilter.length == 0) {
-  //       scatterplot.data = data;
-  //     } else {
-  //       scatterplot.data = data.filter(d => difficultyFilter.includes(d.difficulty));
-  //     }
-  //     scatterplot.updateVis();
-  //   }
 });
+/**
+ * Use treemap as filter and update dotMatrix accordingly
+ */
+function filterWithMeetingData(meetingCategory) {
+  dotmatrix.highlightedData = data.filter((d) =>
+    MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d)
+  );
 
+  dotmatrix.updateVis();
+}
+
+function TreeMapfilterDotMatrixChartData(dotClicked) {
+  let meetingMethod = "";
+  for (let i = 0; i < 7; i++) {
+    if (MEETING_METHODS_CHECKS_MAPPING[MEETING_METHODS[i]](dotClicked)) {
+      meetingMethod = MEETING_METHODS[i];
+    }
+  }
+  if (meetingMethod !== "") {
+    let filteredData = treeMap.data.filter((d) =>
+      MEETING_METHODS_CHECKS_MAPPING[meetingMethod](d)
+    );
+    console.log(filteredData);
+    treeMap.highlightedData = filteredData;
+    treeMap.updateVis();
+  }
+}
 /**
  * filter the data rendered in the bubble chart according to:
  * @param mainCategory the relationship ranking

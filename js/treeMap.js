@@ -250,9 +250,9 @@ class TreeMap {
       .style("fill", function (d) {
         return vis.colourScale(d["id"]);
       })
-      .on('mouseover', (event, d) => {
-        d3.select('#tooltip')
-          .style('display', 'block')
+      .on("mouseover", (event, d) => {
+        d3.select("#tooltip")
+          .style("display", "block")
           .html(
             `<div><b>How they met:</b> ${d["id"]}</div>
              <div><b>Count:</b> ${d["value"]}</div>`
@@ -265,6 +265,16 @@ class TreeMap {
       })
       .on("mouseleave", () => {
         d3.select("#tooltip").style("display", "none");
+      })
+      .on("click", function (event, d) {
+        // const isActive = difficultyFilter.includes(d.key);
+        // if (isActive) {
+        //   difficultyFilter = difficultyFilter.filter((f) => f !== d.key); // Remove filter
+        // } else {
+        //   difficultyFilter.push(d.key); // Append filter
+        // }
+        filterWithMeetingData(d["id"]); // Call global function to update scatter plot
+        // d3.select(this).classed("active", !isActive); // Add class to style active filters with CSS
       });
   }
 }
