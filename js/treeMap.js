@@ -51,7 +51,8 @@ class TreeMap {
       .append("svg")
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight)
-      .attr("id", "tree-map-container");
+      .attr("id", "tree-map-container")
+      .attr("class", "chart");
 
     // Colour scale for categories
     vis.colourScale = d3.scaleOrdinal(d3.schemeTableau10);
@@ -267,14 +268,7 @@ class TreeMap {
         d3.select("#tooltip").style("display", "none");
       })
       .on("click", function (event, d) {
-        // const isActive = difficultyFilter.includes(d.key);
-        // if (isActive) {
-        //   difficultyFilter = difficultyFilter.filter((f) => f !== d.key); // Remove filter
-        // } else {
-        //   difficultyFilter.push(d.key); // Append filter
-        // }
-        filterWithMeetingData(d["id"]); // Call global function to update scatter plot
-        // d3.select(this).classed("active", !isActive); // Add class to style active filters with CSS
+        filterWithMeetingData(d["id"]);
       });
   }
 }

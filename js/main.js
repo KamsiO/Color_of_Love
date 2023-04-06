@@ -104,6 +104,10 @@ d3.csv("data/dating.csv").then((_data) => {
     }
   });
 });
+
+d3.selectAll("#remove-filtering").on("click", (e) => {
+console.log("got here!!!")
+})
 /**
  * Use treemap as filter and update dotMatrix accordingly
  */
