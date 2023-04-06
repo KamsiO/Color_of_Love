@@ -15,8 +15,8 @@
 
     <!-- CSS links -->
     <link rel="stylesheet" href="css/main-style.css">
-    <link rel="stylesheet" href="css/beeswarm-style.css">
     <link rel="stylesheet" href="css/treemap-style.css">
+    <link rel="stylesheet" href="css/dotMatrixChart-style.css">
     <link rel="stylesheet" href="css/barchart-style.css">
     <link rel="stylesheet" href="css/heatmap-style.css">
 </head>
@@ -24,12 +24,12 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col-lg-4">
                 <h1 id="title">The Colour of Love</h1>
                 <p id="overview">With the ever-evolving dating scene in the 2020’s, it’s getting more and more difficult to find a partner that might be the one. Using the data collected in the <a href="https://data.stanford.edu/hcmst2017">How Couples Meet and Stay Together 2017</a> study by Stanford researchers, we hope our visualization helps you understand some of the factors that could affect important aspects of a relationship including its overall quality! Hover and click through our visualizations to dive deeper and explore interesting dependencies between age, sex habits, religiousness, and race.</p>
 
                 <!-- Age dropdow -->
-                <label>Filter by age group:</label>
+                <label><b>Filter by age group:</b></label>
                 <select id="age-group-filter-dropdown">
                     <option value="all">
                         All ages
@@ -57,35 +57,43 @@
                     </option>
                 </select>
             </div>
-            <div class="col">
-                <!-- dot matrix -->
+            <div class="col-lg-8">
+                <div id="dot-matrix"></div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="container-md" id="tree-map"></div>
+        <div class="row btm">
+            <div class="col-lg-5">
+                <div id="tree-map"></div>
             </div>
-            <div class="col">
-                <!-- bar chart -->
+            <div class="col-lg-4">
+                <div id="bar-chart">
+                    <svg id="bar-chart-plot"></svg>
+                    <div id="bar-chart-legend">
+                         <!-- Legend for Quality of Relationship:  --> 
+                         <span class="barChart-legend-dot" id="interracial"></span>
+                         <label class="circles-label" for="interracial">Same Race</label> 
+                         <span class="barChart-legend-dot" id="same_race"></span>
+                         <label class="circles-label" for="same_race">Interracial</label> 
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                <div class="container-md" id="heat-map"></div>
+            <div class="col-lg-3">
+                <div id="heat-map"></div>
             </div>
         </div>
     </div>
 
-    <div id="tree-map-tooltip"></div>
     <div id="tooltip"></div>
 
     <!-- JavaScript links -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="js/beeswarmPlot.js"></script>
+    <script src="js/dotMatrix.js"></script>
     <script src="js/barChart.js"></script>
     <script src="js/heatMap.js"></script>
     <script src="js/treeMap.js"></script>
     <script src="js/main.js"></script>
 
-    <!-- Bootstrap: (if we want to make our visualization responsive) -->
+    <!-- Bootstrap: (to make our visualization responsive) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>

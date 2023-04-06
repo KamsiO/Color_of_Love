@@ -4,9 +4,6 @@
 }
 
 /* Labels */
-#heat-map-chart .tick text {
-    fill: rgb(90, 90, 90);
-}
 
 #heat-map-chart .axis-label {
     font-size: 14px;
