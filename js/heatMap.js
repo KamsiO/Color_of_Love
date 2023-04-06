@@ -8,10 +8,10 @@ class HeatMap {
     constructor(_config, _data) {
       this.config = {
         parentElement: _config.parentElement,
-        containerWidth: 395,
-        containerHeight: 300,
+        containerWidth: 410,
+        containerHeight: 315,
         tooltipPadding: 15,
-        margin: {top: 50, right: 60, bottom: 100, left: 130},
+        margin: {top: 40, right: 60, bottom: 100, left: 130},
         legendWidth: 10,
         legendHeight: 100
       }
@@ -105,7 +105,7 @@ class HeatMap {
             d3.select('#tooltip')
               .style('display', 'block')
               .html(`
-                <div class="tooltip-text"><b>Number of people:</b> ${vis.colorValue(d)}</div>
+                <div><b>Number of people:</b> ${vis.colorValue(d)}</div>
               `);
           })
           .on('mousemove', (event) => {
@@ -195,7 +195,7 @@ class HeatMap {
 
        // Legend
         vis.legend = vis.svg.append('g')
-            .attr('transform', `translate(${vis.config.containerWidth - 35},${vis.config.margin.top + 20})`);
+            .attr('transform', `translate(${vis.config.containerWidth - 35},${vis.config.margin.top + 40})`);
 
         vis.legendColorGradient = vis.legend.append('defs').append('linearGradient')
             .attr('id', 'linear-gradient')

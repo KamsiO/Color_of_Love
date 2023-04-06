@@ -10,9 +10,9 @@ class TreeMap {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 500,
-      containerHeight: _config.containerHeight || 300,
+      containerHeight: _config.containerHeight || 310,
       tooltipPadding: 15,
-      margin: _config.margin || { top: 50, right: 175, bottom: 20, left: 40 },
+      margin: _config.margin || { top: 50, right: 175, bottom: 25, left: 40 },
     };
     this.data = _data;
 
@@ -44,7 +44,7 @@ class TreeMap {
       .attr("id", "tree-map-container");
 
     // Colour scale for categories
-    vis.colourScale = d3.scaleOrdinal(d3.schemeCategory10);
+    vis.colourScale = d3.scaleOrdinal(d3.schemeTableau10);
 
     // SVG Group containing the actual chart; D3 margin convention
     vis.chart = vis.svg
@@ -69,7 +69,7 @@ class TreeMap {
 
     vis.footnote = vis.chart
       .append("text")
-      .attr("transform", `translate(-5,${vis.height + 15})`)
+      .attr("transform", `translate(-5,${vis.height + 20})`)
       .attr("class", "subtitle")
       .attr("font-size", "11px")
       .text(
@@ -260,25 +260,6 @@ class TreeMap {
       .style("fill", function (d) {
         return vis.colourScale(d["id"]);
       })
-      // .on("mouseover", function (e, d) {
-      //   // hovering over a treemap node shows the number of respondents belonging to that group
-      //   d3.select("#tree-map-tooltip")
-      //     .style("display", "block")
-      //     .style("position", "absolute")
-      //     .style("background-color", "white")
-      //     .style("font-family", "arial")
-      //     .style("left", `${e.pageX + 10}px`)
-      //     .style("top", `${e.pageY + 10}px`)
-      //     .html(
-      //       `<div>
-      //           <p>How they met: ${d["id"]}</p>
-      //           <p>Count: ${d["value"]}</p>
-      //       </div>`
-      //     );
-      // })
-      // .on("mouseleave", function (e, d) {
-      //   d3.select("#tree-map-tooltip").style("display", "none");
-      // });
       .on('mouseover', (event, d) => {
         d3.select('#tooltip')
           .style('display', 'block')
