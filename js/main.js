@@ -104,6 +104,7 @@ d3.csv("data/dating.csv").then((_data) => {
     }
   });
 });
+
 /**
  * Use treemap as filter and update dotMatrix accordingly
  */
@@ -131,8 +132,9 @@ function TreeMapfilterDotMatrixChartData(dotClicked) {
     treeMap.updateVis();
   }
 }
+
 /**
- * filter the data rendered in the bubble chart according to:
+ * filter the data rendered in the dot matrix according to:
  * @param mainCategory the relationship ranking
  * @param subCategory bar clidked (interracial or same race)
  */
@@ -145,6 +147,15 @@ function filterDotMatrixChartData() {
   console.log(filteredData);
   dotmatrix.highlightedData = filteredData;
   dotmatrix.updateVis();
+}
+
+/**
+ * filter the data rendered in the dot chart according to:
+ * @param sexFreq the sex frequency category of the selected cell
+ * @param religiousness the religous service attendance category of the selected cell
+ */
+function heatMapfilterDotMatrixChartData(sexFreq, religiousness) {
+   
 }
 
 /**
@@ -164,4 +175,13 @@ function filterBarChartData(dotClicked) {
   console.log(filteredData);
   barChart.highlightedData = filteredData;
   barChart.updateVis();
+}
+
+/**
+ * highlights a cell that corresponds to the dot's sex and religion habits (if available) when dot is clicked
+ * @param dotClicked is the dot that was clicked.
+ */
+function selectHeatMapCell(dotClicked) {
+    heatMap.selectedCategories = [dotClicked.ppp20072, dotClicked.w6_sex_frequency];
+    heatMap.renderVis();
 }

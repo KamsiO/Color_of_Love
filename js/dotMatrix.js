@@ -123,7 +123,9 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
+          console.log(d);
           filterBarChartData(d);
+          selectHeatMapCell(d);
         });
 
 
