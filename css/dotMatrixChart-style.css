@@ -1,0 +1,14 @@
+/* 
+IMPORTANT: CSS styles across files can overwrite each other!
+Make sure to use specific IDs/classes.
+*/
+
+.matrix-dot.inactive {
+    fill-opacity: 0.3;
+}
+.matrix-dot:hover {
+    stroke: rgb(65, 65, 65);
+    stroke-width: 3px;
+}
+
+

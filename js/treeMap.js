@@ -10,9 +10,9 @@ class TreeMap {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 500,
-      containerHeight: _config.containerHeight || 300,
+      containerHeight: _config.containerHeight || 310,
       tooltipPadding: 15,
-      margin: _config.margin || { top: 50, right: 175, bottom: 20, left: 40 },
+      margin: _config.margin || { top: 50, right: 175, bottom: 25, left: 40 },
     };
     this.data = _data;
     this.checks = {
@@ -54,7 +54,7 @@ class TreeMap {
       .attr("id", "tree-map-container");
 
     // Colour scale for categories
-    vis.colourScale = d3.scaleOrdinal(d3.schemeCategory10);
+    vis.colourScale = d3.scaleOrdinal(d3.schemeTableau10);
 
     // SVG Group containing the actual chart; D3 margin convention
     vis.chart = vis.svg
@@ -80,7 +80,7 @@ class TreeMap {
 
     vis.footnote = vis.chart
       .append("text")
-      .attr("transform", `translate(-5,${vis.height + 15})`)
+      .attr("transform", `translate(-5,${vis.height + 20})`)
       .attr("class", "subtitle")
       .attr("font-size", "11px")
       .text(
@@ -250,10 +250,9 @@ class TreeMap {
       .style("fill", function (d) {
         return vis.colourScale(d["id"]);
       })
-
-      .on("mouseover", (event, d) => {
-        d3.select("#tooltip")
-          .style("display", "block")
+      .on('mouseover', (event, d) => {
+        d3.select('#tooltip')
+          .style('display', 'block')
           .html(
             `<div><b>How they met:</b> ${d["id"]}</div>
              <div><b>Count:</b> ${d["value"]}</div>`
