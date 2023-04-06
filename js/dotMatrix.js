@@ -149,7 +149,9 @@ class DotMatrix {
           vis.xLegendCount += 1;
           return vis.xLegendCount % 5 == 0 ? vis.xLegend = 0 : vis.xLegend += 165;
         })
-        .style("fill", d => vis.colorScale(d));
+        .style("fill", d => vis.colorScale(d))
+        .style("stroke", "black")
+        .style("font-size", "0.25px");
 
     vis.yLegendCount = -1;
     vis.xLegendCount = -1;
@@ -243,16 +245,14 @@ class DotMatrix {
  */
   preprocessData() {
     let vis = this;
-    console.log(vis.data);
+    // console.log(vis.data);
     let tempData = vis.data;
     vis.data = tempData.filter(d => (
       vis.subjectRace(d) !== "" &&
       vis.subjectRace(d) !== "Refused" &&
       vis.partnerRace(d) !== "" &&
       vis.partnerRace(d) !== "Refused"
-  ));
-      console.log(vis.data);
-
+    ));
   }
 
 }

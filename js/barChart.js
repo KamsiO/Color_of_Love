@@ -153,10 +153,13 @@ class BarChart {
       // Specificy x- and y-value accessor functions
       vis.xValue = d => vis.relationshipRanking(d);
       vis.yValue = d => vis.groupedData.get(vis.relationshipRanking(d));
+      
+      // Gives the bars a minimum height so that the smallest bars are still visible.
+      vis.addMinBarHeight = 10;
     
       // set the domain of xScale to be the relationship rankings
       vis.xScale.domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
-      vis.yScale.domain ([0,vis.maxOccurenceCount(vis.groupedData)]);
+      vis.yScale.domain ([0,(vis.maxOccurenceCount(vis.groupedData) + vis.addMinBarHeight)]);
 
       vis.renderVis();
     }
@@ -178,8 +181,6 @@ class BarChart {
           return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
         });
 
-      // Gives the bars a minimum height so that the smallest bars are still visible.
-      let addMinHeight = 10;
 
       const individualBars = barGroup.selectAll('.bar')
         .data (d => [d[1]])
@@ -193,11 +194,11 @@ class BarChart {
             .attr('class', d => `bar ${d[0]}`)
             .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
             .attr('y', d => {
-                return vis.yScale(d[1]) - addMinHeight;
+                return vis.yScale(d[1]) - vis.addMinBarHeight;
               })
             .attr('width', 20)
             .attr('height', d => {
-                return vis.height -  vis.yScale(d[1]) + addMinHeight;
+                return vis.height -  vis.yScale(d[1]) + vis.addMinBarHeight;
             });
 
       individualBars

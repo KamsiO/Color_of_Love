@@ -111,6 +111,7 @@ function TreeMapfilterDotMatrixChartData(dotClicked) {
   for (let i = 0; i < 7; i++) {
     if (MEETING_METHODS_CHECKS_MAPPING[MEETING_METHODS[i]](dotClicked)) {
       meetingMethod = MEETING_METHODS[i];
+      console.log( MEETING_METHODS[i])
     }
   }
   if (meetingMethod !== "") {
@@ -175,9 +176,10 @@ function filterDotMatrixChartData() {
  * @param attendance the x-value of the cell in the heat map
  */
 function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
-    let filteredData = dotmatrix.data.filter(d => (sexFrequency(d) == sexFreq) && (religiousity(d) == attendance));
-    console.log(filteredData);
-    dotmatrix.highlightedData = filteredData;
+    console.log(sexFreq);
+    console.log(attendance);
+    dotmatrix.highlightedData = dotmatrix.data.filter(d => (sexFrequency(d) == sexFreq) && (religiousity(d) == attendance));
+    console.log(dotmatrix.highlightedData);
     dotmatrix.updateVis();
 }
 
@@ -185,8 +187,9 @@ function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
  * Use treemap as filter and update dotMatrix accordingly
  */
 function filterWithMeetingData(meetingCategory) {
-    dotmatrix.highlightedData = data.filter((d) =>
-      MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d)
+    dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
+        // console.log(meetingCategory);
+        return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d) }
     );
     dotmatrix.updateVis();
 }
