@@ -5,7 +5,7 @@ class TreeMap {
    * @param {Object}
    * @param {Array}
    */
-  constructor(_config, _data) {
+  constructor(_config, _data, _method_checks) {
     // Configuration object with defaults
     this.config = {
       parentElement: _config.parentElement,
@@ -15,7 +15,17 @@ class TreeMap {
       margin: _config.margin || { top: 50, right: 175, bottom: 25, left: 40 },
     };
     this.data = _data;
-
+    this.checks = {
+      checkEducationMethod: _method_checks.checkEducationMethod,
+      checkProfessionalSettingMethod:
+        _method_checks.checkProfessionalSettingMethod,
+      checkSocialSettingMethod: _method_checks.checkSocialSettingMethod,
+      checkInternetSiteMethod: _method_checks.checkInternetSiteMethod,
+      checkOnlineSocialNetworkingMethod:
+        _method_checks.checkOnlineSocialNetworkingMethod,
+      checkAbroadMethod: _method_checks.checkAbroadMethod,
+      checkMutualConnectionMethod: _method_checks.checkMutualConnectionMethod,
+    };
     this.initVis();
   }
 
@@ -54,12 +64,13 @@ class TreeMap {
         `translate(${vis.config.margin.left},${vis.config.margin.top})`
       );
 
-    vis.title = vis.chart.append("text")
-      .attr('class', 'title')
-      .attr('x', -5)
-      .attr('y', -15)
+    vis.title = vis.chart
+      .append("text")
+      .attr("class", "title")
+      .attr("x", -5)
+      .attr("y", -15)
       .text("How People Met Their Partners");
-    
+
     // doing the scale when initializing the visualization becuase it needs to be static
     vis.colourScale.domain(Object.keys(MEETING_METHODS));
     vis.legend = vis.chart
@@ -121,65 +132,44 @@ class TreeMap {
     const educationDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
-      (d) => d.hcm2017q24_school === "yes" || d.hcm2017q24_college === "yes"
+      (d) => this.checks.checkEducationMethod(d)
     );
 
     // professional
     const professionalSettingDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
-      (d) =>
-        d.hcm2017q24_mil === "yes" ||
-        d.hcm2017q24_customer === "yes" ||
-        d.hcm2017q24_vol_org === "yes" ||
-        d.hcm2017q24_work_neighbors === "yes"
+      (d) => this.checks.checkProfessionalSettingMethod(d)
     );
 
     const socialSettingDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
-      (d) =>
-        d.hcm2017q24_bar_restaurant === "yes" ||
-        d.hcm2017q24_party === "yes" ||
-        d.hcm2017q24_public === "yes" ||
-        d.hcm2017q24_church === "yes" ||
-        d.hcm2017q24_single_serve_nonint === "yes" // like "singles night at the cafe"
+      (d) => this.checks.checkSocialSettingMethod(d)
     );
 
     const internetSiteDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
-      (d) =>
-        d.hcm2017q24_internet_other === "yes" ||
-        d.hcm2017q24_internet_dating === "yes" || // dating app
-        d.hcm2017q24_internet_org === "yes" // internet site not dedicated to dating
+      (d) => this.checks.checkInternetSiteMethod(d)
     );
 
     const onlineSocialNetworkingDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
-      (d) =>
-        d.hcm2017q24_internet_soc_network === "yes" || // instagram or smth
-        d.hcm2017q24_internet_game === "yes" ||
-        d.hcm2017q24_internet_chat === "yes"
+      (d) => this.checks.checkOnlineSocialNetworkingMethod(d)
     );
 
     const abroadDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
-      (d) =>
-        d.hcm2017q24_vacation === "yes" || d.hcm2017q24_business_trip === "yes"
+      (d) => this.checks.checkAbroadMethod(d)
     );
 
     const mutualConnectionDataMap = d3.rollups(
       vis.data,
       (v) => v.length,
-      (d) =>
-        d.hcm2017q24_blind_date === "yes" || // usually blind dates get set up by someone you know
-        d.hcm2017q24_met_through_family === "yes" ||
-        d.hcm2017q24_met_through_friend === "yes" ||
-        d.hcm2017q24_met_through_as_nghbrs === "yes" ||
-        d.hcm2017q24_met_as_through_cowork === "yes"
+      (d) => this.checks.checkMutualConnectionMethod(d)
     );
 
     vis.aggregatedData = new Map([
@@ -260,21 +250,31 @@ class TreeMap {
       .style("fill", function (d) {
         return vis.colourScale(d["id"]);
       })
-      .on('mouseover', (event, d) => {
-        d3.select('#tooltip')
-          .style('display', 'block')
+      .on("mouseover", (event, d) => {
+        d3.select("#tooltip")
+          .style("display", "block")
           .html(
             `<div><b>How they met:</b> ${d["id"]}</div>
              <div><b>Count:</b> ${d["value"]}</div>`
           );
       })
-      .on('mousemove', (event) => {
-        d3.select('#tooltip')
-          .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
-          .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
+      .on("mousemove", (event) => {
+        d3.select("#tooltip")
+          .style("left", event.pageX + vis.config.tooltipPadding + "px")
+          .style("top", event.pageY + vis.config.tooltipPadding + "px");
       })
-      .on('mouseleave', () => {
-        d3.select('#tooltip').style('display', 'none');
+      .on("mouseleave", () => {
+        d3.select("#tooltip").style("display", "none");
+      })
+      .on("click", function (event, d) {
+        // const isActive = difficultyFilter.includes(d.key);
+        // if (isActive) {
+        //   difficultyFilter = difficultyFilter.filter((f) => f !== d.key); // Remove filter
+        // } else {
+        //   difficultyFilter.push(d.key); // Append filter
+        // }
+        filterWithMeetingData(d["id"]); // Call global function to update scatter plot
+        // d3.select(this).classed("active", !isActive); // Add class to style active filters with CSS
       });
   }
 }
