@@ -33,6 +33,7 @@ class DotMatrix {
       .attr('height', vis.config.containerHeight)
       .attr('id', 'dot-matrix-chart');
 
+
     vis.svg.append("text")
       .attr('class', 'title')
       .attr('x', vis.width + 10)
@@ -59,10 +60,10 @@ class DotMatrix {
 
     // name the race categories
     vis.raceCategories = ["White & Black", "Black & Asian", "Native American & Asian", "Black & Other", "Same Race",
-    "Black & Native American", "Asian & Other", "White & Other", "Asian & White", "Native American & Other"];
+    "Black & Native American", "Asian & Other", "White & Other", "Asian & White", "Native American & Other", "Native American & White"];
 
     vis.colorScale = d3.scaleOrdinal()
-      .range(d3.schemeCategory10)
+      .range(d3.schemePaired)
       .domain(vis.raceCategories);
 
     vis.updateVis();
@@ -198,8 +199,11 @@ class DotMatrix {
         vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" && vis.subjectRace(d) == "Other (please specify)") {
           d.relRaceCat = "Native American & Other";
       } else if (vis.subjectRace(d) == "Asian or Pacific Islander" && vis.partnerRace(d) == "White" ||
-        vis.partnerRace(d) == "Asian or Pacific Islander" && vis.subjectRace(d) == "White") {
-          d.relRaceCat = "Asian & White";
+      vis.partnerRace(d) == "Asian or Pacific Islander" && vis.subjectRace(d) == "White") {
+        d.relRaceCat = "Asian & White";
+      }else if (vis.subjectRace(d) == "American Indian, Aleut, or Eskimo" && vis.partnerRace(d) == "White" ||
+        vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" && vis.subjectRace(d) == "White") {
+          d.relRaceCat = "Native American & White";
       } else {
           d.relRaceCat = "Same Race";
       }
