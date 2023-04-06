@@ -123,6 +123,7 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
+          console.log(d);
           filterBarChartData(d);
         });
 
@@ -166,9 +167,6 @@ class DotMatrix {
         })
         .style("font-size", vis.dotRadius * 3 + "px")
         .text(d => d);
-
-
-
   }
 
   assignRelationshipRace() {
@@ -215,6 +213,11 @@ class DotMatrix {
     let vis = this;
 
     let particpantAge = d.ppage;
+    let relationshipRanking = d.Q34;
+    let sexFrequency = d.w6_sex_frequency;
+    let religiousity = d.ppp20072;
+    //let howTheyMet = // fill with Guramrit's function return value;
+
 
     d3.select('#tooltip')
       .style('display', 'block')
@@ -224,6 +227,9 @@ class DotMatrix {
           <div><b>Age</b>: ${particpantAge}</div>
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
+          <div><b>Relationship Quality:</b> ${relationshipRanking}</div> 
+          <div><b>Sex Frequency:</b> ${sexFrequency}</div> 
+          <div><b>Religious Service Attendance:</b> ${religiousity}</div> 
         `);
   }
 
@@ -233,8 +239,16 @@ class DotMatrix {
  */
   preprocessData() {
     let vis = this;
-    vis.data = vis.data.filter(d => vis.subjectRace(d) != "" || vis.partnerRace(d) != "" || vis.subjectRace(d) != "Other (please specify)" || vis.partnerRace(d) != "Other (please specify)" ||
-      vis.subjectRace(d) != "Refused" || vis.partnerRace(d) != "Refused");
+    console.log(vis.data);
+    let tempData = vis.data;
+    vis.data = tempData.filter(d => (
+      vis.subjectRace(d) !== "" &&
+      vis.subjectRace(d) !== "Refused" &&
+      vis.partnerRace(d) !== "" &&
+      vis.partnerRace(d) !== "Refused"
+  ));
+      console.log(vis.data);
+
   }
 
 }

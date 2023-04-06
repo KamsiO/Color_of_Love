@@ -2,9 +2,9 @@ let varForFilteringcirclesChart = "";
 let currcirclesChartMainCategory = ""; // the relationship ranking
 let currcirclesChartSubCategory = ""; // whether the person is part of an interracial couple
 let relationshipRanking = d => d.Q34;
-let whetherInterracialOfSameRace = d => d.interracial_5cat;
-
-
+let whetherInterracialOrSameRace = d => d.interracial_5cat;
+let subjectRace = d => d.w6_subject_race;
+let partnerRace = d => d.w6_q6b;
 
 const MEETING_METHODS = {
     0: "Education",
@@ -17,18 +17,16 @@ const MEETING_METHODS = {
 };
 
 
-
-
 /**
  * Load data from CSV file asynchronously and render charts
  */
-let treeMap, data;
+let treeMap, barChart, dotmatrix, heatmap, data;
 d3.csv('data/dating.csv').then(_data => {
     data = _data;
     
     // Global data processing
     data.forEach(d => {
-        if (d.w6_subject_race == d.w6_q6b) {
+        if (subjectRace(d) === partnerRace(d)) {
             d.interracial_5cat = "no";
         } else {
             d.interracial_5cat = "yes";
@@ -36,7 +34,7 @@ d3.csv('data/dating.csv').then(_data => {
     });
 
     // initialize visualizations
-    const dotmatrix = new DotMatrix({
+    dotmatrix = new DotMatrix({
         parentElement: '#dot-matrix',
     }, data);
 
@@ -44,7 +42,7 @@ d3.csv('data/dating.csv').then(_data => {
         parentElement: "#tree-map",
     }, data);
 
-    const barChart = new BarChart({
+    barChart = new BarChart({
         parentElement: '#bar-chart-plot',
     }, data);
 
@@ -91,7 +89,7 @@ d3.csv('data/dating.csv').then(_data => {
  * @param subCategory bar clidked (interracial or same race)
  */
 function filterDotMatrixChartData() {
-    let filteredData = dotmatrix.data.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOfSameRace(d) == currcirclesChartSubCategory));
+    let filteredData = dotmatrix.data.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOrSameRace(d) == currcirclesChartSubCategory));
     console.log(filteredData);
     dotmatrix.highlightedData = filteredData;
     dotmatrix.updateVis();
@@ -103,11 +101,11 @@ function filterDotMatrixChartData() {
  * @param dotClicked is the dot that was clicked.
  */
 function filterBarChartData(dotClicked) {
-    //console.log(dotClicked);
     let relationshipRankingOfPersonClicked = dotClicked.Q34;
-    // console.log(relationshipRankingOfPersonClicked);
     let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
-    let filteredData = barChart.data.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOfSameRace(d) == whetherRelationshipIsInterracial);
+    let tempData = barChart.data;
+    console.log(tempData);
+    let filteredData = tempData.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial);
     console.log(filteredData);
     barChart.highlightedData = filteredData;
     barChart.updateVis();

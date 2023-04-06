@@ -188,14 +188,7 @@ class BarChart {
             .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
             .attr('y', d => vis.yScale(d[1]))
             .attr('width', 20)
-            .attr('height', d => vis.height -  vis.yScale(d[1]))
-            // .attr('class', d => {
-            //   if (vis.highlightedData.length != 0) {
-            //     return `higlighted-bar`;
-            //   } else {
-            //     return ``;
-            //   }
-            // });
+            .attr('height', d => vis.height -  vis.yScale(d[1]));
 
       individualBars
         .on('mouseover', function (event,d) {
@@ -210,12 +203,16 @@ class BarChart {
           d3.select('#tooltip').style('display', 'none');
         }).on('click', function(event, d) {
           currcirclesChartSubCategory = d[0];
+          console.log("got here1");
+          console.log(currcirclesChartSubCategory);
         });
 
       // when a bar is clicked, filter the data displayed in the circlesChart
       barGroup
         .on('click', function(event, d) {
           currcirclesChartMainCategory = d[0];
+          console.log("got here2");
+          console.log(currcirclesChartMainCategory);
           filterDotMatrixChartData();
         });
     
