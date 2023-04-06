@@ -1,4 +1,19 @@
-/* 
-IMPORTANT: CSS styles across files can overwrite each other!
-Make sure to use specific IDs/classes.
-*/
+/* Axes */
+#heat-map-chart .axis path {
+    display: none;
+}
+
+/* Labels */
+#heat-map-chart .tick text {
+    fill: rgb(90, 90, 90);
+}
+
+#heat-map-chart .axis-label {
+    font-size: 14px;
+}
+
+/* Interactivity */
+.box:hover {
+    stroke: rgb(65, 65, 65);
+    stroke-width: 2px;
+}

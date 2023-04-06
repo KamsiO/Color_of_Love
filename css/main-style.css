@@ -1,20 +1,38 @@
-/* 
-IMPORTANT: CSS styles across files can overwrite each other!
-Make sure to use specific IDs/classes.
-*/
-:root {
-    /* COLORS */
-    --tooltip_bckg: white;
-    --tooltip_border_color: #ddd;
-    --font_color: black;
-    --interacial_color: red;
-    --same_race_color: blue;
-    --stroke_color: black;
-    /* border */
-    --border-color: purple;
+body {
+    font-family: 'Open Sans', sans-serif;
+}
 
-    /* text */
-    /* --axis_title_font_size: 1em; */
-    --labels_font_size: 0.8em;
-    --shape_stroke_width: 2px;
+.container {
+    padding-top: 20px;
+    margin-left: 30px;
+}
+
+#overview {
+    text-align: justify;
+}
+
+/* Chart Text */
+.title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 10px;
+    font-style: italic;
+    fill: rgb(139, 139, 139);
+}
+
+/* Tooltip */
+#tooltip {
+    position: absolute;
+    display: none;
+    border-radius: 7px;
+    background: #fff;
+    box-shadow: 2px 2px 2px 0px rgb(92 92 92 / 0.5);
+    border: 1px solid #ddd;
+    font-size: 12px;
+    padding: 8px;
+    min-width: 100px;
+    color: #333;
 }
