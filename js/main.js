@@ -103,15 +103,8 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
 
 
 /**
- * Use treemap as filter and update dotMatrix accordingly
+ * FUNCTIONS CALLED WHEN A DOT IS CLICKED
  */
-function filterWithMeetingData(meetingCategory) {
-  dotmatrix.highlightedData = data.filter((d) =>
-    MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d)
-  );
-
-  dotmatrix.updateVis();
-}
 
 function TreeMapfilterDotMatrixChartData(dotClicked) {
   let meetingMethod = "";
@@ -131,16 +124,35 @@ function TreeMapfilterDotMatrixChartData(dotClicked) {
 }
 
 /**
- * filter the data rendered in the dot matrix chart according to:
- * mainCategory the relationship ranking
- * subCategory bar clidked (interracial or same race)
+ * highlights a bar that corresponds to the dot (if available) when a button is clicked
+ * @param dotClicked is the dot that was clicked.
  */
-function barChartFilterDotMatrixChartData() {
-    let filteredData = dotmatrix.data.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOrSameRace(d) == currcirclesChartSubCategory));
+function filterBarChartData(dotClicked) {
+    let relationshipRankingOfPersonClicked = dotClicked.Q34;
+    let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
+    let tempData = barChart.data;
+    console.log(tempData);
+    let filteredData = tempData.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial);
     console.log(filteredData);
-    dotmatrix.highlightedData = filteredData;
-    dotmatrix.updateVis();
+    barChart.highlightedData = filteredData;
+    barChart.updateVis();
 }
+
+
+/**
+ * highlights a cell that corresponds to the dot's sex and religion habits (if available) when dot is clicked
+ * @param dotClicked is the dot that was clicked.
+ */
+function selectHeatMapCell(dotClicked) {
+    heatMap.selectedCategories = [dotClicked.ppp20072, dotClicked.w6_sex_frequency];
+    heatMap.renderVis();
+}
+
+
+/**
+ * FUNCTIONS TO SELECT THE CORRESPONDING DOTS WHEN ANOTHER VIEW IS CLICKED
+ * 
+ */
 
  /* filter the data rendered in the dot matrix according to:
  * @param mainCategory the relationship ranking
@@ -150,20 +162,11 @@ function filterDotMatrixChartData() {
   let filteredData = dotmatrix.data.filter(
     (d) =>
       relationshipRanking(d) == currcirclesChartMainCategory &&
-      whetherInterracialOfSameRace(d) == currcirclesChartSubCategory
+      whetherInterracialOrSameRace(d) == currcirclesChartSubCategory
   );
   console.log(filteredData);
   dotmatrix.highlightedData = filteredData;
   dotmatrix.updateVis();
-}
-
-/**
- * filter the data rendered in the dot chart according to:
- * @param sexFreq the sex frequency category of the selected cell
- * @param religiousness the religous service attendance category of the selected cell
- */
-function heatMapfilterDotMatrixChartData(sexFreq, religiousness) {
-   
 }
 
 /**
@@ -179,33 +182,27 @@ function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
 }
 
 /**
+ * Use treemap as filter and update dotMatrix accordingly
+ */
+function filterWithMeetingData(meetingCategory) {
+    dotmatrix.highlightedData = data.filter((d) =>
+      MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d)
+    );
+    dotmatrix.updateVis();
+}
+
+/**
  * filter the data rendered in the dot matrix chart according to:
+ * mainCategory the relationship ranking
+ * subCategory bar clidked (interracial or same race)
  */
-function TreeMapfilterDotMatrixChartData() {
-//
+function barChartFilterDotMatrixChartData() {
+    dotmatrix.highlightedData = dotmatrix.data.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOrSameRace(d) == currcirclesChartSubCategory));
+    console.log(dotmatrix.highlightedData);
+    dotmatrix.updateVis();
 }
 
-/**
- * highlights a bar that corresponds to the dot (if available) when a button is clicked
- * @param dotClicked is the dot that was clicked.
- */
-function filterBarChartData(dotClicked) {
-    let relationshipRankingOfPersonClicked = dotClicked.Q34;
-    let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
-    let tempData = barChart.data;
-    console.log(tempData);
-    let filteredData = tempData.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial);
-    console.log(filteredData);
-    barChart.highlightedData = filteredData;
-    barChart.updateVis();
-}
 
-/**
- * highlights a cell that corresponds to the dot's sex and religion habits (if available) when dot is clicked
- * @param dotClicked is the dot that was clicked.
- */
-function selectHeatMapCell(dotClicked) {
-    heatMap.selectedCategories = [dotClicked.ppp20072, dotClicked.w6_sex_frequency];
-    heatMap.renderVis();
-}
+
+
 

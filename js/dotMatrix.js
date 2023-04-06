@@ -127,6 +127,7 @@ class DotMatrix {
           console.log(d);
           filterBarChartData(d);
           selectHeatMapCell(d);
+          TreeMapfilterDotMatrixChartData(d);
         });
 
 
