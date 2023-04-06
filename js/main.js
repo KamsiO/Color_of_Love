@@ -15,11 +15,10 @@ let relationshipRanking = d => d.Q34;
 let whetherInterracialOfSameRace = d => d.interracial_5cat;
 
 
-
 /**
  * Load data from CSV file asynchronously and render charts
  */
-let treeMap, data;
+let dotmatrix, treeMap, barChart, heatMap, data;
 d3.csv("data/dating.csv").then((_data) => {
     data = _data;
 
@@ -33,19 +32,19 @@ d3.csv("data/dating.csv").then((_data) => {
     });
 
     // initialize visualizations
-    const dotmatrix = new DotMatrix({
+    dotmatrix = new DotMatrix({
         parentElement: '#dot-matrix',
     }, data);
 
-    const treeMap = new TreeMap({
+    treeMap = new TreeMap({
         parentElement: "#tree-map",
     }, data);
 
-    const barChart = new BarChart({
+    barChart = new BarChart({
         parentElement: '#bar-chart-plot',
     }, data);
 
-    const heatMap = new HeatMap({
+    heatMap = new HeatMap({
         parentElement: '#heat-map',
     }, data);
 
@@ -83,7 +82,7 @@ d3.csv("data/dating.csv").then((_data) => {
 
 
 /**
- * filter the data rendered in the bubble chart according to:
+ * filter the data rendered in the dot matrix according to:
  * @param mainCategory the relationship ranking
  * @param subCategory bar clidked (interracial or same race)
  */
@@ -92,6 +91,16 @@ function filterDotMatrixChartData() {
     console.log(filteredData);
     dotmatrix.highlightedData = filteredData;
     dotmatrix.updateVis();
+
+}
+
+/**
+ * filter the data rendered in the dot chart according to:
+ * @param sexFreq the sex frequency category of the selected cell
+ * @param religiousness the religous service attendance category of the selected cell
+ */
+function heatMapfilterDotMatrixChartData(sexFreq, religiousness) {
+   
 
 }
 
@@ -108,4 +117,13 @@ function filterBarChartData(dotClicked) {
     console.log(filteredData);
     barChart.highlightedData = filteredData;
     barChart.updateVis();
+}
+
+/**
+ * highlights a cell that corresponds to the dot's sex and religion habits (if available) when dot is clicked
+ * @param dotClicked is the dot that was clicked.
+ */
+function selectHeatMapCell(dotClicked) {
+    heatMap.selectedCategories = [dotClicked.ppp20072, dotClicked.w6_sex_frequency];
+    heatMap.renderVis();
 }
