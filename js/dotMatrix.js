@@ -157,7 +157,7 @@ class DotMatrix {
     vis.legend.selectAll(".legendText")
         .data(vis.raceCategories)
       .join('text')
-        .attr('class', "legendText")
+        .attr('class', "legendText legend-text")
         .attr("x", function () {
           vis.xLegendCount += 1;
           return vis.xLegendCount % 5 == 0 ? vis.xLegend = 10 : vis.xLegend += 165;

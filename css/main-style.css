@@ -1,5 +1,22 @@
+:root[theme='light'] {
+    --body-bckgrnd-color: white;
+    --font-color: black;
+    --tick-color: rgb(156, 156, 156);
+    --legend-text-color: rgb(90,90,90);
+}
+
+:root[theme='dark'] {
+    --body-bckgrnd-color: black;
+    --font-color: white;
+    --tick-color: rgb(190, 190, 190);
+    --legend-text-color: rgb(197, 197, 197);
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
+    background-color: var(--body-bckgrnd-color);
+    color: var(--font-color);
+    fill: var(--font-color);
 }
 
 /* Responsive Layout */
@@ -48,7 +65,12 @@ body {
 }
 
 .tick text {
-    fill: rgb(90, 90, 90);
+    fill: var(--tick-color);
+}
+
+.legend-text {
+    fill: var(--legend-text-color);
+    color: var(--legend-text-color);
 }
 
 
