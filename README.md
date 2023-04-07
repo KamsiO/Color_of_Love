@@ -1,3 +1,4 @@
+# D3 Project Starter Template
 # D3 Project Sources
 
 ## Heatmap Sources:
@@ -19,5 +20,4 @@ Chi:
 ## Main Style Sources:
 https://stackoverflow.com/questions/35175722/min-width-for-column-in-bootstrap-grid-system
 To control the width of Bootstrap columns so that elements move instead of squish
-
 
