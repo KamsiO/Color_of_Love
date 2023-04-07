@@ -91,7 +91,7 @@ class HeatMap {
           .style('fill', d => vis.colorScale(vis.colorValue(d)))
           .classed('selected', d => vis.selectedCategories.length > 0 && vis.selectedCategories[0] === d[0] && vis.selectedCategories[1] === d[1])
           .on('click', function(event, d) {
-            heatMapfilterDotMatrixChartData(d[0], d[1]);
+            heatMapfilterDotMatrixChartData( d[1], d[0]);
           })
 
       vis.tooltipEventListener(boxes);

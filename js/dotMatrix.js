@@ -33,6 +33,7 @@ class DotMatrix {
       .attr('height', vis.config.containerHeight)
       .attr('id', 'dot-matrix-chart');
 
+
     vis.svg.append("text")
       .attr('class', 'title')
       .attr('x', vis.width + 10)
@@ -59,10 +60,10 @@ class DotMatrix {
 
     // name the race categories
     vis.raceCategories = ["White & Black", "Black & Asian", "Native American & Asian", "Black & Other", "Same Race",
-    "Black & Native American", "Asian & Other", "White & Other", "Asian & White", "Native American & Other"];
+    "Black & Native American", "Asian & Other", "White & Other", "Asian & White", "Native American & Other", "Native American & White"];
 
     vis.colorScale = d3.scaleOrdinal()
-      .range(d3.schemeCategory10)
+      .range(d3.schemePaired)
       .domain(vis.raceCategories);
 
     vis.updateVis();
@@ -126,6 +127,7 @@ class DotMatrix {
           console.log(d);
           filterBarChartData(d);
           selectHeatMapCell(d);
+          TreeMapfilterDotMatrixChartData(d);
         });
 
 
@@ -147,7 +149,9 @@ class DotMatrix {
           vis.xLegendCount += 1;
           return vis.xLegendCount % 5 == 0 ? vis.xLegend = 0 : vis.xLegend += 165;
         })
-        .style("fill", d => vis.colorScale(d));
+        .style("fill", d => vis.colorScale(d))
+        .style("stroke", "black")
+        .style("font-size", "0.25px");
 
     vis.yLegendCount = -1;
     vis.xLegendCount = -1;
@@ -168,9 +172,6 @@ class DotMatrix {
         })
         .style("font-size", vis.dotRadius * 3 + "px")
         .text(d => d);
-
-
-
   }
 
   assignRelationshipRace() {
@@ -202,8 +203,11 @@ class DotMatrix {
         vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" && vis.subjectRace(d) == "Other (please specify)") {
           d.relRaceCat = "Native American & Other";
       } else if (vis.subjectRace(d) == "Asian or Pacific Islander" && vis.partnerRace(d) == "White" ||
-        vis.partnerRace(d) == "Asian or Pacific Islander" && vis.subjectRace(d) == "White") {
-          d.relRaceCat = "Asian & White";
+      vis.partnerRace(d) == "Asian or Pacific Islander" && vis.subjectRace(d) == "White") {
+        d.relRaceCat = "Asian & White";
+      }else if (vis.subjectRace(d) == "American Indian, Aleut, or Eskimo" && vis.partnerRace(d) == "White" ||
+        vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" && vis.subjectRace(d) == "White") {
+          d.relRaceCat = "Native American & White";
       } else {
           d.relRaceCat = "Same Race";
       }
@@ -218,6 +222,9 @@ class DotMatrix {
 
     let particpantAge = d.ppage;
 
+    //let howTheyMet = // fill with Guramrit's function return value;
+
+
     d3.select('#tooltip')
       .style('display', 'block')
       .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
@@ -226,6 +233,9 @@ class DotMatrix {
           <div><b>Age</b>: ${particpantAge}</div>
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
+          <div><b>Relationship Quality:</b> ${relationshipRanking(d)}</div> 
+          <div><b>Sex Frequency:</b> ${sexFrequency(d)}</div> 
+          <div><b>Religious Service Attendance:</b> ${religiousity(d)}</div> 
         `);
   }
 
@@ -235,8 +245,14 @@ class DotMatrix {
  */
   preprocessData() {
     let vis = this;
-    vis.data = vis.data.filter(d => vis.subjectRace(d) != "" || vis.partnerRace(d) != "" || vis.subjectRace(d) != "Other (please specify)" || vis.partnerRace(d) != "Other (please specify)" ||
-      vis.subjectRace(d) != "Refused" || vis.partnerRace(d) != "Refused");
+    // console.log(vis.data);
+    let tempData = vis.data;
+    vis.data = tempData.filter(d => (
+      vis.subjectRace(d) !== "" &&
+      vis.subjectRace(d) !== "Refused" &&
+      vis.partnerRace(d) !== "" &&
+      vis.partnerRace(d) !== "Refused"
+    ));
   }
 
 }
