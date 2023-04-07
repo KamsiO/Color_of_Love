@@ -153,13 +153,11 @@ class BarChart {
       // Specificy x- and y-value accessor functions
       vis.xValue = d => vis.relationshipRanking(d);
       vis.yValue = d => vis.groupedData.get(vis.relationshipRanking(d));
-      
-      // Gives the bars a minimum height so that the smallest bars are still visible.
-      vis.addMinBarHeight = 10;
+    
     
       // set the domain of xScale to be the relationship rankings
       vis.xScale.domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
-      vis.yScale.domain ([0,(vis.maxOccurenceCount(vis.groupedData) + vis.addMinBarHeight)]);
+      vis.yScale.domain ([0,(vis.maxOccurenceCount(vis.groupedData))]);
 
       vis.renderVis();
     }
@@ -168,37 +166,60 @@ class BarChart {
     renderVis() {
       let vis = this;
       vis.specificBarClicked = '';
-      console.log(this.groupedData);
+      // console.log(this.groupedData);
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const barGroup = vis.chart.selectAll('.bars')
         .data(vis.groupedData, d => {
-          // console.log(d[0]);
+          // console.log(this.groupedData);
           return d[0];}
          )
         .join("g")
         .attr('class', 'bars')
         .attr("transform", d => {
+          console.log(vis.relationshipRanking);
+          if (vis.highlightedData[0] == d[0]) {
+            vis.relationshipRanking = d[0];
+          } 
           return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
+
         });
 
+        vis.barHeightTooSmall = d => d[1] < 20;
+        // Gives the bars a minimum height so that the smallest bars are still visible.
+        vis.addMinBarHeight = 20;
 
+        // have another value that represents the category and place it with the yes/no plus the value (yes/no) 
       const individualBars = barGroup.selectAll('.bar')
-        .data (d => [d[1]])
-        .join('g')
-        .selectAll('g')
-          .data(d => {
-            d.delete("");
-            console.log(d);
-            return d; }) 
+        // .data (d => [d[1]])
+        // .join('g')
+        // .selectAll('g')
+          .data(d => d[1], d => d[0]) 
             .join ('rect')
             .attr('class', d => `bar ${d[0]}`)
             .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
             .attr('y', d => {
-                return vis.yScale(d[1]) - vis.addMinBarHeight;
+              console.log(vis.yScale(d[1]));
+              if(vis.barHeightTooSmall(d)) {
+                return vis.yScale(vis.addMinBarHeight);
+              } else {
+                return vis.yScale(d[1]);
+              }
               })
             .attr('width', 20)
             .attr('height', d => {
-                return vis.height -  vis.yScale(d[1]) + vis.addMinBarHeight;
+              if(vis.barHeightTooSmall(d)) {
+                return vis.height -  vis.yScale(vis.addMinBarHeight);
+              } else {
+                return vis.height -  vis.yScale(d[1]);
+              }
+            })
+            .style("stroke", d => {
+              console.log(d[0]);
+              console.log(vis.highlightedData);
+              if (vis.highlightedData[0] == vis.relationshipRanking && vis.highlightedData[1] == d[0]) {
+                console.log(vis.highlightedData[1]);
+                return 'black';
+              }
             });
 
       individualBars
@@ -247,13 +268,22 @@ class BarChart {
       }
     };
 
+    let getCount = d => {
+      if (vis.barHeightTooSmall(d))
+      {
+        return `< ${vis.addMinBarHeight}`;
+      } else {
+        return `${d[1]}`;
+      }
+    }
+
     d3.select('#tooltip')
     .style('display', 'block')
     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
     .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
     .html(`
       <div><strong>${subCatname(d)}</strong></div>
-      <div>Count: ${d[1]} </div> 
+      <div>Count: ${getCount(d)} </div> 
     `);
   }
 
@@ -268,3 +298,4 @@ class BarChart {
 
   
 }
+

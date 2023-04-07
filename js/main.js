@@ -129,13 +129,13 @@ function TreeMapfilterDotMatrixChartData(dotClicked) {
  * @param dotClicked is the dot that was clicked.
  */
 function filterBarChartData(dotClicked) {
-    let relationshipRankingOfPersonClicked = dotClicked.Q34;
-    let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
-    let tempData = barChart.data;
-    console.log(tempData);
-    let filteredData = tempData.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial);
-    console.log(filteredData);
-    barChart.highlightedData = filteredData;
+    // let relationshipRankingOfPersonClicked = dotClicked.Q34;
+    // let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
+    // let tempData = barChart.data;
+    // console.log(tempData);
+    // barChart.highlightedData = tempData.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial);
+    // console.log(barChart.highlightedData);
+    barChart.highlightedData = [relationshipRanking(dotClicked), whetherInterracialOrSameRace(dotClicked)];
     barChart.updateVis();
 }
 
@@ -186,13 +186,13 @@ function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
 /**
  * Use treemap as filter and update dotMatrix accordingly
  */
-function filterWithMeetingData(meetingCategory) {
-    dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
-        // console.log(meetingCategory);
-        return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d) }
-    );
-    dotmatrix.updateVis();
-}
+// function filterWithMeetingData(meetingCategory) {
+//     dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
+//         // console.log(meetingCategory);
+//         return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d) }
+//     );
+//     dotmatrix.updateVis();
+// }
 
 /**
  * filter the data rendered in the dot matrix chart according to:
