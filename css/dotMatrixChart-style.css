@@ -7,8 +7,8 @@ Make sure to use specific IDs/classes.
     fill-opacity: 0.3;
 }
 .matrix-dot:hover {
-    stroke: rgb(65, 65, 65);
-    stroke-width: 3px;
+    stroke: var(--highlight-color);
+    stroke-width: 2px;
 }
 
 

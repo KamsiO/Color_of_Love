@@ -185,3 +185,27 @@ function selectHeatMapCell(dotClicked) {
     heatMap.selectedCategories = [dotClicked.ppp20072, dotClicked.w6_sex_frequency];
     heatMap.renderVis();
 }
+
+
+// https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
+// https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
+// viewing mode toggle listener
+d3.selectAll('input[name="btnradio"]').on("change", function (e) {
+  console.log(e.target);
+  let btns = document.getElementsByClassName('btn');
+  if(e.target.id === "light-btn") {
+    document.documentElement.setAttribute('theme', 'light');
+    for(let i = 0; i < btns.length; i++) {
+      btns[i].classList.replace('btn-outline-light', 'btn-outline-dark');
+    }
+    document.getElementById('sun').setAttribute('fill', 'orange');
+    document.getElementById('moon').setAttribute('fill', 'black');
+  } else if (e.target.id === "dark-btn") {
+    document.documentElement.setAttribute('theme', 'dark');
+    for(let i = 0; i < btns.length; i++) {
+      btns[i].classList.replace('btn-outline-dark', 'btn-outline-light');
+    }
+    document.getElementById('sun').setAttribute('fill', 'white');
+    document.getElementById('moon').setAttribute('fill', 'orange');
+  }
+});

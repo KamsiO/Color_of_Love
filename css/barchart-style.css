@@ -43,7 +43,7 @@ Make sure to use specific IDs/classes.
 }
 
 .bar:hover {
-  stroke: rgb(65, 65, 65);
+  stroke: var(--highlight-color);
   stroke-width: 2px;
 }
 

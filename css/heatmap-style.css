@@ -10,11 +10,11 @@
 
 /* Interactivity */
 .box:hover {
-    stroke: rgb(65, 65, 65);
+    stroke: var(--highlight-color);
     stroke-width: 2px;
 }
 
 .box.selected {
-    stroke: rgb(65, 65, 65);
+    stroke: var(--highlight-color);
     stroke-width: 3px;
 }
