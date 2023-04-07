@@ -86,18 +86,18 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
             treeMap.data = data;
             heatMap.data = data;
             dotmatrix.data = data;
-            //barChart.data = data;
+            barChart.data = data;
         } else {
             let ageData = data.filter(d => d.ppagecat === currSelection);
             treeMap.data = ageData;
             heatMap.data = ageData;
             dotmatrix.data = ageData;
-            //barChart.data = ageData;
+            barChart.data = ageData;
         }
         treeMap.updateVis();
         heatMap.updateVis();
         dotmatrix.updateVis();
-        //barChart.updateVis();
+        barChart.updateVis();
     }
 });
 
@@ -129,12 +129,6 @@ function TreeMapfilterDotMatrixChartData(dotClicked) {
  * @param dotClicked is the dot that was clicked.
  */
 function filterBarChartData(dotClicked) {
-    // let relationshipRankingOfPersonClicked = dotClicked.Q34;
-    // let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
-    // let tempData = barChart.data;
-    // console.log(tempData);
-    // barChart.highlightedData = tempData.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial);
-    // console.log(barChart.highlightedData);
     barChart.highlightedData = [relationshipRanking(dotClicked), whetherInterracialOrSameRace(dotClicked)];
     barChart.updateVis();
 }

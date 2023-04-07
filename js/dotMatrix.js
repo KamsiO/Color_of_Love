@@ -124,7 +124,7 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          console.log(d);
+          // console.log(d);
           filterBarChartData(d);
           selectHeatMapCell(d);
           // TreeMapfilterDotMatrixChartData(d);
@@ -223,7 +223,22 @@ class DotMatrix {
     let particpantAge = d.ppage;
 
     //let howTheyMet = // fill with Guramrit's function return value;
+    // check if the sexfreq and religiuosity is refused or "" and replace with missing
+    let fillSexFreq = d => {
+      if(sexFrequency(d) == "Refused" || sexFrequency(d) == "") {
+        return `N/A`;
+      } else {
+        return sexFrequency(d);
+      }
+    };
 
+    let fillReligiousity = d => {
+      if(religiousity(d) == "Refused" || religiousity(d) == "") {
+        return `N/A`;
+      } else {
+        return religiousity(d);
+      }
+    };
 
     d3.select('#tooltip')
       .style('display', 'block')
@@ -234,8 +249,8 @@ class DotMatrix {
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
           <div><b>Relationship Quality:</b> ${relationshipRanking(d)}</div> 
-          <div><b>Sex Frequency:</b> ${sexFrequency(d)}</div> 
-          <div><b>Religious Service Attendance:</b> ${religiousity(d)}</div> 
+          <div><b>Sex Frequency:</b> ${fillSexFreq(d)}</div> 
+          <div><b>Religious Service Attendance:</b> ${fillReligiousity(d)}</div> 
         `);
   }
 
@@ -248,10 +263,12 @@ class DotMatrix {
     // console.log(vis.data);
     let tempData = vis.data;
     vis.data = tempData.filter(d => (
-      vis.subjectRace(d) !== "" &&
-      vis.subjectRace(d) !== "Refused" &&
-      vis.partnerRace(d) !== "" &&
-      vis.partnerRace(d) !== "Refused"
+      vis.subjectRace(d) != "" &&
+      vis.subjectRace(d) != "Refused" &&
+      vis.partnerRace(d) != "" &&
+      vis.partnerRace(d) != "Refused" &&
+      relationshipRanking(d) != "" &&
+      relationshipRanking(d) != "Refused"
     ));
   }
 
