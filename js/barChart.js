@@ -43,8 +43,7 @@ class BarChart {
         .paddingInner(.85);
 
       vis.yScale = d3.scaleLinear()
-        .range([vis.height, 0]);    
-         
+        .range([vis.height, 0]);   
 
       // intialize the axis
       vis.xAxis = d3.axisBottom(vis.xScale)
@@ -154,10 +153,13 @@ class BarChart {
       // Specificy x- and y-value accessor functions
       vis.xValue = d => vis.relationshipRanking(d);
       vis.yValue = d => vis.groupedData.get(vis.relationshipRanking(d));
+      
+      // Gives the bars a minimum height so that the smallest bars are still visible.
+      vis.addMinBarHeight = 10;
     
       // set the domain of xScale to be the relationship rankings
       vis.xScale.domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
-      vis.yScale.domain([0,vis.maxOccurenceCount(vis.groupedData)]);
+      vis.yScale.domain ([0,(vis.maxOccurenceCount(vis.groupedData) + vis.addMinBarHeight)]);
 
       vis.renderVis();
     }
@@ -166,15 +168,19 @@ class BarChart {
     renderVis() {
       let vis = this;
       vis.specificBarClicked = '';
-
+      console.log(this.groupedData);
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const barGroup = vis.chart.selectAll('.bars')
-        .data(vis.groupedData)
+        .data(vis.groupedData, d => {
+          // console.log(d[0]);
+          return d[0];}
+         )
         .join("g")
         .attr('class', 'bars')
         .attr("transform", d => {
           return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
         });
+
 
       const individualBars = barGroup.selectAll('.bar')
         .data (d => [d[1]])
@@ -182,20 +188,18 @@ class BarChart {
         .selectAll('g')
           .data(d => {
             d.delete("");
+            console.log(d);
             return d; }) 
             .join ('rect')
             .attr('class', d => `bar ${d[0]}`)
             .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
-            .attr('y', d => vis.yScale(d[1]))
+            .attr('y', d => {
+                return vis.yScale(d[1]) - vis.addMinBarHeight;
+              })
             .attr('width', 20)
-            .attr('height', d => vis.height -  vis.yScale(d[1]))
-            // .attr('class', d => {
-            //   if (vis.highlightedData.length != 0) {
-            //     return `higlighted-bar`;
-            //   } else {
-            //     return ``;
-            //   }
-            // });
+            .attr('height', d => {
+                return vis.height -  vis.yScale(d[1]) + vis.addMinBarHeight;
+            });
 
       individualBars
         .on('mouseover', function (event,d) {
@@ -210,13 +214,17 @@ class BarChart {
           d3.select('#tooltip').style('display', 'none');
         }).on('click', function(event, d) {
           currcirclesChartSubCategory = d[0];
+          console.log("got here1");
+          console.log(currcirclesChartSubCategory);
         });
 
       // when a bar is clicked, filter the data displayed in the circlesChart
       barGroup
         .on('click', function(event, d) {
           currcirclesChartMainCategory = d[0];
-          filterDotMatrixChartData();
+          console.log("got here2");
+          console.log(currcirclesChartMainCategory);
+          barChartFilterDotMatrixChartData();
         });
     
       // Update the axes because the underlying scales might have changed

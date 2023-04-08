@@ -1,36 +1,32 @@
 class HeatMap {
-  /**
-   * Class constructor with initial configuration
-   * @param {Object}
-   * @param {Array}
-   */
-  constructor(_config, _data) {
-    this.config = {
-      parentElement: _config.parentElement,
-      containerWidth: 410,
-      containerHeight: 315,
-      tooltipPadding: 15,
-      margin: { top: 40, right: 60, bottom: 100, left: 130 },
-      legendWidth: 10,
-      legendHeight: 100,
-    };
-    this.data = _data;
 
-    this.initVis();
-  }
-
-  initVis() {
-    let vis = this;
-
-    // Calculate inner chart size. Margin specifies the space around the actual chart.
-    vis.width =
-      vis.config.containerWidth -
-      vis.config.margin.left -
-      vis.config.margin.right;
-    vis.height =
-      vis.config.containerHeight -
-      vis.config.margin.top -
-      vis.config.margin.bottom;
+    /**
+     * Class constructor with initial configuration
+     * @param {Object}
+     * @param {Array}
+     */
+    constructor(_config, _data) {
+      this.config = {
+        parentElement: _config.parentElement,
+        containerWidth: 410,
+        containerHeight: 315,
+        tooltipPadding: 15,
+        margin: {top: 40, right: 60, bottom: 100, left: 130},
+        legendWidth: 10,
+        legendHeight: 100
+      }
+      this.data = _data;
+      this.selectedCategories = [];
+      
+      this.initVis();
+    }
+    
+    initVis() {
+      let vis = this;
+  
+      // Calculate inner chart size. Margin specifies the space around the actual chart.
+      vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
+      vis.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
 
     vis.initScales();
 
@@ -102,18 +98,21 @@ class HeatMap {
   renderVis() {
     let vis = this;
 
-    let boxes = vis.chart
-      .selectAll(".box")
-      .data(vis.box_groups)
-      .join("rect")
-      .attr("class", "box")
-      .attr("x", (d) => vis.xScale(d[0]))
-      .attr("y", (d) => vis.yScale(d[1]))
-      .attr("rx", 2)
-      .attr("ry", 2)
-      .attr("width", vis.xScale.bandwidth())
-      .attr("height", vis.yScale.bandwidth())
-      .style("fill", (d) => vis.colorScale(vis.colorValue(d)));
+      let boxes = vis.chart.selectAll('.box')
+          .data(vis.box_groups)
+        .join('rect')
+          .attr('class', 'box')
+          .attr('x', d => vis.xScale(d[0]))
+          .attr('y', d => vis.yScale(d[1]))
+          .attr('rx', 2)
+          .attr('ry', 2)
+          .attr('width', vis.xScale.bandwidth())
+          .attr('height', vis.yScale.bandwidth())
+          .style('fill', d => vis.colorScale(vis.colorValue(d)))
+          .classed('selected', d => vis.selectedCategories.length > 0 && vis.selectedCategories[0] === d[0] && vis.selectedCategories[1] === d[1])
+          .on('click', function(event, d) {
+            heatMapfilterDotMatrixChartData( d[1], d[0]);
+          })
 
     vis.tooltipEventListener(boxes);
 
@@ -147,9 +146,13 @@ class HeatMap {
   initScales() {
     let vis = this;
 
-    vis.xScale = d3.scaleBand().range([0, vis.width]).padding(0.02);
+      vis.xScale = d3.scaleBand()
+          .range([0, vis.width])
+          .padding(0.03);
 
-    vis.yScale = d3.scaleBand().range([vis.height, 0]).padding(0.02);
+      vis.yScale = d3.scaleBand()
+          .range([vis.height, 0])
+          .padding(0.03);
 
     vis.colorScale = d3.scaleSequential().interpolator(d3.interpolateRdPu);
   }
