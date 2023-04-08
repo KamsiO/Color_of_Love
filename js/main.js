@@ -180,13 +180,13 @@ function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
 /**
  * Use treemap as filter and update dotMatrix accordingly
  */
-// function filterWithMeetingData(meetingCategory) {
-//     dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
-//         // console.log(meetingCategory);
-//         return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d) }
-//     );
-//     dotmatrix.updateVis();
-// }
+function filterWithMeetingData(meetingCategory) {
+    dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
+        // console.log(meetingCategory);
+        return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d) }
+    );
+    dotmatrix.updateVis();
+}
 
 /**
  * filter the data rendered in the dot matrix chart according to:

@@ -126,7 +126,7 @@ class DotMatrix {
         .on('click', (event, d) => {
           filterBarChartData(d);
           selectHeatMapCell(d);
-          // TreeMapfilterDotMatrixChartData(d);
+          TreeMapfilterDotMatrixChartData(d);
         });
 
     vis.yLegendCount = -1;

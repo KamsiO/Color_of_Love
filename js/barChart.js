@@ -202,7 +202,6 @@ class BarChart {
         });
 
         vis.barHeightTooSmall = d => d[1] < 20;
-        // vis.barHeightTooSmall = d => vis.height - vis.yScale(d[1]) <=  3;
         // Gives the bars a minimum height so that the smallest bars are still visible.
         vis.addMinBarHeight = 19;
 
@@ -290,7 +289,7 @@ class BarChart {
     let getCount = d => {
       if (vis.barHeightTooSmall(d))
       {
-        return `< ${vis.addMinBarHeight}`;
+        return `< ${vis.addMinBarHeight + 1}`;
       } else {
         return `${d[1]}`;
       }
