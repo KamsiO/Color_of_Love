@@ -151,10 +151,6 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          d3.selectAll('.matrix-dot.selected').each(function() {
-            d3.select(this).classed('selected', false);
-          });
-          event.target.classList.add('selected');
           filterBarChartData(d);
           selectHeatMapCell(d);
           TreeMapfilterDotMatrixChartData(d);

@@ -13,8 +13,3 @@
     stroke: var(--highlight-color);
     stroke-width: 2px;
 }
-
-/* .box.selected {
-    stroke: var(--highlight-color);
-    stroke-width: 3px;
-} */
