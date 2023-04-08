@@ -155,9 +155,8 @@ function filterBarChartData(dotClicked) {
     let relationshipRankingOfPersonClicked = dotClicked.Q34;
     let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
     let tempData = barChart.data;
-    console.log(tempData);
+
     let filteredData = tempData.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial);
-    console.log(filteredData);
     barChart.highlightedData = filteredData;
     barChart.updateVis();
 }
@@ -198,10 +197,7 @@ function filterDotMatrixChartData() {
  * @param attendance the x-value of the cell in the heat map
  */
 function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
-    console.log(sexFreq);
-    console.log(attendance);
     dotmatrix.highlightedData = dotmatrix.data.filter(d => (sexFrequency(d) == sexFreq) && (religiousity(d) == attendance));
-    console.log(dotmatrix.highlightedData);
     dotmatrix.updateVis();
 }
 

@@ -9,13 +9,39 @@ class DotMatrix {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 1000,
-      containerHeight: _config.containerHeight || 365,
-      margin: _config.margin || { top: 35, right: 20, bottom: 45, left: 50},
+      containerHeight: _config.containerHeight || 395,
+      margin: _config.margin || { top: 35, right: 20, bottom: 75, left: 50},
       tooltipPadding: _config.tooltipPadding || 15
     }
 
     this.highlightedData = [];
     this.data = _data;
+    // this.colors = [
+    //   "#FF7F00", //orange
+    // "#1E90FF", //dodger blue 
+    // "#E31A1C", // red
+    // "#008b00", //green
+    // "#6A3D9A", //purple
+    // "#ffd700", //gold
+    // "#7ec0ee", //skyblue
+    // // "#FB9A99", //lt pink
+    // "#90ee90", //pale green
+    // // "#CAB2D6", //lt purple
+    // // "#FDBF6F", //lt orange
+    // "#00ced1", //dark turquoise
+    // // "gray70", 
+    // // "khaki2",
+    // // "maroon", 
+    // "#e066ff", // "orchid1", 
+    // // "deeppink1", "blue1", 
+    // // "steelblue4",
+    // // "darkturquoise", 
+    // // "green1", 
+    // // "yellow4", 
+    // // "yellow3",
+    // "#8b4500" // "darkorange4", 
+    // // "brown"
+    // ];
 
     this.initVis();
   }
@@ -48,7 +74,7 @@ class DotMatrix {
 
     vis.footnote = vis.chart
       .append("text")
-      .attr("transform", `translate(-5,${vis.height + 40})`)
+      .attr("transform", `translate(-5,${vis.height + 60})`)
       .attr("class", "subtitle")
       .attr("font-size", "11px")
       .text(
@@ -59,11 +85,12 @@ class DotMatrix {
       .attr('transform', `translate(${vis.config.margin.left},${vis.height - 30})`);
 
     // name the race categories
-    vis.raceCategories = ["White & Black", "Black & Asian", "Native American & Asian", "Black & Other", "Same Race",
-    "Black & Native American", "Asian & Other", "White & Other", "Asian & White", "Native American & Other", "Native American & White"];
+    vis.raceCategories = ["Black & Other", "Black & Asian", "Native American & Asian", "Asian & White", "Same Race",
+    "Black & Native American", "Asian & Other", "White & Black", "White & Other", "Native American & Other", "Native American & White"];
 
     vis.colorScale = d3.scaleOrdinal()
-      .range(d3.schemePaired)
+      .range(d3.schemeCategory10.concat(['#b03060'])) // options: #698b69, #5218fa, #8b0a50
+      // .range(d3.schemeCategory10)
       .domain(vis.raceCategories);
 
     vis.updateVis();
@@ -124,7 +151,10 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          console.log(d);
+          d3.selectAll('.matrix-dot.selected').each(function() {
+            d3.select(this).classed('selected', false);
+          });
+          event.target.classList.add('selected');
           filterBarChartData(d);
           selectHeatMapCell(d);
           TreeMapfilterDotMatrixChartData(d);
@@ -149,9 +179,7 @@ class DotMatrix {
           vis.xLegendCount += 1;
           return vis.xLegendCount % 5 == 0 ? vis.xLegend = 0 : vis.xLegend += 165;
         })
-        .style("fill", d => vis.colorScale(d))
-        .style("stroke", "black")
-        .style("font-size", "0.25px");
+        .style("fill", d => vis.colorScale(d));
 
     vis.yLegendCount = -1;
     vis.xLegendCount = -1;

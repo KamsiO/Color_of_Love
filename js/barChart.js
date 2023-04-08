@@ -168,7 +168,7 @@ class BarChart {
     renderVis() {
       let vis = this;
       vis.specificBarClicked = '';
-      console.log(this.groupedData);
+
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const barGroup = vis.chart.selectAll('.bars')
         .data(vis.groupedData, d => {
@@ -188,7 +188,6 @@ class BarChart {
         .selectAll('g')
           .data(d => {
             d.delete("");
-            console.log(d);
             return d; }) 
             .join ('rect')
             .attr('class', d => `bar ${d[0]}`)
