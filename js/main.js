@@ -87,7 +87,8 @@ d3.csv("data/dating.csv").then((_data) => {
 // event listeners for the dropdown
 
 // the flag ensures that we don't re-filter the data if we don't need to
-let currSelection;
+// default value is "all"
+let currSelection = "all";
 d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
   // Filter data accordingly and update vis
 
@@ -110,12 +111,13 @@ d3.selectAll("#remove-filtering").on("click", (e) => {
   // todo re-filter by age
   clearAllInteractions();
 });
+
 function clearAllInteractions() {
   heatMap.selectedCategories = [];
   heatMap.renderVis();
 
   treeMap.data = data;
-  dotmatrix.data = data;
+  // dotmatrix.data = data;
   dotmatrix.highlightedData = [];
   barChart.data = data;
   barChart.highlightedData = [];
@@ -128,6 +130,7 @@ function clearAllInteractions() {
 }
 
 function performAgeFiltering(currSelection) {
+  console.log(currSelection);
   if (currSelection == "all") {
     // get rid of all filtering
     treeMap.data = data;
