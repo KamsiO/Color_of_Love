@@ -168,7 +168,6 @@ class BarChart {
     renderVis() {
       let vis = this;
       vis.specificBarClicked = '';
-      console.log(this.groupedData);
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const barGroup = vis.chart.selectAll('.bars')
         .data(vis.groupedData, d => {
@@ -188,7 +187,6 @@ class BarChart {
         .selectAll('g')
           .data(d => {
             d.delete("");
-            console.log(d);
             return d; }) 
             .join ('rect')
             .attr('class', d => `bar ${d[0]}`)
@@ -214,16 +212,14 @@ class BarChart {
           d3.select('#tooltip').style('display', 'none');
         }).on('click', function(event, d) {
           currcirclesChartSubCategory = d[0];
-          console.log("got here1");
-          console.log(currcirclesChartSubCategory);
+
         });
 
       // when a bar is clicked, filter the data displayed in the circlesChart
       barGroup
         .on('click', function(event, d) {
           currcirclesChartMainCategory = d[0];
-          console.log("got here2");
-          console.log(currcirclesChartMainCategory);
+
           barChartFilterDotMatrixChartData();
         });
     

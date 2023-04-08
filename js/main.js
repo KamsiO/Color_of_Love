@@ -25,7 +25,7 @@ const MEETING_METHODS_CHECKS_MAPPING = {
   "Internet Website": checkInternetSiteMethod,
   "Online Social Networking": checkOnlineSocialNetworkingMethod,
   Abroad: checkAbroadMethod,
-  "Mutual Connection:": checkMutualConnectionMethod,
+  "Mutual Connection": checkMutualConnectionMethod,
 };
 
 /**
@@ -130,7 +130,6 @@ function clearAllInteractions() {
 }
 
 function performAgeFiltering(currSelection) {
-  console.log(currSelection);
   if (currSelection == "all") {
     // get rid of all filtering
     treeMap.data = data;
@@ -238,7 +237,7 @@ function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
 function filterWithMeetingData(meetingCategory) {
   clearAllInteractions();
   dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
-    // console.log(meetingCategory);
+    console.log(meetingCategory);
     return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d);
   });
   dotmatrix.updateVis();
