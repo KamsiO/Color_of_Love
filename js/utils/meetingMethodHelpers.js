@@ -52,3 +52,13 @@ function checkMutualConnectionMethod(d) {
     d.hcm2017q24_met_as_through_cowork === "yes"
   );
 }
+
+function getMeetingMethod(d) {
+  let meetingMethod = "";
+  for (let i = 0; i < 7; i++) {
+    if (MEETING_METHODS_CHECKS_MAPPING[MEETING_METHODS[i]](d)) {
+      meetingMethod = MEETING_METHODS[i];
+    }
+  }
+  return meetingMethod;
+}

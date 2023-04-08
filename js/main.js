@@ -138,17 +138,11 @@ function filterWithMeetingData(meetingCategory) {
 }
 
 function TreeMapfilterDotMatrixChartData(dotClicked) {
-  let meetingMethod = "";
-  for (let i = 0; i < 7; i++) {
-    if (MEETING_METHODS_CHECKS_MAPPING[MEETING_METHODS[i]](dotClicked)) {
-      meetingMethod = MEETING_METHODS[i];
-    }
-  }
+  let meetingMethod = getMeetingMethod(dotClicked);
   if (meetingMethod !== "") {
     let filteredData = treeMap.data.filter((d) =>
       MEETING_METHODS_CHECKS_MAPPING[meetingMethod](d)
     );
-    console.log(filteredData);
     treeMap.highlightedData = filteredData;
     treeMap.updateVis();
   }
