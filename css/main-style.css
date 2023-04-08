@@ -67,14 +67,12 @@ body {
 
 #remove-filtering {
   position: fixed;
-  /* z-index: -10; */
   width: 100%;
   height: 100%;
-  border: solid red 5px;
-
 }
 
-.chart, #age-group-filter-dropdown {
-    position: relative;
-    z-index: 100000;
+.chart,
+#age-group-filter-dropdown {
+  position: relative;
+  z-index: 100000;
 }
