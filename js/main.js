@@ -86,8 +86,8 @@ d3.csv("data/dating.csv").then((_data) => {
     if (currSelection !== e.target.value) {
       currSelection = e.target.value;
       if (currSelection == "all") {
+        // get rid of all filtering
         treeMap.data = data;
-        heatMap.data = data;
         dotmatrix.data = data;
         //barChart.data = data;
       } else {
@@ -95,8 +95,13 @@ d3.csv("data/dating.csv").then((_data) => {
         treeMap.data = ageData;
         heatMap.data = ageData;
         dotmatrix.data = ageData;
+
         //barChart.data = ageData;
       }
+
+      dotmatrix.highlightedData = [];
+      heatMap.selectedCategories = [];
+
       treeMap.updateVis();
       heatMap.updateVis();
       dotmatrix.updateVis();
@@ -106,8 +111,21 @@ d3.csv("data/dating.csv").then((_data) => {
 });
 
 d3.selectAll("#remove-filtering").on("click", (e) => {
-console.log("got here!!!")
-})
+  console.log("got here!!!");
+  // todo re-filter by age
+  heatMap.selectedCategories = [];
+  heatMap.renderVis();
+
+  treeMap.data = data;
+  dotmatrix.data = data;
+  dotmatrix.highlightedData = [];
+  barChart.data = data;
+  barChart.highlightedData = [];
+
+  barChart.updateVis();
+  dotmatrix.updateVis();
+  treeMap.updateVis();
+});
 /**
  * Use treemap as filter and update dotMatrix accordingly
  */
