@@ -62,6 +62,7 @@ body {
   padding: 8px;
   min-width: 100px;
   color: #333;
+  z-index: 10000000;
 }
 
 #remove-filtering {
