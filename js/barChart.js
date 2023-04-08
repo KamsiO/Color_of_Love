@@ -108,14 +108,6 @@ class BarChart {
       vis.yesInterracial = "yes";
       vis.sameRaceCoupleColor = "red";
       vis.interracialCoupleColor = "blue";
-
-      // global class accessor functions
-      // vis.relationshipRanking = d => d.Q34;
-      // vis.whetherPartOfInterracialCouple = d => d.interracial_5cat;
-      
-      // keeps track of how many points were plotted
-      vis.pointsPlotted = 0;
-      vis.totalPointsToPlot = vis.data.length;
       
       // filters out data where there was no answer or someone refused to answer
       vis.preprocessData();
@@ -159,7 +151,6 @@ class BarChart {
       vis.xValue = d => vis.relationshipRanking(d);
       vis.yValue = d => vis.groupedData.get(vis.relationshipRanking(d));
     
-    
       // set the domain of xScale to be the relationship rankings
       vis.xScale.domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
       vis.yScale.domain ([0,(vis.maxOccurenceCount(vis.groupedData))]);
@@ -184,7 +175,6 @@ class BarChart {
             } else {
               barValues.set("name","yes");
               barValues.set("nVal", d[1].get("yes"));            }
-            // console.log(barValues);
           }
           // After remove the ranking entry so that we don't render bars for it
           d[1].delete('ranking');
@@ -198,20 +188,14 @@ class BarChart {
             vis.relationshipRanking = d[0];
           } 
           return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
-
         });
 
         vis.barHeightTooSmall = d => d[1] < 20;
+        // vis.barHeightTooSmall = d => (vis.height - vis.yScale(d[1])) <  3;
         // Gives the bars a minimum height so that the smallest bars are still visible.
         vis.addMinBarHeight = 19;
 
         vis.checkIfActive = d => {
-          console.log(barValues);
-          console.log(barValues.get('name'));
-          console.log(d[0]);
-          console.log(barValues.get('nVal'));
-          console.log(d[1]);
-          console.log(vis.highlightedData);
           if (vis.highlightedData.length > 0 && d[0] == barValues.get("name") && d[1] == barValues.get("nVal")) {
             console.log(barValues);
             return `active`;
@@ -235,7 +219,7 @@ class BarChart {
             .attr('width', 20)
             .attr('height', d => {
               if(vis.barHeightTooSmall(d)) {
-                return vis.height -  vis.yScale(vis.addMinBarHeight);
+                return vis.height - vis.yScale(vis.addMinBarHeight);
               } else {
                 return vis.height -  vis.yScale(d[1]);
               }
