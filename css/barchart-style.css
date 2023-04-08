@@ -28,11 +28,6 @@ Make sure to use specific IDs/classes.
   shape-rendering: crispEdges;
 }
 
-/* .active {
-  stroke: rgb(65, 65, 65);
-  stroke-width: 3px;
-} */
-
 .bar.yes {
   fill: var(--interacial_color);
 }
@@ -49,12 +44,6 @@ Make sure to use specific IDs/classes.
   stroke: rgb(65, 65, 65);
   stroke-width: 3px;
 }
-
-/* .bar.active {
-  stroke: rgb(65, 65, 65);
-  stroke-width: 3px;
-  fill: yellow;
-}   */
 
 .bar:hover {
   stroke: rgb(65, 65, 65);

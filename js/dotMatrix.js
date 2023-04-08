@@ -34,6 +34,7 @@ class DotMatrix {
       .attr('id', 'dot-matrix-chart');
 
 
+    // append the title of the view
     vis.svg.append("text")
       .attr('class', 'title')
       .attr('x', vis.width + 10)
@@ -79,7 +80,6 @@ class DotMatrix {
     vis.assignRelationshipRace();
 
     vis.groupedByRace = d3.group(vis.data, d => d.relRaceCat);
-    //console.log(vis.groupedByRace);
 
     vis.colorValue = d => d.relRaceCat;
 
@@ -124,12 +124,10 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          // console.log(d);
           filterBarChartData(d);
           selectHeatMapCell(d);
           // TreeMapfilterDotMatrixChartData(d);
         });
-
 
     vis.yLegendCount = -1;
     vis.xLegendCount = -1;
@@ -174,6 +172,7 @@ class DotMatrix {
         .text(d => d);
   }
 
+
   assignRelationshipRace() {
     let vis = this;
 
@@ -214,6 +213,7 @@ class DotMatrix {
     });
 }
 
+
   /**
    *  displays the tooltip information when you hover over the dots.
    */
@@ -240,6 +240,14 @@ class DotMatrix {
       }
     };
 
+    let fillRelationshipRanking = d => {
+      if(relationshipRanking(d) == "Refused" || relationshipRanking(d) == "") {
+        return `N/A`;
+      } else {
+        return religiousity(d);
+      }
+    };
+
     d3.select('#tooltip')
       .style('display', 'block')
       .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
@@ -248,7 +256,7 @@ class DotMatrix {
           <div><b>Age</b>: ${particpantAge}</div>
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
-          <div><b>Relationship Quality:</b> ${relationshipRanking(d)}</div> 
+          <div><b>Relationship Quality:</b> ${fillRelationshipRanking(d)}</div> 
           <div><b>Sex Frequency:</b> ${fillSexFreq(d)}</div> 
           <div><b>Religious Service Attendance:</b> ${fillReligiousity(d)}</div> 
         `);
@@ -266,9 +274,7 @@ class DotMatrix {
       vis.subjectRace(d) != "" &&
       vis.subjectRace(d) != "Refused" &&
       vis.partnerRace(d) != "" &&
-      vis.partnerRace(d) != "Refused" &&
-      relationshipRanking(d) != "" &&
-      relationshipRanking(d) != "Refused"
+      vis.partnerRace(d) != "Refused"
     ));
   }
 

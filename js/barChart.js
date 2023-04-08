@@ -30,7 +30,6 @@ class BarChart {
       // yes = couple is interracial
       vis.subgroupsCategory = ["yes", "no"];
 
-
       // intialize the scale 
       vis.xScale = d3.scaleBand()
         .range([0, vis.width])
@@ -39,7 +38,6 @@ class BarChart {
       vis.xSubgroupScale = d3.scaleBand()
         .range([0, vis.xScale.bandwidth()/5])
         .domain(vis.subgroupsCategory)
-        // .paddingOuter(5)
         .paddingInner(.85);
 
       vis.yScale = d3.scaleLinear()
@@ -111,9 +109,9 @@ class BarChart {
       vis.sameRaceCoupleColor = "red";
       vis.interracialCoupleColor = "blue";
 
-      // global accessor functions
-      vis.relationshipRanking = d => d.Q34;
-      vis.whetherPartOfInterracialCouple = d => d.interracial_5cat;
+      // global class accessor functions
+      // vis.relationshipRanking = d => d.Q34;
+      // vis.whetherPartOfInterracialCouple = d => d.interracial_5cat;
       
       // keeps track of how many points were plotted
       vis.pointsPlotted = 0;
@@ -128,6 +126,7 @@ class BarChart {
       vis.groupedData.delete('');
       vis.groupedData.delete("Refused");
 
+      // Add a ranking entry at the same level as the subcategories ("yes"/"no")
       vis.groupedData.forEach((value, key) => {
         value.forEach((innerValue, innerKey) => value.set("ranking", key));
       });
@@ -174,13 +173,10 @@ class BarChart {
       vis.specificBarClicked = '';
 
       let barValues = new Map();
-      // console.log(this.groupedData);
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const barGroup = vis.chart.selectAll('.bars')
         .data(vis.groupedData, d => {
-          // After remove the ranking entry so that we don't render bars for it
-          // console.log(d[0]);
-          // console.log(d[1].get("no"));
+
           if (vis.highlightedData[0] == d[0]) {
             if(vis.highlightedData[1] == "no"){
               barValues.set("name","no");
@@ -190,7 +186,7 @@ class BarChart {
               barValues.set("nVal", d[1].get("yes"));            }
             // console.log(barValues);
           }
-
+          // After remove the ranking entry so that we don't render bars for it
           d[1].delete('ranking');
           return d[0];
         })
@@ -205,12 +201,12 @@ class BarChart {
 
         });
 
-
         vis.barHeightTooSmall = d => d[1] < 20;
+        // vis.barHeightTooSmall = d => vis.height - vis.yScale(d[1]) <=  3;
         // Gives the bars a minimum height so that the smallest bars are still visible.
-        vis.addMinBarHeight = 20;
+        vis.addMinBarHeight = 19;
 
-        vis.shouldHighlightBar = d => {
+        vis.checkIfActive = d => {
           console.log(barValues);
           console.log(barValues.get('name'));
           console.log(d[0]);
@@ -218,21 +214,15 @@ class BarChart {
           console.log(d[1]);
           console.log(vis.highlightedData);
           if (vis.highlightedData.length > 0 && d[0] == barValues.get("name") && d[1] == barValues.get("nVal")) {
-            // barValues = new Map();
             console.log(barValues);
             return `active`;
           } else {
             return ;
           }
-          
         };
 
-        // have another value that represents the category and place it with the yes/no plus the value (yes/no) 
       const individualBars = barGroup.selectAll('.bar')
-          .data(d => d[1], d => {
-            // console.log(d);
-            return d[0];
-          }) 
+          .data(d => d[1], d => d[0]) 
             .join ('rect')
             .attr('class', d => `bar ${d[0]}`)
             .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
@@ -251,23 +241,8 @@ class BarChart {
                 return vis.height -  vis.yScale(d[1]);
               }
             })
-             .attr('class', d =>  `bar ${d[0]} ${vis.shouldHighlightBar(d)}`);
+             .attr('class', d =>  `bar ${d[0]} ${vis.checkIfActive(d)}`);
 
-        // individualBars.on('DOMAttrModified', function(event, d) {
-
-        //   // Check if filter is already active
-        //   const isActive = vis.highlightedData.length > 0 && vis.highlightedData[1] == barValues.get("key") && d[1] == barValues.get("value");
-
-        //   console.log(d);
-        //   // if (isActive) {
-        //   //   // Remove filter
-        //   // }
-        //   d3.select(this).classed('active', !isActive);
-
-        //   if (event.attrName === 'style' && event.newValue.includes('stroke')) {
-        //     barValues = {};
-        //   }
-        // });
 
       individualBars
         .on('mouseover', function (event,d) {
@@ -282,18 +257,17 @@ class BarChart {
           d3.select('#tooltip').style('display', 'none');
         }).on('click', function(event, d) {
           currcirclesChartSubCategory = d[0];
-          console.log(currcirclesChartSubCategory);
         });
 
-      // when a bar is clicked, filter the data displayed in the circlesChart
+      // when a bar is clicked, filter all the displays
       barGroup
         .on('click', function(event, d) {
           currcirclesChartMainCategory = d[0];
-          vis.highlightedData = [];
+          vis.highlightedData = []; // todo: replace with a call to the global reset from Guramrit
           barChartFilterDotMatrixChartData();
         });
     
-      // Update the axes because the underlying scales might have changed
+      // call the axes
       vis.xAxisG.call(vis.xAxis);
       vis.yAxisG.call(vis.yAxis);
     }
@@ -338,8 +312,8 @@ class BarChart {
    */
   preprocessData() {
     let vis = this;
-    vis.data = vis.data.filter(d => vis.relationshipRanking(d) !="" || vis.relationshipRanking(d) != "Refused" ||
-     vis.whetherPartOfInterracialCouple(d) != "" || vis.whetherPartOfInterracialCouple(d) != "Refused");
+    vis.data = vis.data.filter(d => relationshipRanking(d) !="" || relationshipRanking(d) != "Refused" ||
+     whetherInterracialOrSameRace(d) != "" || whetherInterracialOrSameRace(d) != "Refused");
   }
 
   
