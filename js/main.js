@@ -1,12 +1,12 @@
 let varForFilteringcirclesChart = "";
 let currcirclesChartMainCategory = ""; // the relationship ranking
 let currcirclesChartSubCategory = ""; // whether the person is part of an interracial couple
-let relationshipRanking = d => d.Q34;
-let whetherInterracialOrSameRace = d => d.interracial_5cat;
-let subjectRace = d => d.w6_subject_race;
-let partnerRace = d => d.w6_q6b;
-let sexFrequency = d => d.w6_sex_frequency;
-let religiousity = d => d.ppp20072;
+let relationshipRanking = (d) => d.Q34;
+let whetherInterracialOrSameRace = (d) => d.interracial_5cat;
+let subjectRace = (d) => d.w6_subject_race;
+let partnerRace = (d) => d.w6_q6b;
+let sexFrequency = (d) => d.w6_sex_frequency;
+let religiousity = (d) => d.ppp20072;
 
 const MEETING_METHODS = {
   0: "Education",
@@ -32,44 +32,55 @@ const MEETING_METHODS_CHECKS_MAPPING = {
  * Load data from CSV file asynchronously and render charts
  */
 let treeMap, barChart, dotmatrix, heatMap, data;
-d3.csv('data/dating.csv').then(_data => {
-    data = _data;
-    
-    // Global data processing
-    data.forEach(d => {
-        if (subjectRace(d) === partnerRace(d)) {
-            d.interracial_5cat = "no";
-        } else {
-            d.interracial_5cat = "yes";
-        }
-    });
+d3.csv("data/dating.csv").then((_data) => {
+  data = _data;
 
-    // initialize visualizations
-    dotmatrix = new DotMatrix({
-        parentElement: '#dot-matrix',
-    }, data);
+  // Global data processing
+  data.forEach((d) => {
+    if (subjectRace(d) === partnerRace(d)) {
+      d.interracial_5cat = "no";
+    } else {
+      d.interracial_5cat = "yes";
+    }
+  });
 
-    treeMap = new TreeMap({
-        parentElement: "#tree-map",
-    }, 
-    data, 
+  // initialize visualizations
+  dotmatrix = new DotMatrix(
     {
-        checkEducationMethod,
-        checkProfessionalSettingMethod,
-        checkSocialSettingMethod,
-        checkInternetSiteMethod,
-        checkOnlineSocialNetworkingMethod,
-        checkAbroadMethod,
-        checkMutualConnectionMethod,
-      });
+      parentElement: "#dot-matrix",
+    },
+    data
+  );
 
-    barChart = new BarChart({
-        parentElement: '#bar-chart-plot',
-    }, data);
+  treeMap = new TreeMap(
+    {
+      parentElement: "#tree-map",
+    },
+    data,
+    {
+      checkEducationMethod,
+      checkProfessionalSettingMethod,
+      checkSocialSettingMethod,
+      checkInternetSiteMethod,
+      checkOnlineSocialNetworkingMethod,
+      checkAbroadMethod,
+      checkMutualConnectionMethod,
+    }
+  );
 
-    heatMap = new HeatMap({
-        parentElement: '#heat-map',
-    }, data);
+  barChart = new BarChart(
+    {
+      parentElement: "#bar-chart-plot",
+    },
+    data
+  );
+
+  heatMap = new HeatMap(
+    {
+      parentElement: "#heat-map",
+    },
+    data
+  );
 });
 
 // https://stackoverflow.com/questions/24193593/d3-how-to-change-dataset-based-on-drop-down-box-selection
@@ -78,25 +89,28 @@ d3.csv('data/dating.csv').then(_data => {
 // the flag ensures that we don't re-filter the data if we don't need to
 let currSelection;
 d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
-    // Filter data accordingly and update vis
+  // Filter data accordingly and update vis
 
-    if (currSelection !== e.target.value) {
-      currSelection = e.target.value;
-      performAgeFiltering(currSelection);
+  if (currSelection !== e.target.value) {
+    currSelection = e.target.value;
+    performAgeFiltering(currSelection);
 
-      dotmatrix.highlightedData = [];
-      heatMap.selectedCategories = [];
+    dotmatrix.highlightedData = [];
+    heatMap.selectedCategories = [];
 
-      treeMap.updateVis();
-      heatMap.updateVis();
-      dotmatrix.updateVis();
-      //barChart.updateVis();
-    }
-  });
+    treeMap.updateVis();
+    heatMap.updateVis();
+    dotmatrix.updateVis();
+    //barChart.updateVis();
+  }
+});
 
 d3.selectAll("#remove-filtering").on("click", (e) => {
   console.log("got here!!!");
   // todo re-filter by age
+  clearAllInteractions();
+});
+function clearAllInteractions() {
   heatMap.selectedCategories = [];
   heatMap.renderVis();
 
@@ -107,11 +121,12 @@ d3.selectAll("#remove-filtering").on("click", (e) => {
   barChart.highlightedData = [];
 
   performAgeFiltering(currSelection);
-  
+
   barChart.updateVis();
   dotmatrix.updateVis();
   treeMap.updateVis();
-});
+}
+
 function performAgeFiltering(currSelection) {
   if (currSelection == "all") {
     // get rid of all filtering
@@ -133,6 +148,7 @@ function performAgeFiltering(currSelection) {
  */
 
 function TreeMapfilterDotMatrixChartData(dotClicked) {
+  clearAllInteractions();
   let meetingMethod = getMeetingMethod(dotClicked);
   if (meetingMethod !== "") {
     let filteredData = treeMap.data.filter((d) =>
@@ -148,37 +164,45 @@ function TreeMapfilterDotMatrixChartData(dotClicked) {
  * @param dotClicked is the dot that was clicked.
  */
 function filterBarChartData(dotClicked) {
-    let relationshipRankingOfPersonClicked = dotClicked.Q34;
-    let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
-    let tempData = barChart.data;
-    console.log(tempData);
-    let filteredData = tempData.filter(d => relationshipRanking(d) == relationshipRankingOfPersonClicked && whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial);
-    console.log(filteredData);
-    barChart.highlightedData = filteredData;
-    barChart.updateVis();
+  clearAllInteractions();
+  let relationshipRankingOfPersonClicked = dotClicked.Q34;
+  let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
+  let tempData = barChart.data;
+  console.log(tempData);
+  let filteredData = tempData.filter(
+    (d) =>
+      relationshipRanking(d) == relationshipRankingOfPersonClicked &&
+      whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial
+  );
+  console.log(filteredData);
+  barChart.highlightedData = filteredData;
+  barChart.updateVis();
 }
-
 
 /**
  * highlights a cell that corresponds to the dot's sex and religion habits (if available) when dot is clicked
  * @param dotClicked is the dot that was clicked.
  */
 function selectHeatMapCell(dotClicked) {
-    heatMap.selectedCategories = [dotClicked.ppp20072, dotClicked.w6_sex_frequency];
-    heatMap.renderVis();
+  clearAllInteractions();
+  heatMap.selectedCategories = [
+    dotClicked.ppp20072,
+    dotClicked.w6_sex_frequency,
+  ];
+  heatMap.renderVis();
 }
-
 
 /**
  * FUNCTIONS TO SELECT THE CORRESPONDING DOTS WHEN ANOTHER VIEW IS CLICKED
- * 
+ *
  */
 
- /* filter the data rendered in the dot matrix according to:
+/* filter the data rendered in the dot matrix according to:
  * @param mainCategory the relationship ranking
  * @param subCategory bar clidked (interracial or same race)
  */
 function filterDotMatrixChartData() {
+  clearAllInteractions();
   let filteredData = dotmatrix.data.filter(
     (d) =>
       relationshipRanking(d) == currcirclesChartMainCategory &&
@@ -195,22 +219,26 @@ function filterDotMatrixChartData() {
  * @param attendance the x-value of the cell in the heat map
  */
 function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
-    console.log(sexFreq);
-    console.log(attendance);
-    dotmatrix.highlightedData = dotmatrix.data.filter(d => (sexFrequency(d) == sexFreq) && (religiousity(d) == attendance));
-    console.log(dotmatrix.highlightedData);
-    dotmatrix.updateVis();
+  clearAllInteractions();
+  console.log(sexFreq);
+  console.log(attendance);
+  dotmatrix.highlightedData = dotmatrix.data.filter(
+    (d) => sexFrequency(d) == sexFreq && religiousity(d) == attendance
+  );
+  console.log(dotmatrix.highlightedData);
+  dotmatrix.updateVis();
 }
 
 /**
  * Use treemap as filter and update dotMatrix accordingly
  */
 function filterWithMeetingData(meetingCategory) {
-    dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
-        // console.log(meetingCategory);
-        return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d) }
-    );
-    dotmatrix.updateVis();
+  clearAllInteractions();
+  dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
+    // console.log(meetingCategory);
+    return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d);
+  });
+  dotmatrix.updateVis();
 }
 
 /**
@@ -219,12 +247,12 @@ function filterWithMeetingData(meetingCategory) {
  * subCategory bar clidked (interracial or same race)
  */
 function barChartFilterDotMatrixChartData() {
-    dotmatrix.highlightedData = dotmatrix.data.filter(d => (relationshipRanking(d) == currcirclesChartMainCategory) && (whetherInterracialOrSameRace(d) == currcirclesChartSubCategory));
-    console.log(dotmatrix.highlightedData);
-    dotmatrix.updateVis();
+  clearAllInteractions();
+  dotmatrix.highlightedData = dotmatrix.data.filter(
+    (d) =>
+      relationshipRanking(d) == currcirclesChartMainCategory &&
+      whetherInterracialOrSameRace(d) == currcirclesChartSubCategory
+  );
+  console.log(dotmatrix.highlightedData);
+  dotmatrix.updateVis();
 }
-
-
-
-
-
