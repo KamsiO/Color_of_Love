@@ -30,7 +30,6 @@ class BarChart {
       // yes = couple is interracial
       vis.subgroupsCategory = ["yes", "no"];
 
-
       // intialize the scale 
       vis.xScale = d3.scaleBand()
         .range([0, vis.width])
@@ -39,7 +38,6 @@ class BarChart {
       vis.xSubgroupScale = d3.scaleBand()
         .range([0, vis.xScale.bandwidth()/5])
         .domain(vis.subgroupsCategory)
-        // .paddingOuter(5)
         .paddingInner(.85);
 
       vis.yScale = d3.scaleLinear()
@@ -110,14 +108,6 @@ class BarChart {
       vis.yesInterracial = "yes";
       vis.sameRaceCoupleColor = "red";
       vis.interracialCoupleColor = "blue";
-
-      // global accessor functions
-      vis.relationshipRanking = d => d.Q34;
-      vis.whetherPartOfInterracialCouple = d => d.interracial_5cat;
-      
-      // keeps track of how many points were plotted
-      vis.pointsPlotted = 0;
-      vis.totalPointsToPlot = vis.data.length;
       
       // filters out data where there was no answer or someone refused to answer
       vis.preprocessData();
@@ -128,12 +118,19 @@ class BarChart {
       vis.groupedData.delete('');
       vis.groupedData.delete("Refused");
 
+      // Add a ranking entry at the same level as the subcategories ("yes"/"no")
+      vis.groupedData.forEach((value, key) => {
+        value.forEach((innerValue, innerKey) => value.set("ranking", key));
+      });
+
+      console.log(vis.groupedData);
+
       // get max number for domain of y-scale
       vis.maxOccurenceCount = function (groupedData){
         // credit for iterator help: https://stackoverflow.com/a/55660647
         let mapValuesIterator = groupedData.values();
         let nextMapValues = mapValuesIterator.next();
-        let max_num = 0
+        vis.max_num = 0
         
         while (!nextMapValues.done) {
           let currMax = 0;
@@ -142,24 +139,21 @@ class BarChart {
           let innerMapAsArray = Array.from(innerMap, ([name, value]) => ({ name, value }));
 
           currMax = Math.max(innerMapAsArray[0].value, innerMapAsArray[1].value);
-          if( currMax > max_num) {
-            max_num = currMax;
+          if( currMax > vis.max_num) {
+            vis.max_num = currMax;
           }
           nextMapValues = mapValuesIterator.next();
         } 
-        return max_num;
+        return vis.max_num;
       }
 
       // Specificy x- and y-value accessor functions
       vis.xValue = d => vis.relationshipRanking(d);
       vis.yValue = d => vis.groupedData.get(vis.relationshipRanking(d));
-      
-      // Gives the bars a minimum height so that the smallest bars are still visible.
-      vis.addMinBarHeight = 10;
     
       // set the domain of xScale to be the relationship rankings
       vis.xScale.domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
-      vis.yScale.domain ([0,(vis.maxOccurenceCount(vis.groupedData) + vis.addMinBarHeight)]);
+      vis.yScale.domain ([0,(vis.maxOccurenceCount(vis.groupedData))]);
 
       vis.renderVis();
     }
@@ -168,36 +162,70 @@ class BarChart {
     renderVis() {
       let vis = this;
       vis.specificBarClicked = '';
+
+      let barValues = new Map();
       // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
       const barGroup = vis.chart.selectAll('.bars')
         .data(vis.groupedData, d => {
-          // console.log(d[0]);
-          return d[0];}
-         )
+
+          if (vis.highlightedData[0] == d[0]) {
+            if(vis.highlightedData[1] == "no"){
+              barValues.set("name","no");
+              barValues.set("nVal", d[1].get("no"));
+            } else {
+              barValues.set("name","yes");
+              barValues.set("nVal", d[1].get("yes"));            
+            }
+          }
+          // After remove the ranking entry so that we don't render bars for it
+          d[1].delete('ranking');
+          return d[0];
+        })
         .join("g")
         .attr('class', 'bars')
         .attr("transform", d => {
+          // console.log(vis.relationshipRanking);
+          if (vis.highlightedData[0] == d[0]) {
+            vis.relationshipRanking = d[0];
+          } 
           return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
         });
 
+        vis.barHeightTooSmall = d => d[1] < (0.04 * vis.max_num);
+        // Gives the bars a minimum height so that the smallest bars are still visible.
+        vis.addMinBarHeight = Math.round(0.04 * vis.max_num);
+
+        vis.checkIfActive = d => {
+          if (vis.highlightedData.length > 0 && d[0] == barValues.get("name") && d[1] == barValues.get("nVal")) {
+            console.log(barValues);
+            return `active`;
+          } else {
+            return ;
+          }
+        };
 
       const individualBars = barGroup.selectAll('.bar')
-        .data (d => [d[1]])
-        .join('g')
-        .selectAll('g')
-          .data(d => {
-            d.delete("");
-            return d; }) 
+          .data(d => d[1], d => d[0]) 
             .join ('rect')
             .attr('class', d => `bar ${d[0]}`)
             .attr('x', d=> vis.xSubgroupScale(d[0]) + vis.xScale.bandwidth() + 1)
             .attr('y', d => {
-                return vis.yScale(d[1]) - vis.addMinBarHeight;
+              if(vis.barHeightTooSmall(d)) {
+                return vis.yScale(vis.addMinBarHeight);
+              } else {
+                return vis.yScale(d[1]);
+              }
               })
             .attr('width', 20)
             .attr('height', d => {
-                return vis.height -  vis.yScale(d[1]) + vis.addMinBarHeight;
-            });
+              if(vis.barHeightTooSmall(d)) {
+                return vis.height - vis.yScale(vis.addMinBarHeight);
+              } else {
+                return vis.height -  vis.yScale(d[1]);
+              }
+            })
+             .attr('class', d =>  `bar ${d[0]} ${vis.checkIfActive(d)}`);
+
 
       individualBars
         .on('mouseover', function (event,d) {
@@ -212,18 +240,17 @@ class BarChart {
           d3.select('#tooltip').style('display', 'none');
         }).on('click', function(event, d) {
           currcirclesChartSubCategory = d[0];
-
         });
 
-      // when a bar is clicked, filter the data displayed in the circlesChart
+      // when a bar is clicked, filter all the displays
       barGroup
         .on('click', function(event, d) {
           currcirclesChartMainCategory = d[0];
-
+          vis.highlightedData = []; // todo: replace with a call to the global reset from Guramrit
           barChartFilterDotMatrixChartData();
         });
     
-      // Update the axes because the underlying scales might have changed
+      // call the axes
       vis.xAxisG.call(vis.xAxis);
       vis.yAxisG.call(vis.yAxis);
     }
@@ -243,13 +270,22 @@ class BarChart {
       }
     };
 
+    let getCount = d => {
+      if (vis.barHeightTooSmall(d))
+      {
+        return `< ${vis.addMinBarHeight}`;
+      } else {
+        return `${d[1]}`;
+      }
+    }
+
     d3.select('#tooltip')
     .style('display', 'block')
     .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')   
     .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
     .html(`
       <div><strong>${subCatname(d)}</strong></div>
-      <div>Count: ${d[1]} </div> 
+      <div>Count: ${getCount(d)} </div> 
     `);
   }
 
@@ -259,8 +295,10 @@ class BarChart {
    */
   preprocessData() {
     let vis = this;
-    vis.data = vis.data.filter(d => vis.relationshipRanking(d) !="" || vis.relationshipRanking(d) != "Refused" || vis.whetherPartOfInterracialCouple(d) != "");
+    vis.data = vis.data.filter(d => relationshipRanking(d) !="" || relationshipRanking(d) != "Refused" ||
+     whetherInterracialOrSameRace(d) != "" || whetherInterracialOrSameRace(d) != "Refused");
   }
 
   
 }
+

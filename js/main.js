@@ -167,16 +167,11 @@ function TreeMapfilterDotMatrixChartData(dotClicked) {
  */
 function filterBarChartData(dotClicked) {
   clearAllInteractions();
-  let relationshipRankingOfPersonClicked = dotClicked.Q34;
-  let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
-  let tempData = barChart.data;
 
-  let filteredData = tempData.filter(
-    (d) =>
-      relationshipRanking(d) == relationshipRankingOfPersonClicked &&
-      whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial
-  );
-  barChart.highlightedData = filteredData;
+  barChart.highlightedData = [
+    relationshipRanking(dotClicked),
+    whetherInterracialOrSameRace(dotClicked),
+  ];
   barChart.updateVis();
 }
 
