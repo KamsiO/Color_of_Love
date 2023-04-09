@@ -130,7 +130,7 @@ class BarChart {
         // credit for iterator help: https://stackoverflow.com/a/55660647
         let mapValuesIterator = groupedData.values();
         let nextMapValues = mapValuesIterator.next();
-        let max_num = 0
+        vis.max_num = 0
         
         while (!nextMapValues.done) {
           let currMax = 0;
@@ -139,12 +139,12 @@ class BarChart {
           let innerMapAsArray = Array.from(innerMap, ([name, value]) => ({ name, value }));
 
           currMax = Math.max(innerMapAsArray[0].value, innerMapAsArray[1].value);
-          if( currMax > max_num) {
-            max_num = currMax;
+          if( currMax > vis.max_num) {
+            vis.max_num = currMax;
           }
           nextMapValues = mapValuesIterator.next();
         } 
-        return max_num;
+        return vis.max_num;
       }
 
       // Specificy x- and y-value accessor functions
@@ -174,7 +174,8 @@ class BarChart {
               barValues.set("nVal", d[1].get("no"));
             } else {
               barValues.set("name","yes");
-              barValues.set("nVal", d[1].get("yes"));            }
+              barValues.set("nVal", d[1].get("yes"));            
+            }
           }
           // After remove the ranking entry so that we don't render bars for it
           d[1].delete('ranking');
@@ -190,10 +191,11 @@ class BarChart {
           return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
         });
 
-        vis.barHeightTooSmall = d => d[1] < 20;
+        // vis.barHeightTooSmall = d => d[1] < 20;
+        vis.barHeightTooSmall = d => d[1] < (0.04 * vis.max_num);
         // vis.barHeightTooSmall = d => (vis.height - vis.yScale(d[1])) <  3;
         // Gives the bars a minimum height so that the smallest bars are still visible.
-        vis.addMinBarHeight = 19;
+        vis.addMinBarHeight = Math.round(0.04 * vis.max_num);
 
         vis.checkIfActive = d => {
           if (vis.highlightedData.length > 0 && d[0] == barValues.get("name") && d[1] == barValues.get("nVal")) {
@@ -273,7 +275,7 @@ class BarChart {
     let getCount = d => {
       if (vis.barHeightTooSmall(d))
       {
-        return `< ${vis.addMinBarHeight + 1}`;
+        return `< ${vis.addMinBarHeight}`;
       } else {
         return `${d[1]}`;
       }
