@@ -39,6 +39,7 @@ class DotMatrix {
       .attr("class", "chart");
 
 
+    // append the title of the view
     vis.svg.append("text")
       .attr('class', 'title')
       .attr('x', vis.width + 10)
@@ -89,8 +90,7 @@ class DotMatrix {
     vis.preprocessData();
     vis.assignRelationshipRace();
 
-    vis.groupedByRace = d3.group(vis.data, (d) => d.relRaceCat);
-    //console.log(vis.groupedByRace);
+    vis.groupedByRace = d3.group(vis.data, d => d.relRaceCat);
 
     vis.colorValue = (d) => d.relRaceCat;
 
@@ -136,7 +136,6 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          console.log(d);
           filterBarChartData(d);
           selectHeatMapCell(d);
           TreeMapfilterDotMatrixChartData(d);
@@ -186,6 +185,7 @@ class DotMatrix {
         .text(d => d);
   }
 
+
   assignRelationshipRace() {
     let vis = this;
 
@@ -224,7 +224,8 @@ class DotMatrix {
         d.relRaceCat = "Same Race";
       }
     });
-  }
+}
+
 
   /**
    *  displays the tooltip information when you hover over the dots.
@@ -235,22 +236,42 @@ class DotMatrix {
     let particpantAge = d.ppage;
 
     //let howTheyMet = // fill with Guramrit's function return value;
+    // check if the sexfreq and religiuosity is refused or "" and replace with missing
+    let fillSexFreq = d => {
+      if(sexFrequency(d) == "Refused" || sexFrequency(d) == "") {
+        return `N/A`;
+      } else {
+        return sexFrequency(d);
+      }
+    };
 
+    let fillReligiousity = d => {
+      if(religiousity(d) == "Refused" || religiousity(d) == "") {
+        return `N/A`;
+      } else {
+        return religiousity(d);
+      }
+    };
 
-    //let howTheyMet = // fill with Guramrit's function return value;
+    let fillRelationshipRanking = d => {
+      if(relationshipRanking(d) == "Refused" || relationshipRanking(d) == "") {
+        return `N/A`;
+      } else {
+        return religiousity(d);
+      }
+    };
 
-
-    d3
-      .select("#tooltip")
-      .style("display", "block")
-      .style("left", event.pageX + vis.config.tooltipPadding + "px")
-      .style("top", event.pageY + vis.config.tooltipPadding + "px").html(`
+    d3.select('#tooltip')
+      .style('display', 'block')
+      .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
+      .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
+      .html(`
           <div><b>Age</b>: ${particpantAge}</div>
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
-          <div><b>Relationship Quality:</b> ${relationshipRanking(d)}</div> 
-          <div><b>Sex Frequency:</b> ${sexFrequency(d)}</div> 
-          <div><b>Religious Service Attendance:</b> ${religiousity(d)}</div> 
+          <div><b>Relationship Quality:</b> ${fillRelationshipRanking(d)}</div> 
+          <div><b>Sex Frequency:</b> ${fillSexFreq(d)}</div> 
+          <div><b>Religious Service Attendance:</b> ${fillReligiousity(d)}</div> 
         `);
   }
 
@@ -262,10 +283,10 @@ class DotMatrix {
     // console.log(vis.data);
     let tempData = vis.data;
     vis.data = tempData.filter(d => (
-      vis.subjectRace(d) !== "" &&
-      vis.subjectRace(d) !== "Refused" &&
-      vis.partnerRace(d) !== "" &&
-      vis.partnerRace(d) !== "Refused"
+      vis.subjectRace(d) != "" &&
+      vis.subjectRace(d) != "Refused" &&
+      vis.partnerRace(d) != "" &&
+      vis.partnerRace(d) != "Refused"
     ));
   }
 }

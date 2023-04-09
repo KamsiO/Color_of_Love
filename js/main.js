@@ -150,7 +150,7 @@ function performAgeFiltering(currSelection) {
  */
 
 function TreeMapfilterDotMatrixChartData(dotClicked) {
-  clearAllInteractions();
+  // clearAllInteractions();
   let meetingMethod = getMeetingMethod(dotClicked);
   if (meetingMethod !== "") {
     let filteredData = treeMap.data.filter((d) =>
@@ -170,13 +170,12 @@ function filterBarChartData(dotClicked) {
   let relationshipRankingOfPersonClicked = dotClicked.Q34;
   let whetherRelationshipIsInterracial = dotClicked.interracial_5cat;
   let tempData = barChart.data;
-  console.log(tempData);
+
   let filteredData = tempData.filter(
     (d) =>
       relationshipRanking(d) == relationshipRankingOfPersonClicked &&
       whetherInterracialOrSameRace(d) == whetherRelationshipIsInterracial
   );
-  console.log(filteredData);
   barChart.highlightedData = filteredData;
   barChart.updateVis();
 }

@@ -28,18 +28,21 @@ Make sure to use specific IDs/classes.
   shape-rendering: crispEdges;
 }
 
-/* .bar.no {
-  fill: rgb(158, 1, 158);
-}
-.bar.yes {
-  fill: rgb(255, 72, 0);
-} */
-
 .bar.yes {
   fill: var(--interacial_color);
 }
 .bar.no {
   fill: var(--same_race_color);
+}
+.bar.yes.active {
+  fill: var(--interacial_color);
+  stroke: rgb(65, 65, 65);
+  stroke-width: 3px;
+}
+.bar.no.active {
+  fill: var(--same_race_color);
+  stroke: rgb(65, 65, 65);
+  stroke-width: 3px;
 }
 
 .bar:hover {
