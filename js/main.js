@@ -114,7 +114,7 @@ d3.selectAll("#remove-filtering").on("click", (e) => {
 function clearAllInteractions() {
   heatMap.selectedCategories = [];
   heatMap.renderVis();
-
+console.log("clearing interactions")
   treeMap.data = data;
   // dotmatrix.data = data;
   dotmatrix.highlightedData = [];
@@ -165,8 +165,6 @@ function TreeMapfilterDotMatrixChartData(dotClicked) {
  * @param dotClicked is the dot that was clicked.
  */
 function filterBarChartData(dotClicked) {
-  clearAllInteractions();
-
   barChart.highlightedData = [
     relationshipRanking(dotClicked),
     whetherInterracialOrSameRace(dotClicked),
@@ -179,7 +177,6 @@ function filterBarChartData(dotClicked) {
  * @param dotClicked is the dot that was clicked.
  */
 function selectHeatMapCell(dotClicked) {
-  clearAllInteractions();
   heatMap.selectedCategories = [
     dotClicked.ppp20072,
     dotClicked.w6_sex_frequency,
@@ -197,7 +194,6 @@ function selectHeatMapCell(dotClicked) {
  * @param subCategory bar clidked (interracial or same race)
  */
 function filterDotMatrixChartData() {
-  clearAllInteractions();
   let filteredData = dotmatrix.data.filter(
     (d) =>
       relationshipRanking(d) == currcirclesChartMainCategory &&

@@ -136,6 +136,7 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
+          clearAllInteractions()
           filterBarChartData(d);
           selectHeatMapCell(d);
           TreeMapfilterDotMatrixChartData(d);
