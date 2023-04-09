@@ -77,14 +77,5 @@ body {
   z-index: 100000;
 }
 
-/* Interactivity */
-.box:hover {
-  stroke: rgb(65, 65, 65);
-  stroke-width: 2px;
-}
 
-.box.selected {
-  stroke: rgb(65, 65, 65);
-  stroke-width: 3px;
-}
 

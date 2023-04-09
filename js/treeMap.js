@@ -15,6 +15,7 @@ class TreeMap {
       margin: _config.margin || { top: 50, right: 175, bottom: 25, left: 40 },
     };
     this.data = _data;
+    this.selectedMethod = "";
     this.checks = {
       checkEducationMethod: _method_checks.checkEducationMethod,
       checkProfessionalSettingMethod:
@@ -236,6 +237,8 @@ class TreeMap {
       .data(vis.root.leaves())
       .join("rect")
       .attr("class", "treemap-rect")
+      .classed("selected", (d) => d["id"] === vis.selectedMethod)
+
       .attr("x", function (d) {
         return d["x0"];
       })

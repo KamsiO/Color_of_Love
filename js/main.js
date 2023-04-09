@@ -114,7 +114,8 @@ d3.selectAll("#remove-filtering").on("click", (e) => {
 function clearAllInteractions() {
   heatMap.selectedCategories = [];
   heatMap.renderVis();
-console.log("clearing interactions")
+  console.log("clearing interactions");
+  treeMap.selectedMethod = "";
   treeMap.data = data;
   // dotmatrix.data = data;
   dotmatrix.highlightedData = [];
@@ -149,13 +150,9 @@ function performAgeFiltering(currSelection) {
  */
 
 function TreeMapfilterDotMatrixChartData(dotClicked) {
-  // clearAllInteractions();
   let meetingMethod = getMeetingMethod(dotClicked);
   if (meetingMethod !== "") {
-    let filteredData = treeMap.data.filter((d) =>
-      MEETING_METHODS_CHECKS_MAPPING[meetingMethod](d)
-    );
-    treeMap.highlightedData = filteredData;
+    treeMap.selectedMethod = meetingMethod;
     treeMap.updateVis();
   }
 }
