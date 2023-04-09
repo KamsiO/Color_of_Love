@@ -191,9 +191,7 @@ class BarChart {
           return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
         });
 
-        // vis.barHeightTooSmall = d => d[1] < 20;
         vis.barHeightTooSmall = d => d[1] < (0.04 * vis.max_num);
-        // vis.barHeightTooSmall = d => (vis.height - vis.yScale(d[1])) <  3;
         // Gives the bars a minimum height so that the smallest bars are still visible.
         vis.addMinBarHeight = Math.round(0.04 * vis.max_num);
 
