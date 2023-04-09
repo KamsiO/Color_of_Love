@@ -1,4 +1,3 @@
-// copied from https://codesandbox.io/s/github/UBC-InfoVis/447-materials/tree/23Jan/d3-examples/d3-linked-charts-basic?file=/js/barchart.js:0-4600
 class BarChart {
     /**
      * Class constructor with initial configuration
