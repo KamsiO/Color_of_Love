@@ -108,7 +108,6 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
 
 d3.selectAll("#remove-filtering").on("click", (e) => {
   console.log("got here!!!");
-  // todo re-filter by age
   clearAllInteractions();
 });
 
