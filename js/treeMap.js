@@ -15,6 +15,7 @@ class TreeMap {
       margin: _config.margin || { top: 50, right: 175, bottom: 25, left: 40 },
     };
     this.data = _data;
+    this.selectedMethod = "";
     this.checks = {
       checkEducationMethod: _method_checks.checkEducationMethod,
       checkProfessionalSettingMethod:
@@ -51,7 +52,8 @@ class TreeMap {
       .append("svg")
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight)
-      .attr("id", "tree-map-container");
+      .attr("id", "tree-map-container")
+      .attr("class", "chart");
 
     // Colour scale for categories
     vis.colourScale = d3.scaleOrdinal(d3.schemeTableau10);
@@ -109,11 +111,11 @@ class TreeMap {
       .data(Object.keys(MEETING_METHODS))
       .enter()
       .append("text")
+      .attr("class", "legend-text")
       .attr("x", 60)
       .attr("y", function (d, i) {
         return 90 + i * 25;
       }) // 90 is where the first dot appears. 25 is the distance between dots
-      .style("fill", "rgb(90,90,90")
       .style("font-size", "12px")
       .text(function (d) {
         return MEETING_METHODS[d];
@@ -235,6 +237,8 @@ class TreeMap {
       .data(vis.root.leaves())
       .join("rect")
       .attr("class", "treemap-rect")
+      .classed("selected", (d) => d["id"] === vis.selectedMethod)
+
       .attr("x", function (d) {
         return d["x0"];
       })
@@ -267,14 +271,7 @@ class TreeMap {
         d3.select("#tooltip").style("display", "none");
       })
       .on("click", function (event, d) {
-        // const isActive = difficultyFilter.includes(d.key);
-        // if (isActive) {
-        //   difficultyFilter = difficultyFilter.filter((f) => f !== d.key); // Remove filter
-        // } else {
-        //   difficultyFilter.push(d.key); // Append filter
-        // }
-        filterWithMeetingData(d["id"]); // Call global function to update scatter plot
-        // d3.select(this).classed("active", !isActive); // Add class to style active filters with CSS
+        filterWithMeetingData(d["id"]);
       });
   }
 }

@@ -1,5 +1,4 @@
 class DotMatrix {
-
   /**
    * Class constructor with initial configuration
    * @param {Object}
@@ -9,29 +8,61 @@ class DotMatrix {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 1000,
-      containerHeight: _config.containerHeight || 365,
-      margin: _config.margin || { top: 35, right: 20, bottom: 45, left: 50},
+      containerHeight: _config.containerHeight || 395,
+      margin: _config.margin || { top: 35, right: 20, bottom: 75, left: 50},
       tooltipPadding: _config.tooltipPadding || 15
     }
 
     this.highlightedData = [];
     this.data = _data;
+    // this.colors = [
+    //   "#FF7F00", //orange
+    // "#1E90FF", //dodger blue 
+    // "#E31A1C", // red
+    // "#008b00", //green
+    // "#6A3D9A", //purple
+    // "#ffd700", //gold
+    // "#7ec0ee", //skyblue
+    // // "#FB9A99", //lt pink
+    // "#90ee90", //pale green
+    // // "#CAB2D6", //lt purple
+    // // "#FDBF6F", //lt orange
+    // "#00ced1", //dark turquoise
+    // // "gray70", 
+    // // "khaki2",
+    // // "maroon", 
+    // "#e066ff", // "orchid1", 
+    // // "deeppink1", "blue1", 
+    // // "steelblue4",
+    // // "darkturquoise", 
+    // // "green1", 
+    // // "yellow4", 
+    // // "yellow3",
+    // "#8b4500" // "darkorange4", 
+    // // "brown"
+    // ];
 
     this.initVis();
   }
-
 
   initVis() {
     let vis = this;
 
     // Calculate inner chart size. Margin specifies the space around the actual chart.
-    vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
-    vis.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
+    vis.width =
+      vis.config.containerWidth -
+      vis.config.margin.left -
+      vis.config.margin.right;
+    vis.height =
+      vis.config.containerHeight -
+      vis.config.margin.top -
+      vis.config.margin.bottom;
 
     vis.svg = d3.select(vis.config.parentElement).append('svg')
       .attr('width', vis.config.containerWidth)
       .attr('height', vis.config.containerHeight)
-      .attr('id', 'dot-matrix-chart');
+      .attr('id', 'dot-matrix-chart')
+      .attr("class", "chart");
 
 
     // append the title of the view
@@ -43,49 +74,55 @@ class DotMatrix {
       .attr("text-anchor", "end")
       .text("Meet the Participants");
 
-
-    vis.chart = vis.svg.append('g')
-      .attr('transform', `translate(${vis.config.margin.left},${vis.config.margin.top})`);
+    vis.chart = vis.svg
+      .append("g")
+      .attr(
+        "transform",
+        `translate(${vis.config.margin.left},${vis.config.margin.top})`
+      );
 
     vis.footnote = vis.chart
       .append("text")
-      .attr("transform", `translate(-5,${vis.height + 40})`)
+      .attr("transform", `translate(-5,${vis.height + 60})`)
       .attr("class", "subtitle")
       .attr("font-size", "11px")
       .text(
         "*Categories not shown in the map are not represented by the current age group"
-    );
+      );
 
-    vis.legend = vis.chart.append('g')
-      .attr('transform', `translate(${vis.config.margin.left},${vis.height - 30})`);
+    vis.legend = vis.chart
+      .append("g")
+      .attr(
+        "transform",
+        `translate(${vis.config.margin.left},${vis.height - 30})`
+      );
 
     // name the race categories
-    vis.raceCategories = ["White & Black", "Black & Asian", "Native American & Asian", "Black & Other", "Same Race",
-    "Black & Native American", "Asian & Other", "White & Other", "Asian & White", "Native American & Other", "Native American & White"];
+    vis.raceCategories = ["Black & Other", "Black & Asian", "Native American & Asian", "Asian & White", "Same Race",
+    "Black & Native American", "Asian & Other", "White & Black", "White & Other", "Native American & Other", "Native American & White"];
 
     vis.colorScale = d3.scaleOrdinal()
-      .range(d3.schemePaired)
+      .range(d3.schemeCategory10.concat(['#b03060'])) // options: #698b69, #5218fa, #8b0a50
+      // .range(d3.schemeCategory10)
       .domain(vis.raceCategories);
 
     vis.updateVis();
   }
 
-
   updateVis() {
     let vis = this;
 
-    vis.subjectRace = d => d.w6_subject_race;
-    vis.partnerRace = d => d.w6_q6b;
+    vis.subjectRace = (d) => d.w6_subject_race;
+    vis.partnerRace = (d) => d.w6_q6b;
     vis.preprocessData();
     vis.assignRelationshipRace();
 
     vis.groupedByRace = d3.group(vis.data, d => d.relRaceCat);
 
-    vis.colorValue = d => d.relRaceCat;
+    vis.colorValue = (d) => d.relRaceCat;
 
     vis.renderVis();
   }
-
 
   renderVis() {
     let vis = this;
@@ -97,13 +134,15 @@ class DotMatrix {
 
     vis.dotRadius = 4;
 
-    let raceGroups = vis.chart.selectAll(".race-group")
-        .data(vis.groupedByRace)
+    let raceGroups = vis.chart
+      .selectAll(".race-group")
+      .data(vis.groupedByRace)
       .join("g")
-        .attr("class", "race-group");
+      .attr("class", "race-group");
 
-    let dots = raceGroups.selectAll(".matrix-dot")
-        .data(d => d[1])
+    let dots = raceGroups
+      .selectAll(".matrix-dot")
+      .data((d) => d[1])
       .join("circle")
         .attr("class", "matrix-dot")
         .attr("r", vis.dotRadius)
@@ -124,6 +163,7 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
+          clearAllInteractions()
           filterBarChartData(d);
           selectHeatMapCell(d);
           TreeMapfilterDotMatrixChartData(d);
@@ -134,8 +174,9 @@ class DotMatrix {
     vis.yLegend = 0;
     vis.xLegend = 0;
 
-    vis.legend.selectAll(".dot-matrix-legend-circles")
-        .data(vis.raceCategories)
+    vis.legend
+      .selectAll(".dot-matrix-legend-circles")
+      .data(vis.raceCategories)
       .join("circle")
         .attr('class', 'dot-matrix-legend-circles')
         .attr("r", 6)
@@ -147,9 +188,7 @@ class DotMatrix {
           vis.xLegendCount += 1;
           return vis.xLegendCount % 5 == 0 ? vis.xLegend = 0 : vis.xLegend += 165;
         })
-        .style("fill", d => vis.colorScale(d))
-        .style("stroke", "black")
-        .style("font-size", "0.25px");
+        .style("fill", d => vis.colorScale(d));
 
     vis.yLegendCount = -1;
     vis.xLegendCount = -1;
@@ -159,7 +198,7 @@ class DotMatrix {
     vis.legend.selectAll(".legendText")
         .data(vis.raceCategories)
       .join('text')
-        .attr('class', "legendText")
+        .attr('class', "legendText legend-text")
         .attr("x", function () {
           vis.xLegendCount += 1;
           return vis.xLegendCount % 5 == 0 ? vis.xLegend = 10 : vis.xLegend += 165;
@@ -208,7 +247,7 @@ class DotMatrix {
         vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" && vis.subjectRace(d) == "White") {
           d.relRaceCat = "Native American & White";
       } else {
-          d.relRaceCat = "Same Race";
+        d.relRaceCat = "Same Race";
       }
     });
 }
@@ -262,10 +301,9 @@ class DotMatrix {
         `);
   }
 
-
   /**
- * Filters the data for people who left the answer blank (or refused to answer) for their race or their partner's race
- */
+   * Filters the data for people who left the answer blank (or refused to answer) for their race or their partner's race
+   */
   preprocessData() {
     let vis = this;
     // console.log(vis.data);
@@ -277,7 +315,4 @@ class DotMatrix {
       vis.partnerRace(d) != "Refused"
     ));
   }
-
 }
-
-

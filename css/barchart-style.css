@@ -1,24 +1,8 @@
-/* 
-IMPORTANT: CSS styles across files can overwrite each other!
-Make sure to use specific IDs/classes.
-*/
 :root {
-  --bar-axis_title_font_size: 0.8em;
-  --bar-axis_label_font_size: 0.8em;
-  --tooltip_bckg: white;
-  --tooltip_border_color: #ddd;
-  --font_color: black;
   --interacial_color: rgb(223, 166, 9);
   --same_race_color: rgb(199, 39, 106);
-  --stroke_color: black;
-  --highlighted-color: black;
-
-  /* border */
-  --border-color: purple;
-
   /* text */
   --labels_font_size: 0.8em;
-  --shape_stroke_width: 2px;
 }
 
 .bar-axis path,
@@ -36,23 +20,18 @@ Make sure to use specific IDs/classes.
 }
 .bar.yes.active {
   fill: var(--interacial_color);
-  stroke: rgb(65, 65, 65);
+  stroke: var(--highlight-color);
   stroke-width: 3px;
 }
 .bar.no.active {
   fill: var(--same_race_color);
-  stroke: rgb(65, 65, 65);
+  stroke: var(--highlight-color);
   stroke-width: 3px;
 }
 
 .bar:hover {
-  stroke: rgb(65, 65, 65);
+  stroke: var(--highlight-color);
   stroke-width: 2px;
-}
-
-.higlighted-bar {
-  stroke: var(--highlighted-color);
-  stroke-width: 5px;
 }
 
 
@@ -80,7 +59,6 @@ Make sure to use specific IDs/classes.
 
 .circles-label {
   font-size: var(--labels_font_size);
-  color: rgb(90, 90, 90);
   margin-right: 2em;
 }
 
