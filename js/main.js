@@ -45,17 +45,13 @@ d3.csv("data/dating.csv").then((_data) => {
   });
 
   // initialize visualizations
-  dotmatrix = new DotMatrix(
-    {
+  dotmatrix = new DotMatrix({
       parentElement: "#dot-matrix",
-    },
-    data
-  );
+    }, data);
 
-  treeMap = new TreeMap(
-    {
+  treeMap = new TreeMap({
       parentElement: "#tree-map",
-    },
+    }, 
     data,
     {
       checkEducationMethod,
@@ -65,22 +61,15 @@ d3.csv("data/dating.csv").then((_data) => {
       checkOnlineSocialNetworkingMethod,
       checkAbroadMethod,
       checkMutualConnectionMethod,
-    }
-  );
+    });
 
-  barChart = new BarChart(
-    {
+  barChart = new BarChart({
       parentElement: "#bar-chart-plot",
-    },
-    data
-  );
+    }, data);
 
-  heatMap = new HeatMap(
-    {
+  heatMap = new HeatMap({
       parentElement: "#heat-map",
-    },
-    data
-  );
+    }, data);
 });
 
 // https://stackoverflow.com/questions/24193593/d3-how-to-change-dataset-based-on-drop-down-box-selection
@@ -108,22 +97,38 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
   }
 });
 
+// https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
+// https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
+// viewing mode toggle listener
+d3.selectAll('input[name="btnradio"]').on("change", function (e) {
+  console.log(e.target);
+  let btns = document.getElementsByClassName('btn');
+  if(e.target.id === "light-btn") {
+    document.documentElement.setAttribute('theme', 'light');
+    for(let i = 0; i < btns.length; i++) {
+      btns[i].classList.replace('btn-outline-light', 'btn-outline-dark');
+    }
+    document.getElementById('sun').setAttribute('fill', 'orange');
+    document.getElementById('moon').setAttribute('fill', 'black');
+  } else if (e.target.id === "dark-btn") {
+    document.documentElement.setAttribute('theme', 'dark');
+    for(let i = 0; i < btns.length; i++) {
+      btns[i].classList.replace('btn-outline-dark', 'btn-outline-light');
+    }
+    document.getElementById('sun').setAttribute('fill', 'white');
+    document.getElementById('moon').setAttribute('fill', 'orange');
+  }
+});
+
 d3.selectAll("#remove-filtering").on("click", (e) => {
-  // console.log("got here!!!");
   clearAllInteractions();
 });
 
 function clearAllInteractions() {
   heatMap.selectedCategories = [];
-  // console.log("clearing interactions");
   treeMap.selectedMethod = "";
-  // treeMap.data = data;
-  // dotmatrix.data = data;
   dotmatrix.highlightedData = [];
-  // barChart.data = data;
   barChart.highlightedData = [];
-
-  //performAgeFiltering(currSelection);
 
   heatMap.renderVis();
   barChart.updateVis();
@@ -210,13 +215,10 @@ function filterDotMatrixChartData() {
  * @param attendance the x-value of the cell in the heat map
  */
 function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
-  clearAllInteractions();
-  console.log(sexFreq);
-  console.log(attendance);
+  clearAllInteractions();;
   dotmatrix.highlightedData = dotmatrix.data.filter(
     (d) => sexFrequency(d) == sexFreq && religiousity(d) == attendance
   );
-  console.log(dotmatrix.highlightedData);
   dotmatrix.updateVis();
 }
 

@@ -1,10 +1,4 @@
 .treemap-rect:hover {
-  stroke: rgb(65, 65, 65);
-  stroke-width: 2px;
-}
-/* Interactivity */
-
-.treemap-rect.selected {
-  stroke: rgb(65, 65, 65);
-  stroke-width: 3px;
+    stroke: var(--highlight-color);
+    stroke-width: 2px;
 }

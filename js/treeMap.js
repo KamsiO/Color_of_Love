@@ -111,11 +111,11 @@ class TreeMap {
       .data(Object.keys(MEETING_METHODS))
       .enter()
       .append("text")
+      .attr("class", "legend-text")
       .attr("x", 60)
       .attr("y", function (d, i) {
         return 90 + i * 25;
       }) // 90 is where the first dot appears. 25 is the distance between dots
-      .style("fill", "rgb(90,90,90")
       .style("font-size", "12px")
       .text(function (d) {
         return MEETING_METHODS[d];
