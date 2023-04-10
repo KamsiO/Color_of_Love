@@ -200,7 +200,7 @@ class BarChart {
           console.log(barValues);
           return `active`;
         } else {
-          return ;
+          return "";
         }
       };
 

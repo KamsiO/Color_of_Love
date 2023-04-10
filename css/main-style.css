@@ -65,6 +65,7 @@ body {
   z-index: 10000000;
 }
 
+/* Remove Filtering */
 #remove-filtering {
   position: fixed;
   width: 100%;

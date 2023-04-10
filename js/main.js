@@ -98,32 +98,34 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
 
     dotmatrix.highlightedData = [];
     heatMap.selectedCategories = [];
+    treeMap.selectedMethod = "";
+    barChart.highlightedData = [];
 
     treeMap.updateVis();
     heatMap.updateVis();
     dotmatrix.updateVis();
-    //barChart.updateVis();
+    barChart.updateVis();
   }
 });
 
 d3.selectAll("#remove-filtering").on("click", (e) => {
-  console.log("got here!!!");
+  // console.log("got here!!!");
   clearAllInteractions();
 });
 
 function clearAllInteractions() {
   heatMap.selectedCategories = [];
-  heatMap.renderVis();
-  console.log("clearing interactions");
+  // console.log("clearing interactions");
   treeMap.selectedMethod = "";
-  treeMap.data = data;
+  // treeMap.data = data;
   // dotmatrix.data = data;
   dotmatrix.highlightedData = [];
-  barChart.data = data;
+  // barChart.data = data;
   barChart.highlightedData = [];
 
-  performAgeFiltering(currSelection);
+  //performAgeFiltering(currSelection);
 
+  heatMap.renderVis();
   barChart.updateVis();
   dotmatrix.updateVis();
   treeMap.updateVis();
@@ -134,6 +136,7 @@ function performAgeFiltering(currSelection) {
     // get rid of all filtering
     treeMap.data = data;
     dotmatrix.data = data;
+    heatMap.data = data;
     //barChart.data = data;
   } else {
     let ageData = data.filter((d) => d.ppagecat === currSelection);
