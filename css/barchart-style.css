@@ -12,6 +12,10 @@
   shape-rendering: crispEdges;
 }
 
+.bar-axis-title {
+  font-size: 13px;
+}
+
 .bar.yes {
   fill: var(--interacial_color);
 }

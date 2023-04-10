@@ -261,7 +261,16 @@ class DotMatrix {
 
     let particpantAge = d.ppage;
 
-    //let howTheyMet = // fill with Guramrit's function return value;
+    let howTheyMet = d => {
+      let whereTheyMet = getHowTheyMet(d);
+      if(whereTheyMet == "") {
+        return `N/A`;
+      } else {
+        return whereTheyMet;
+      }
+    };
+    
+    // fill with Guramrit's function return value;
     // check if the sexfreq and religiuosity is refused or "" and replace with missing
     let fillSexFreq = d => {
       if(sexFrequency(d) == "Refused" || sexFrequency(d) == "") {
@@ -295,6 +304,7 @@ class DotMatrix {
           <div><b>Age</b>: ${particpantAge}</div>
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
+          <div><b>How they met:</b> ${howTheyMet(d)}</div> 
           <div><b>Relationship Quality:</b> ${fillRelationshipRanking(d)}</div> 
           <div><b>Sex Frequency:</b> ${fillSexFreq(d)}</div> 
           <div><b>Religious Service Attendance:</b> ${fillReligiousity(d)}</div> 
@@ -306,7 +316,6 @@ class DotMatrix {
    */
   preprocessData() {
     let vis = this;
-    // console.log(vis.data);
     let tempData = vis.data;
     vis.data = tempData.filter(d => (
       vis.subjectRace(d) != "" &&

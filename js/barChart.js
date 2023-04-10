@@ -81,13 +81,22 @@ class BarChart {
       .style('font-size', '13px')
       .text('Quality of Relationship')
 
-    // vis.chart.append('text')
+    vis.chart
+    // .append('text')
     // .attr('class', 'bar-axis-title')
     // .attr('y', 0)
     // .attr('x', vis.config.margin.left + 23)
     // .style('text-anchor', 'end')
     // .text('Frequency of Rank')
     // .style('font-weight', 'bold');
+    .append("text")
+      .attr("class", "bar-axis-title")
+      .attr("x", -vis.height / 4)
+      .attr("y", -48)
+      .attr("dy", ".71em")
+      .attr("transform", "rotate(270)")
+      .style("text-anchor", "end")
+      .text("Frequency of Rank");
 
     vis.svg.append("text")
         .attr('class', 'title')
@@ -121,8 +130,6 @@ class BarChart {
     vis.groupedData.forEach((value, key) => {
       value.forEach((innerValue, innerKey) => value.set("ranking", key));
     });
-
-    console.log(vis.groupedData);
 
     // get max number for domain of y-scale
     vis.maxOccurenceCount = function (groupedData){
@@ -183,7 +190,6 @@ class BarChart {
       .join("g")
       .attr('class', 'bars')
       .attr("transform", d => {
-        // console.log(vis.relationshipRanking);
         if (vis.highlightedData[0] == d[0]) {
           vis.relationshipRanking = d[0];
         } 
@@ -196,7 +202,6 @@ class BarChart {
 
       vis.checkIfActive = d => {
         if (vis.highlightedData.length > 0 && d[0] == barValues.get("name") && d[1] == barValues.get("nVal")) {
-          console.log(barValues);
           return `active`;
         } else {
           return "";
