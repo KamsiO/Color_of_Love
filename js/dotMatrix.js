@@ -1,5 +1,4 @@
 class DotMatrix {
-
   /**
    * Class constructor with initial configuration
    * @param {Object}
@@ -46,20 +45,27 @@ class DotMatrix {
     this.initVis();
   }
 
-
   initVis() {
     let vis = this;
 
     // Calculate inner chart size. Margin specifies the space around the actual chart.
-    vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
-    vis.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
+    vis.width =
+      vis.config.containerWidth -
+      vis.config.margin.left -
+      vis.config.margin.right;
+    vis.height =
+      vis.config.containerHeight -
+      vis.config.margin.top -
+      vis.config.margin.bottom;
 
     vis.svg = d3.select(vis.config.parentElement).append('svg')
       .attr('width', vis.config.containerWidth)
       .attr('height', vis.config.containerHeight)
-      .attr('id', 'dot-matrix-chart');
+      .attr('id', 'dot-matrix-chart')
+      .attr("class", "chart");
 
 
+    // append the title of the view
     vis.svg.append("text")
       .attr('class', 'title')
       .attr('x', vis.width + 10)
@@ -68,9 +74,12 @@ class DotMatrix {
       .attr("text-anchor", "end")
       .text("Meet the Participants");
 
-
-    vis.chart = vis.svg.append('g')
-      .attr('transform', `translate(${vis.config.margin.left},${vis.config.margin.top})`);
+    vis.chart = vis.svg
+      .append("g")
+      .attr(
+        "transform",
+        `translate(${vis.config.margin.left},${vis.config.margin.top})`
+      );
 
     vis.footnote = vis.chart
       .append("text")
@@ -79,10 +88,14 @@ class DotMatrix {
       .attr("font-size", "11px")
       .text(
         "*Categories not shown in the map are not represented by the current age group"
-    );
+      );
 
-    vis.legend = vis.chart.append('g')
-      .attr('transform', `translate(${vis.config.margin.left},${vis.height - 30})`);
+    vis.legend = vis.chart
+      .append("g")
+      .attr(
+        "transform",
+        `translate(${vis.config.margin.left},${vis.height - 30})`
+      );
 
     // name the race categories
     vis.raceCategories = ["Black & Other", "Black & Asian", "Native American & Asian", "Asian & White", "Same Race",
@@ -96,23 +109,20 @@ class DotMatrix {
     vis.updateVis();
   }
 
-
   updateVis() {
     let vis = this;
 
-    vis.subjectRace = d => d.w6_subject_race;
-    vis.partnerRace = d => d.w6_q6b;
+    vis.subjectRace = (d) => d.w6_subject_race;
+    vis.partnerRace = (d) => d.w6_q6b;
     vis.preprocessData();
     vis.assignRelationshipRace();
 
     vis.groupedByRace = d3.group(vis.data, d => d.relRaceCat);
-    //console.log(vis.groupedByRace);
 
-    vis.colorValue = d => d.relRaceCat;
+    vis.colorValue = (d) => d.relRaceCat;
 
     vis.renderVis();
   }
-
 
   renderVis() {
     let vis = this;
@@ -124,13 +134,15 @@ class DotMatrix {
 
     vis.dotRadius = 4;
 
-    let raceGroups = vis.chart.selectAll(".race-group")
-        .data(vis.groupedByRace)
+    let raceGroups = vis.chart
+      .selectAll(".race-group")
+      .data(vis.groupedByRace)
       .join("g")
-        .attr("class", "race-group");
+      .attr("class", "race-group");
 
-    let dots = raceGroups.selectAll(".matrix-dot")
-        .data(d => d[1])
+    let dots = raceGroups
+      .selectAll(".matrix-dot")
+      .data((d) => d[1])
       .join("circle")
         .attr("class", "matrix-dot")
         .attr("r", vis.dotRadius)
@@ -151,19 +163,20 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
+          clearAllInteractions()
           filterBarChartData(d);
           selectHeatMapCell(d);
           TreeMapfilterDotMatrixChartData(d);
         });
-
 
     vis.yLegendCount = -1;
     vis.xLegendCount = -1;
     vis.yLegend = 0;
     vis.xLegend = 0;
 
-    vis.legend.selectAll(".dot-matrix-legend-circles")
-        .data(vis.raceCategories)
+    vis.legend
+      .selectAll(".dot-matrix-legend-circles")
+      .data(vis.raceCategories)
       .join("circle")
         .attr('class', 'dot-matrix-legend-circles')
         .attr("r", 6)
@@ -197,6 +210,7 @@ class DotMatrix {
         .style("font-size", vis.dotRadius * 3 + "px")
         .text(d => d);
   }
+
 
   assignRelationshipRace() {
     let vis = this;
@@ -233,10 +247,11 @@ class DotMatrix {
         vis.partnerRace(d) == "American Indian, Aleut, or Eskimo" && vis.subjectRace(d) == "White") {
           d.relRaceCat = "Native American & White";
       } else {
-          d.relRaceCat = "Same Race";
+        d.relRaceCat = "Same Race";
       }
     });
 }
+
 
   /**
    *  displays the tooltip information when you hover over the dots.
@@ -247,7 +262,30 @@ class DotMatrix {
     let particpantAge = d.ppage;
 
     //let howTheyMet = // fill with Guramrit's function return value;
+    // check if the sexfreq and religiuosity is refused or "" and replace with missing
+    let fillSexFreq = d => {
+      if(sexFrequency(d) == "Refused" || sexFrequency(d) == "") {
+        return `N/A`;
+      } else {
+        return sexFrequency(d);
+      }
+    };
 
+    let fillReligiousity = d => {
+      if(religiousity(d) == "Refused" || religiousity(d) == "") {
+        return `N/A`;
+      } else {
+        return religiousity(d);
+      }
+    };
+
+    let fillRelationshipRanking = d => {
+      if(relationshipRanking(d) == "Refused" || relationshipRanking(d) == "") {
+        return `N/A`;
+      } else {
+        return religiousity(d);
+      }
+    };
 
     d3.select('#tooltip')
       .style('display', 'block')
@@ -257,28 +295,24 @@ class DotMatrix {
           <div><b>Age</b>: ${particpantAge}</div>
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
-          <div><b>Relationship Quality:</b> ${relationshipRanking(d)}</div> 
-          <div><b>Sex Frequency:</b> ${sexFrequency(d)}</div> 
-          <div><b>Religious Service Attendance:</b> ${religiousity(d)}</div> 
+          <div><b>Relationship Quality:</b> ${fillRelationshipRanking(d)}</div> 
+          <div><b>Sex Frequency:</b> ${fillSexFreq(d)}</div> 
+          <div><b>Religious Service Attendance:</b> ${fillReligiousity(d)}</div> 
         `);
   }
 
-
   /**
- * Filters the data for people who left the answer blank (or refused to answer) for their race or their partner's race
- */
+   * Filters the data for people who left the answer blank (or refused to answer) for their race or their partner's race
+   */
   preprocessData() {
     let vis = this;
     // console.log(vis.data);
     let tempData = vis.data;
     vis.data = tempData.filter(d => (
-      vis.subjectRace(d) !== "" &&
-      vis.subjectRace(d) !== "Refused" &&
-      vis.partnerRace(d) !== "" &&
-      vis.partnerRace(d) !== "Refused"
+      vis.subjectRace(d) != "" &&
+      vis.subjectRace(d) != "Refused" &&
+      vis.partnerRace(d) != "" &&
+      vis.partnerRace(d) != "Refused"
     ));
   }
-
 }
-
-
