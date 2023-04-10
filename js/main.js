@@ -45,17 +45,13 @@ d3.csv("data/dating.csv").then((_data) => {
   });
 
   // initialize visualizations
-  dotmatrix = new DotMatrix(
-    {
+  dotmatrix = new DotMatrix({
       parentElement: "#dot-matrix",
-    },
-    data
-  );
+    }, data);
 
-  treeMap = new TreeMap(
-    {
+  treeMap = new TreeMap({
       parentElement: "#tree-map",
-    },
+    }, 
     data,
     {
       checkEducationMethod,
@@ -65,22 +61,15 @@ d3.csv("data/dating.csv").then((_data) => {
       checkOnlineSocialNetworkingMethod,
       checkAbroadMethod,
       checkMutualConnectionMethod,
-    }
-  );
+    });
 
-  barChart = new BarChart(
-    {
+  barChart = new BarChart({
       parentElement: "#bar-chart-plot",
-    },
-    data
-  );
+    }, data);
 
-  heatMap = new HeatMap(
-    {
+  heatMap = new HeatMap({
       parentElement: "#heat-map",
-    },
-    data
-  );
+    }, data);
 });
 
 // https://stackoverflow.com/questions/24193593/d3-how-to-change-dataset-based-on-drop-down-box-selection
@@ -137,15 +126,9 @@ d3.selectAll("#remove-filtering").on("click", (e) => {
 
 function clearAllInteractions() {
   heatMap.selectedCategories = [];
-  // console.log("clearing interactions");
   treeMap.selectedMethod = "";
-  // treeMap.data = data;
-  // dotmatrix.data = data;
   dotmatrix.highlightedData = [];
-  // barChart.data = data;
   barChart.highlightedData = [];
-
-  //performAgeFiltering(currSelection);
 
   heatMap.renderVis();
   barChart.updateVis();
