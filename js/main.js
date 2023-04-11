@@ -128,7 +128,9 @@ function clearAllInteractions() {
   heatMap.selectedCategories = [];
   treeMap.selectedMethod = "";
   dotmatrix.highlightedData = [];
+  dotmatrix.clickedDot = [];
   barChart.highlightedData = [];
+  barChart.clickedBar = [];
 
   heatMap.renderVis();
   barChart.updateVis();

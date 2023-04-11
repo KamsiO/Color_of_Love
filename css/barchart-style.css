@@ -33,7 +33,7 @@
   stroke-width: 3px;
 }
 
-.bar:hover {
+.bar:hover, .bar.clicked{
   stroke: var(--highlight-color);
   stroke-width: 2px;
 }

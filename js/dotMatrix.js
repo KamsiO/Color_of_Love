@@ -14,40 +14,14 @@ class DotMatrix {
     }
 
     this.highlightedData = [];
+    this.clickedDot = [];
     this.data = _data;
-    // this.colors = [
-    //   "#FF7F00", //orange
-    // "#1E90FF", //dodger blue 
-    // "#E31A1C", // red
-    // "#008b00", //green
-    // "#6A3D9A", //purple
-    // "#ffd700", //gold
-    // "#7ec0ee", //skyblue
-    // // "#FB9A99", //lt pink
-    // "#90ee90", //pale green
-    // // "#CAB2D6", //lt purple
-    // // "#FDBF6F", //lt orange
-    // "#00ced1", //dark turquoise
-    // // "gray70", 
-    // // "khaki2",
-    // // "maroon", 
-    // "#e066ff", // "orchid1", 
-    // // "deeppink1", "blue1", 
-    // // "steelblue4",
-    // // "darkturquoise", 
-    // // "green1", 
-    // // "yellow4", 
-    // // "yellow3",
-    // "#8b4500" // "darkorange4", 
-    // // "brown"
-    // ];
 
     this.initVis();
   }
 
   initVis() {
     let vis = this;
-
     // Calculate inner chart size. Margin specifies the space around the actual chart.
     vis.width =
       vis.config.containerWidth -
@@ -155,6 +129,7 @@ class DotMatrix {
           return vis.xcount % 112 == 0 ? vis.x = 0 : vis.x += vis.dotRadius * 2;
         })
         .attr("fill", d => vis.colorScale(vis.colorValue(d)))
+        .classed("clicked", d => vis.clickedDot.length !== 0 && vis.clickedDot.includes(d))
         .classed("inactive", d => vis.highlightedData.length !== 0 && !vis.highlightedData.includes(d))
         .on('mouseover', function (event, d) {
           vis.toolTipInfo(event, d);
@@ -163,7 +138,9 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          clearAllInteractions()
+          clearAllInteractions();
+          vis.clickedDot.push(d);
+          vis.renderVis();
           filterBarChartData(d);
           selectHeatMapCell(d);
           TreeMapfilterDotMatrixChartData(d);
