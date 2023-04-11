@@ -33,9 +33,7 @@ class HeatMap {
       vis.initAxes();
 
       // Define size of SVG drawing area
-      vis.svg = d3
-        .select(vis.config.parentElement)
-        .append("svg")
+      vis.svg = d3.select(vis.config.parentElement).append("svg")
         .attr("width", vis.config.containerWidth)
         .attr("height", vis.config.containerHeight)
         .attr("id", "heat-map-chart")
@@ -152,15 +150,20 @@ class HeatMap {
       .range([vis.height, 0])
       .padding(0.03);
 
-    vis.colorScale = d3.scaleSequential().interpolator(d3.interpolateRdPu);
+    vis.colorScale = d3.scaleSequential()
+      .interpolator(d3.interpolateRdPu);
   }
 
   initAxes() {
     let vis = this;
 
-    vis.xAxis = d3.axisBottom(vis.xScale).tickSize(0).tickPadding(5);
+    vis.xAxis = d3.axisBottom(vis.xScale)
+      .tickSize(0)
+      .tickPadding(5);
 
-    vis.yAxis = d3.axisLeft(vis.yScale).tickSize(0).tickPadding(5);
+    vis.yAxis = d3.axisLeft(vis.yScale)
+      .tickSize(0)
+      .tickPadding(5);
   }
 
   addGroups() {
@@ -168,10 +171,7 @@ class HeatMap {
 
     vis.chart = vis.svg
       .append("g")
-      .attr(
-        "transform",
-        `translate(${vis.config.margin.left},${vis.config.margin.top})`
-      );
+      .attr("transform", `translate(${vis.config.margin.left},${vis.config.margin.top})`);
 
     // Append x-axis group
     vis.xAxisG = vis.chart
@@ -249,7 +249,8 @@ class HeatMap {
       .attr("height", vis.config.legendHeight)
       .attr("fill", "url(#linear-gradient)");
 
-    vis.yLegendScale = d3.scaleLinear().range([0, vis.config.legendHeight]);
+    vis.yLegendScale = d3.scaleLinear()
+      .range([0, vis.config.legendHeight]);
 
     vis.yLegendAxis = d3
       .axisRight(vis.yLegendScale)
