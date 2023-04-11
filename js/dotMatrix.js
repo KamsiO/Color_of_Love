@@ -14,6 +14,7 @@ class DotMatrix {
     }
 
     this.highlightedData = [];
+    this.clickedDot = [];
     this.data = _data;
 
     this.initVis();
@@ -21,7 +22,6 @@ class DotMatrix {
 
   initVis() {
     let vis = this;
-
     // Calculate inner chart size. Margin specifies the space around the actual chart.
     vis.width =
       vis.config.containerWidth -
@@ -139,6 +139,7 @@ class DotMatrix {
           return vis.xcount % 112 == 0 ? vis.x = 0 : vis.x += vis.dotRadius * 2;
         })
         .attr("fill", d => vis.colorScale(vis.colorValue(d)))
+        .classed("clicked", d => vis.clickedDot.length !== 0 && vis.clickedDot.includes(d))
         .classed("inactive", d => vis.highlightedData.length !== 0 && !vis.highlightedData.includes(d))
         .on('mouseover', function (event, d) {
           vis.toolTipInfo(event, d);
@@ -147,7 +148,9 @@ class DotMatrix {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          clearAllInteractions()
+          clearAllInteractions();
+          vis.clickedDot.push(d);
+          vis.renderVis();
           filterBarChartData(d);
           selectHeatMapCell(d);
           TreeMapfilterDotMatrixChartData(d);
@@ -245,7 +248,16 @@ class DotMatrix {
 
     let particpantAge = d.ppage;
 
-    //let howTheyMet = // fill with Guramrit's function return value;
+    let howTheyMet = d => {
+      let whereTheyMet = getHowTheyMet(d);
+      if(whereTheyMet == "") {
+        return `N/A`;
+      } else {
+        return whereTheyMet;
+      }
+    };
+    
+    // fill with Guramrit's function return value;
     // check if the sexfreq and religiuosity is refused or "" and replace with missing
     let fillSexFreq = d => {
       if(sexFrequency(d) == "Refused" || sexFrequency(d) == "") {
@@ -279,6 +291,7 @@ class DotMatrix {
           <div><b>Age</b>: ${particpantAge}</div>
           <div><b>Race:</b> ${vis.subjectRace(d)}</div>
           <div><b>Partner's Race:</b> ${vis.partnerRace(d)}</div> 
+          <div><b>How they met:</b> ${howTheyMet(d)}</div> 
           <div><b>Relationship Quality:</b> ${fillRelationshipRanking(d)}</div> 
           <div><b>Sex Frequency:</b> ${fillSexFreq(d)}</div> 
           <div><b>Religious Service Attendance:</b> ${fillReligiousity(d)}</div> 
