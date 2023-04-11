@@ -28,25 +28,26 @@ class HeatMap {
       vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
       vis.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
 
-    vis.initScales();
+      vis.initScales();
 
-    vis.initAxes();
+      vis.initAxes();
 
-    // Define size of SVG drawing area
-    vis.svg = d3
-      .select(vis.config.parentElement)
-      .append("svg")
-      .attr("width", vis.config.containerWidth)
-      .attr("height", vis.config.containerHeight)
-      .attr("id", "heat-map-chart")
-      .attr("class", "chart");
-    vis.addGroups();
+      // Define size of SVG drawing area
+      vis.svg = d3
+        .select(vis.config.parentElement)
+        .append("svg")
+        .attr("width", vis.config.containerWidth)
+        .attr("height", vis.config.containerHeight)
+        .attr("id", "heat-map-chart")
+        .attr("class", "chart");
+    
+      vis.addGroups();
 
-    vis.addLabels();
+      vis.addLabels();
 
-    vis.initLegend();
+      vis.initLegend();
 
-    vis.updateVis();
+      vis.updateVis();
   }
 
   updateVis() {
@@ -54,19 +55,13 @@ class HeatMap {
 
     // filter out data points where there was no response
     vis.data = vis.data.filter((d) => {
-      let responded_sex_freq =
-        d.w6_sex_frequency != "" && d.w6_sex_frequency != "Refused";
+      let responded_sex_freq = d.w6_sex_frequency != "" && d.w6_sex_frequency != "Refused";
       let responded_religious = d.ppp20072 != "" && d.ppp20072 != "Refused";
       let has_cohab_value = d.cohab_before_marriage != "";
       return responded_sex_freq && responded_religious && has_cohab_value;
     });
 
-    vis.box_groups = d3.flatRollup(
-      vis.data,
-      (v) => v.length,
-      (d) => d.ppp20072,
-      (d) => d.w6_sex_frequency
-    );
+    vis.box_groups = d3.flatRollup(vis.data, v => v.length, d => d.ppp20072, d => d.w6_sex_frequency);
 
     // Specify x-, y-, and color- accessor functions
     vis.xValue = (d) => d.ppp20072;
@@ -98,26 +93,26 @@ class HeatMap {
   renderVis() {
     let vis = this;
 
-      let boxes = vis.chart.selectAll('.box')
-          .data(vis.box_groups)
-        .join('rect')
-          .attr('class', 'box')
-          .attr('x', d => vis.xScale(d[0]))
-          .attr('y', d => vis.yScale(d[1]))
-          .attr('rx', 2)
-          .attr('ry', 2)
-          .attr('width', vis.xScale.bandwidth())
-          .attr('height', vis.yScale.bandwidth())
-          .style('fill', d => vis.colorScale(vis.colorValue(d)))
-          .classed('selected', d => vis.selectedCategories.length > 0 && vis.selectedCategories[0] === d[0] && vis.selectedCategories[1] === d[1])
-          .on('click', function(event, d) {
-            heatMapfilterDotMatrixChartData(d[1], d[0]);
-            vis.selectedCategories = [];
-            d3.selectAll('.box.selected').each(function() {
-              d3.select(this).classed('selected', false);
-            })
-            d3.select(this).classed('selected', true);
+    let boxes = vis.chart.selectAll('.box')
+        .data(vis.box_groups)
+      .join('rect')
+        .attr('class', 'box')
+        .attr('x', d => vis.xScale(d[0]))
+        .attr('y', d => vis.yScale(d[1]))
+        .attr('rx', 2)
+        .attr('ry', 2)
+        .attr('width', vis.xScale.bandwidth())
+        .attr('height', vis.yScale.bandwidth())
+        .style('fill', d => vis.colorScale(vis.colorValue(d)))
+        .classed('selected', d => vis.selectedCategories.length > 0 && vis.selectedCategories[0] === d[0] && vis.selectedCategories[1] === d[1])
+        .on('click', function(event, d) {
+          heatMapfilterDotMatrixChartData(d[1], d[0]);
+          vis.selectedCategories = [];
+          d3.selectAll('.box.selected').each(function() {
+            d3.select(this).classed('selected', false);
           })
+          d3.select(this).classed('selected', true);
+        });
 
     vis.tooltipEventListener(boxes);
 
@@ -134,9 +129,7 @@ class HeatMap {
 
     mark
       .on("mouseover", (event, d) => {
-        d3.select("#tooltip").style("display", "block").html(`
-                <div><b>Number of people:</b> ${vis.colorValue(d)}</div>
-              `);
+        d3.select("#tooltip").style("display", "block").html(`<div><b>Number of people:</b> ${vis.colorValue(d)}</div>`);
       })
       .on("mousemove", (event) => {
         d3.select("#tooltip")
@@ -151,13 +144,13 @@ class HeatMap {
   initScales() {
     let vis = this;
 
-      vis.xScale = d3.scaleBand()
-          .range([0, vis.width])
-          .padding(0.03);
+    vis.xScale = d3.scaleBand()
+      .range([0, vis.width])
+      .padding(0.03);
 
-      vis.yScale = d3.scaleBand()
-          .range([vis.height, 0])
-          .padding(0.03);
+    vis.yScale = d3.scaleBand()
+      .range([vis.height, 0])
+      .padding(0.03);
 
     vis.colorScale = d3.scaleSequential().interpolator(d3.interpolateRdPu);
   }
@@ -188,6 +181,17 @@ class HeatMap {
 
     // Append y-axis group
     vis.yAxisG = vis.chart.append("g").attr("class", "axis y-axis");
+
+    // Append group used to clear selection on click
+    vis.clearSelectionG = vis.chart.append('g')
+      .append('rect')
+        .attr('width', vis.config.containerWidth)
+        .attr('height', vis.config.containerHeight)
+        .attr("transform", `translate(${-vis.config.margin.left},${-vis.config.margin.top})`)
+        .attr('opacity', 0)
+      .on('click', function(event, d) {
+        clearAllInteractions();
+      });
   }
 
   addLabels() {
@@ -228,12 +232,7 @@ class HeatMap {
     // Legend
     vis.legend = vis.svg
       .append("g")
-      .attr(
-        "transform",
-        `translate(${vis.config.containerWidth - 35},${
-          vis.config.margin.top + 40
-        })`
-      );
+      .attr("transform", `translate(${vis.config.containerWidth - 35},${vis.config.margin.top + 40})`);
 
     vis.legendColorGradient = vis.legend
       .append("defs")
@@ -266,18 +265,17 @@ class HeatMap {
     let vis = this;
 
     // Add stops to the gradient
-    vis.legendColorGradient
-      .selectAll("stop")
-      .data([
-        { offset: "0%", color: vis.colorScale.range()[0] },
-        { offset: "25%", color: "#fbb4b9" },
-        { offset: "50%", color: "#f768a1" },
-        { offset: "75%", color: "#c51b8a" },
-        { offset: "100%", color: vis.colorScale.range()[1] },
-      ])
+    vis.legendColorGradient.selectAll("stop")
+        .data([
+          {offset: "0%", color: vis.colorScale.range()[0]},
+          {offset: "25%", color: "#fbb4b9"},
+          {offset: "50%", color: "#f768a1"},
+          {offset: "75%", color: "#c51b8a"},
+          {offset: "100%", color: vis.colorScale.range()[1]},
+        ])
       .join("stop")
-      .attr("offset", (d) => d.offset)
-      .attr("stop-color", (d) => d.color);
+        .attr("offset", (d) => d.offset)
+        .attr("stop-color", (d) => d.color);
 
     vis.yLegendScale.domain(vis.colorScale.domain()).nice();
     const extent = vis.yLegendScale.domain();

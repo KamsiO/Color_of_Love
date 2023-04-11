@@ -15,32 +15,6 @@ class DotMatrix {
 
     this.highlightedData = [];
     this.data = _data;
-    // this.colors = [
-    //   "#FF7F00", //orange
-    // "#1E90FF", //dodger blue 
-    // "#E31A1C", // red
-    // "#008b00", //green
-    // "#6A3D9A", //purple
-    // "#ffd700", //gold
-    // "#7ec0ee", //skyblue
-    // // "#FB9A99", //lt pink
-    // "#90ee90", //pale green
-    // // "#CAB2D6", //lt purple
-    // // "#FDBF6F", //lt orange
-    // "#00ced1", //dark turquoise
-    // // "gray70", 
-    // // "khaki2",
-    // // "maroon", 
-    // "#e066ff", // "orchid1", 
-    // // "deeppink1", "blue1", 
-    // // "steelblue4",
-    // // "darkturquoise", 
-    // // "green1", 
-    // // "yellow4", 
-    // // "yellow3",
-    // "#8b4500" // "darkorange4", 
-    // // "brown"
-    // ];
 
     this.initVis();
   }
@@ -97,13 +71,23 @@ class DotMatrix {
         `translate(${vis.config.margin.left},${vis.height - 30})`
       );
 
+    // Append group used to clear selection on click
+    vis.clearSelectionG = vis.chart.append('g')
+      .append('rect')
+        .attr('width', vis.config.containerWidth)
+        .attr('height', vis.config.containerHeight)
+        .attr("transform", `translate(${-vis.config.margin.left},${-vis.config.margin.top})`)
+        .attr('opacity', 0)
+      .on('click', function(event, d) {
+        clearAllInteractions();
+      });
+
     // name the race categories
     vis.raceCategories = ["Black & Other", "Black & Asian", "Native American & Asian", "Asian & White", "Same Race",
     "Black & Native American", "Asian & Other", "White & Black", "White & Other", "Native American & Other", "Native American & White"];
 
     vis.colorScale = d3.scaleOrdinal()
-      .range(d3.schemeCategory10.concat(['#b03060'])) // options: #698b69, #5218fa, #8b0a50
-      // .range(d3.schemeCategory10)
+      .range(d3.schemeCategory10.concat(['#8b0a50'])) // options: #698b69, #5218fa, #b03060
       .domain(vis.raceCategories);
 
     vis.updateVis();
@@ -306,7 +290,6 @@ class DotMatrix {
    */
   preprocessData() {
     let vis = this;
-    // console.log(vis.data);
     let tempData = vis.data;
     vis.data = tempData.filter(d => (
       vis.subjectRace(d) != "" &&

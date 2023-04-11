@@ -97,6 +97,17 @@ class BarChart {
         .attr('dy', '.71em')
         .attr("text-anchor", "left")
         .text("Relationship Quality by Race");
+
+    // Append group used to clear selection on click
+    vis.clearSelectionG = vis.chart.append('g')
+        .append('rect')
+          .attr('width', vis.config.containerWidth)
+          .attr('height', vis.config.containerHeight)
+          .attr("transform", `translate(${-vis.config.margin.left},${-vis.config.margin.top})`)
+          .attr('opacity', 0)
+        .on('click', function(event, d) {
+          clearAllInteractions();
+        });
     
     vis.updateVis();
   }
