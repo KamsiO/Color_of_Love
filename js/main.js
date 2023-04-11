@@ -1,6 +1,7 @@
 let varForFilteringcirclesChart = "";
 let currcirclesChartMainCategory = ""; // the relationship ranking
 let currcirclesChartSubCategory = ""; // whether the person is part of an interracial couple
+let getHowTheyMet = d => getMeetingMethod(d);
 let relationshipRanking = (d) => d.Q34;
 let whetherInterracialOrSameRace = (d) => d.interracial_5cat;
 let subjectRace = (d) => d.w6_subject_race;
@@ -101,7 +102,6 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
 // https://www.javascripttutorial.net/javascript-dom/javascript-radio-button/
 // viewing mode toggle listener
 d3.selectAll('input[name="btnradio"]').on("change", function (e) {
-  console.log(e.target);
   let btns = document.getElementsByClassName('btn');
   if(e.target.id === "light-btn") {
     document.documentElement.setAttribute('theme', 'light');
@@ -128,7 +128,9 @@ function clearAllInteractions() {
   heatMap.selectedCategories = [];
   treeMap.selectedMethod = "";
   dotmatrix.highlightedData = [];
+  dotmatrix.clickedDot = [];
   barChart.highlightedData = [];
+  barChart.clickedBar = [];
 
   heatMap.renderVis();
   barChart.updateVis();
@@ -142,14 +144,13 @@ function performAgeFiltering(currSelection) {
     treeMap.data = data;
     dotmatrix.data = data;
     heatMap.data = data;
-    //barChart.data = data;
+    barChart.data = data;
   } else {
     let ageData = data.filter((d) => d.ppagecat === currSelection);
     treeMap.data = ageData;
     heatMap.data = ageData;
     dotmatrix.data = ageData;
-
-    //barChart.data = ageData;
+    barChart.data = ageData;
   }
 }
 
@@ -204,7 +205,6 @@ function filterDotMatrixChartData() {
       relationshipRanking(d) == currcirclesChartMainCategory &&
       whetherInterracialOrSameRace(d) == currcirclesChartSubCategory
   );
-  console.log(filteredData);
   dotmatrix.highlightedData = filteredData;
   dotmatrix.updateVis();
 }
@@ -228,7 +228,6 @@ function heatMapfilterDotMatrixChartData(sexFreq, attendance) {
 function filterWithMeetingData(meetingCategory) {
   clearAllInteractions();
   dotmatrix.highlightedData = dotmatrix.data.filter((d) => {
-    console.log(meetingCategory);
     return MEETING_METHODS_CHECKS_MAPPING[meetingCategory](d);
   });
   dotmatrix.updateVis();
@@ -246,6 +245,5 @@ function barChartFilterDotMatrixChartData() {
       relationshipRanking(d) == currcirclesChartMainCategory &&
       whetherInterracialOrSameRace(d) == currcirclesChartSubCategory
   );
-  console.log(dotmatrix.highlightedData);
   dotmatrix.updateVis();
 }

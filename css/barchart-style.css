@@ -12,6 +12,10 @@
   shape-rendering: crispEdges;
 }
 
+.bar-axis-title {
+  font-size: 13px;
+}
+
 .bar.yes {
   fill: var(--interacial_color);
 }
@@ -29,7 +33,7 @@
   stroke-width: 3px;
 }
 
-.bar:hover {
+.bar:hover, .bar.clicked{
   stroke: var(--highlight-color);
   stroke-width: 2px;
 }

@@ -1,4 +1,3 @@
-// copied from https://codesandbox.io/s/github/UBC-InfoVis/447-materials/tree/23Jan/d3-examples/d3-linked-charts-basic?file=/js/barchart.js:0-4600
 class BarChart {
   /**
    * Class constructor with initial configuration
@@ -16,6 +15,7 @@ class BarChart {
     
     this.data = _data;
     this.highlightedData = [];
+    this.clickedBar = [];
 
     this.initVis();
   }
@@ -82,13 +82,22 @@ class BarChart {
       .style('font-size', '13px')
       .text('Quality of Relationship')
 
-    // vis.chart.append('text')
+    vis.chart
+    // .append('text')
     // .attr('class', 'bar-axis-title')
     // .attr('y', 0)
     // .attr('x', vis.config.margin.left + 23)
     // .style('text-anchor', 'end')
     // .text('Frequency of Rank')
     // .style('font-weight', 'bold');
+    .append("text")
+      .attr("class", "bar-axis-title")
+      .attr("x", -vis.height / 4)
+      .attr("y", -48)
+      .attr("dy", ".71em")
+      .attr("transform", "rotate(270)")
+      .style("text-anchor", "end")
+      .text("Frequency of Rank");
 
     vis.svg.append("text")
         .attr('class', 'title')
@@ -134,8 +143,6 @@ class BarChart {
       value.forEach((innerValue, innerKey) => value.set("ranking", key));
     });
 
-    console.log(vis.groupedData);
-
     // get max number for domain of y-scale
     vis.maxOccurenceCount = function (groupedData){
       // credit for iterator help: https://stackoverflow.com/a/55660647
@@ -178,7 +185,6 @@ class BarChart {
     // code for bars and bar inspired from here: https://d3-graph-gallery.com/graph/barplot_grouped_basicWide.html
     const barGroup = vis.chart.selectAll('.bars')
       .data(vis.groupedData, d => {
-
         if (vis.highlightedData[0] == d[0]) {
           if(vis.highlightedData[1] == "no"){
             barValues.set("name","no");
@@ -195,7 +201,6 @@ class BarChart {
       .join("g")
       .attr('class', 'bars')
       .attr("transform", d => {
-        // console.log(vis.relationshipRanking);
         if (vis.highlightedData[0] == d[0]) {
           vis.relationshipRanking = d[0];
         } 
@@ -207,8 +212,7 @@ class BarChart {
       vis.addMinBarHeight = Math.round(0.04 * vis.max_num);
 
       vis.checkIfActive = d => {
-        if (vis.highlightedData.length > 0 && d[0] == barValues.get("name") && d[1] == barValues.get("nVal")) {
-          console.log(barValues);
+        if (d[0] == barValues.get("name") && d[1] == barValues.get("nVal")) {
           return `active`;
         } else {
           return "";
@@ -235,7 +239,11 @@ class BarChart {
               return vis.height -  vis.yScale(d[1]);
             }
           })
-           .attr('class', d =>  `bar ${d[0]} ${vis.checkIfActive(d)}`);
+          .attr('class', d =>  `bar ${d[0]} ${vis.checkIfActive(d)}`)
+          .classed("clicked", d => {
+            return vis.clickedBar.length !== 0 && vis.clickedBar[0] == d[0] && vis.clickedBar[1] == d[1];
+          });
+
 
 
     individualBars
@@ -250,6 +258,8 @@ class BarChart {
       .on('mouseleave', () => {
         d3.select('#tooltip').style('display', 'none');
       }).on('click', function(event, d) {
+        // vis.clickedBar = [];
+        vis.storeClickedBar = d;
         currcirclesChartSubCategory = d[0];
       });
 
@@ -257,8 +267,10 @@ class BarChart {
     barGroup
       .on('click', function(event, d) {
         currcirclesChartMainCategory = d[0];
-        vis.highlightedData = []; // todo: replace with a call to the global reset from Guramrit
         barChartFilterDotMatrixChartData();
+        vis.clickedBar.push(vis.storeClickedBar[0]);
+        vis.clickedBar.push(vis.storeClickedBar[1]);
+        vis.renderVis();
       });
   
     // call the axes
