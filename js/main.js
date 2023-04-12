@@ -91,6 +91,7 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
     heatMap.selectedCategories = [];
     treeMap.selectedMethod = "";
     barChart.highlightedData = [];
+    barChart.clickedBar = [];
 
     treeMap.updateVis();
     heatMap.updateVis();

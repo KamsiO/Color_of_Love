@@ -86,7 +86,7 @@ class BarChart {
 
     .append("text")
       .attr("class", "bar-axis-title")
-      .attr("x", -vis.height / 2.5)
+      .attr("x", -vis.height / 2.3)
       .attr("y", -49)
       .attr("dy", ".71em")
       .attr("transform", "rotate(270)")
@@ -301,7 +301,7 @@ class BarChart {
   .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
   .html(`
     <div><strong>${subCatname(d)}</strong></div>
-    <div>Count: ${getCount(d)} </div> 
+    <div><b>Count:</b> ${getCount(d)}</div> 
   `);
 }
 

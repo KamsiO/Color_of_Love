@@ -34,10 +34,10 @@ class HeatMap {
 
       // Define size of SVG drawing area
       vis.svg = d3.select(vis.config.parentElement).append("svg")
-        .attr("width", vis.config.containerWidth)
-        .attr("height", vis.config.containerHeight)
-        .attr("id", "heat-map-chart")
-        .attr("class", "chart");
+          .attr("width", vis.config.containerWidth)
+          .attr("height", vis.config.containerHeight)
+          .attr("id", "heat-map-chart")
+          .attr("class", "chart");
     
       vis.addGroups();
 
@@ -110,11 +110,9 @@ class HeatMap {
 
     vis.tooltipEventListener(boxes);
 
-    vis.xAxisG
-      .call(vis.xAxis)
-      .selectAll(".tick text")
-      .attr("transform", "rotate(320)")
-      .style("text-anchor", "end");
+    vis.xAxisG.call(vis.xAxis).selectAll(".tick text")
+        .attr("transform", "rotate(320)")
+        .style("text-anchor", "end");
     vis.yAxisG.call(vis.yAxis);
   }
 
@@ -139,44 +137,43 @@ class HeatMap {
     let vis = this;
 
     vis.xScale = d3.scaleBand()
-      .range([0, vis.width])
-      .padding(0.03);
+        .range([0, vis.width])
+        .padding(0.03);
 
     vis.yScale = d3.scaleBand()
-      .range([vis.height, 0])
-      .padding(0.03);
+        .range([vis.height, 0])
+        .padding(0.03);
 
     vis.colorScale = d3.scaleSequential()
-      .interpolator(d3.interpolateRdPu);
+        .interpolator(d3.interpolateRdPu);
   }
 
   initAxes() {
     let vis = this;
 
     vis.xAxis = d3.axisBottom(vis.xScale)
-      .tickSize(0)
-      .tickPadding(5);
+        .tickSize(0)
+        .tickPadding(5);
 
     vis.yAxis = d3.axisLeft(vis.yScale)
-      .tickSize(0)
-      .tickPadding(5);
+        .tickSize(0)
+        .tickPadding(5);
   }
 
   addGroups() {
     let vis = this;
 
-    vis.chart = vis.svg
-      .append("g")
-      .attr("transform", `translate(${vis.config.margin.left},${vis.config.margin.top})`);
+    vis.chart = vis.svg.append("g")
+        .attr("transform", `translate(${vis.config.margin.left},${vis.config.margin.top})`);
 
     // Append x-axis group
-    vis.xAxisG = vis.chart
-      .append("g")
-      .attr("class", "axis x-axis")
-      .attr("transform", `translate(0,${vis.height})`);
+    vis.xAxisG = vis.chart.append("g")
+        .attr("class", "axis x-axis")
+        .attr("transform", `translate(0,${vis.height})`);
 
     // Append y-axis group
-    vis.yAxisG = vis.chart.append("g").attr("class", "axis y-axis");
+    vis.yAxisG = vis.chart.append("g")
+        .attr("class", "axis y-axis");
 
     // Append group used to clear selection on click
     vis.clearSelectionG = vis.chart.append('g')
@@ -193,69 +190,60 @@ class HeatMap {
   addLabels() {
     let vis = this;
 
-    vis.svg
-      .append("text")
-      .attr("class", "title")
-      .attr("x", 35)
-      .attr("y", vis.config.margin.top - 27)
-      .attr("dy", ".71em")
-      .attr("text-anchor", "left")
-      .text("Sex Frequency by Religiousness");
+    vis.svg.append("text")
+        .attr("class", "title")
+        .attr("x", 35)
+        .attr("y", vis.config.margin.top - 27)
+        .attr("dy", ".71em")
+        .attr("text-anchor", "left")
+        .text("Sex Frequency by Religiousness");
 
-    vis.chart
-      .append("text")
-      .attr("class", "axis-label")
-      .attr("y", vis.height + 85)
-      .attr("x", vis.width / 2)
-      .attr("dy", ".71em")
-      .style("text-anchor", "middle")
-      .text("Religious Service Attendance");
+    vis.chart.append("text")
+        .attr("class", "axis-label")
+        .attr("y", vis.height + 85)
+        .attr("x", vis.width / 2)
+        .attr("dy", ".71em")
+        .style("text-anchor", "middle")
+        .text("Religious Service Attendance");
 
-    vis.svg
-      .append("text")
-      .attr("class", "axis-label")
-      .attr("x", -vis.height / 2)
-      .attr("y", 5)
-      .attr("dy", ".71em")
-      .attr("transform", "rotate(270)")
-      .style("text-anchor", "end")
-      .text("Sex Frequency");
+    vis.svg.append("text")
+        .attr("class", "axis-label")
+        .attr("x", -vis.height / 2)
+        .attr("y", 5)
+        .attr("dy", ".71em")
+        .attr("transform", "rotate(270)")
+        .style("text-anchor", "end")
+        .text("Sex Frequency");
   }
 
   initLegend() {
     let vis = this;
 
     // Legend
-    vis.legend = vis.svg
-      .append("g")
-      .attr("transform", `translate(${vis.config.containerWidth - 35},${vis.config.margin.top + 40})`);
+    vis.legend = vis.svg.append("g")
+        .attr("transform", `translate(${vis.config.containerWidth - 35},${vis.config.margin.top + 40})`);
 
-    vis.legendColorGradient = vis.legend
-      .append("defs")
-      .append("linearGradient")
-      .attr("id", "linear-gradient")
-      .attr("x1", "0%")
-      .attr("y1", "0%")
-      .attr("x2", "0%")
-      .attr("y2", "100%");
+    vis.legendColorGradient = vis.legend.append("defs").append("linearGradient")
+        .attr("id", "linear-gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "0%")
+        .attr("y2", "100%");
 
-    vis.legendColorRamp = vis.legend
-      .append("rect")
-      .attr("width", vis.config.legendWidth)
-      .attr("height", vis.config.legendHeight)
-      .attr("fill", "url(#linear-gradient)");
+    vis.legendColorRamp = vis.legend.append("rect")
+        .attr("width", vis.config.legendWidth)
+        .attr("height", vis.config.legendHeight)
+        .attr("fill", "url(#linear-gradient)");
 
     vis.yLegendScale = d3.scaleLinear()
-      .range([0, vis.config.legendHeight]);
+        .range([0, vis.config.legendHeight]);
 
-    vis.yLegendAxis = d3
-      .axisRight(vis.yLegendScale)
-      .tickSize(vis.config.legendWidth + 3)
-      .tickFormat(d3.format("d"));
+    vis.yLegendAxis = d3.axisRight(vis.yLegendScale)
+        .tickSize(vis.config.legendWidth + 3)
+        .tickFormat(d3.format("d"));
 
-    vis.yLegendAxisG = vis.legend
-      .append("g")
-      .attr("class", "axis y-axis legend-axis");
+    vis.yLegendAxisG = vis.legend.append("g")
+        .attr("class", "axis y-axis legend-axis");
   }
 
   renderLegend() {
