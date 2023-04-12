@@ -207,8 +207,9 @@ class BarChart {
         return `translate( ${vis.xScale(d[0]) -  1.5 * vis.xScale.bandwidth()},0)`
       });
 
+      // checks if the bar is less than 4% of the max number in the y-axis.
       vis.barHeightTooSmall = d => d[1] < (0.04 * vis.max_num);
-      // Gives the bars a minimum height so that the smallest bars are still visible.
+      // Gives the bars a minimum height (of 4% of the max number in the y-axis) so that the smallest bars are still visible.
       vis.addMinBarHeight = Math.round(0.04 * vis.max_num);
 
       vis.checkIfActive = d => {
