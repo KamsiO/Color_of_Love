@@ -279,7 +279,7 @@ class DotMatrix {
       if(relationshipRanking(d) == "Refused" || relationshipRanking(d) == "") {
         return `N/A`;
       } else {
-        return religiousity(d);
+        return relationshipRanking(d);
       }
     };
 
