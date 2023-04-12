@@ -123,18 +123,15 @@ class TreeMap {
       .attr("text-anchor", "left")
       .style("alignment-baseline", "middle");
 
+
     // Append group used to clear selection on click
-    vis.clearSelectionG = vis.chart
-      .append("g")
-      .append("rect")
-      .attr("width", vis.config.containerWidth)
-      .attr("height", vis.config.containerHeight)
-      .attr(
-        "transform",
-        `translate(${-vis.config.margin.left},${-vis.config.margin.top})`
-      )
-      .attr("opacity", 0)
-      .on("click", function (event, d) {
+    vis.clearSelectionG = vis.chart.append('g')
+      .append('rect')
+        .attr('width', vis.config.containerWidth)
+        .attr('height', vis.config.containerHeight)
+        .attr("transform", `translate(${-vis.config.margin.left},${-vis.config.margin.top})`)
+        .attr('opacity', 0)
+      .on('click', function(event, d) {
         clearAllInteractions();
       });
 
@@ -288,10 +285,6 @@ class TreeMap {
       })
       .on("click", function (event, d) {
         filterWithMeetingData(d["id"]);
-        d3.selectAll(".tree-rect.selected").each(function () {
-          d3.select(this).classed("selected", false);
-        });
-        d3.select(this).classed("selected", true);
       });
   }
 }
