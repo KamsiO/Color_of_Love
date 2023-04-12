@@ -87,6 +87,7 @@ d3.selectAll("#age-group-filter-dropdown").on("change", function (e) {
     performAgeFiltering(currSelection);
 
     dotmatrix.highlightedData = [];
+    dotmatrix.clickedDot = [];
     heatMap.selectedCategories = [];
     treeMap.selectedMethod = "";
     barChart.highlightedData = [];

@@ -9,7 +9,7 @@ class BarChart {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 400,
       containerHeight: _config.containerHeight || 300,
-      margin: _config.margin || {top: 47, right: 20, bottom: 40, left: 50},
+      margin: _config.margin || {top: 47, right: 10, bottom: 40, left: 50},
       tooltipPadding: _config.tooltipPadding || 15
     }
     
@@ -83,25 +83,19 @@ class BarChart {
       .text('Quality of Relationship')
 
     vis.chart
-    // .append('text')
-    // .attr('class', 'bar-axis-title')
-    // .attr('y', 0)
-    // .attr('x', vis.config.margin.left + 23)
-    // .style('text-anchor', 'end')
-    // .text('Frequency of Rank')
-    // .style('font-weight', 'bold');
+
     .append("text")
       .attr("class", "bar-axis-title")
-      .attr("x", -vis.height / 4)
-      .attr("y", -48)
+      .attr("x", -vis.height / 2.5)
+      .attr("y", -49)
       .attr("dy", ".71em")
       .attr("transform", "rotate(270)")
       .style("text-anchor", "end")
-      .text("Frequency of Rank");
+      .text("Count");
 
     vis.svg.append("text")
         .attr('class', 'title')
-        .attr('x', 35)
+        .attr('x', 20)
         .attr('y', vis.config.margin.top - 29)
         .attr('dy', '.71em')
         .attr("text-anchor", "left")
@@ -240,7 +234,7 @@ class BarChart {
             }
           })
           .attr('class', d =>  `bar ${d[0]} ${vis.checkIfActive(d)}`)
-          .classed("clicked", d => {
+          .classed("selected", d => {
             return vis.clickedBar.length !== 0 && vis.clickedBar[0] == d[0] && vis.clickedBar[1] == d[1];
           });
 
@@ -258,7 +252,6 @@ class BarChart {
       .on('mouseleave', () => {
         d3.select('#tooltip').style('display', 'none');
       }).on('click', function(event, d) {
-        // vis.clickedBar = [];
         vis.storeClickedBar = d;
         currcirclesChartSubCategory = d[0];
       });
