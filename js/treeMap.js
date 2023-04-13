@@ -285,6 +285,10 @@ class TreeMap {
       })
       .on("click", function (event, d) {
         filterWithMeetingData(d["id"]);
+        d3.selectAll(".tree-rect.selected").each(function () {
+          d3.select(this).classed("selected", false);
+        });
+        d3.select(this).classed("selected", true);
       });
   }
 }
