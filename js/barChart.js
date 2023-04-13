@@ -91,7 +91,7 @@ class BarChart {
       .attr("dy", ".71em")
       .attr("transform", "rotate(270)")
       .style("text-anchor", "end")
-      .text("Normalized Count");
+      .text("Normalized Count %");
 
     vis.svg.append("text")
         .attr('class', 'title')
