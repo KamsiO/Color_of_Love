@@ -86,12 +86,12 @@ class BarChart {
 
     .append("text")
       .attr("class", "bar-axis-title")
-      .attr("x", -vis.height / 2.3)
-      .attr("y", -49)
+      .attr("x", -vis.height / 4)
+      .attr("y", -42)
       .attr("dy", ".71em")
       .attr("transform", "rotate(270)")
       .style("text-anchor", "end")
-      .text("Count");
+      .text("Normalized Count");
 
     vis.svg.append("text")
         .attr('class', 'title')
@@ -137,27 +137,9 @@ class BarChart {
       value.forEach((innerValue, innerKey) => value.set("ranking", key));
     });
 
-    // get max number for domain of y-scale
-    vis.maxOccurenceCount = function (groupedData){
-      // credit for iterator help: https://stackoverflow.com/a/55660647
-      let mapValuesIterator = groupedData.values();
-      let nextMapValues = mapValuesIterator.next();
-      vis.max_num = 0
-      
-      while (!nextMapValues.done) {
-        let currMax = 0;
-        let innerMap = nextMapValues.value;
-        // credit for turning map to array: https://stackoverflow.com/a/56795800
-        let innerMapAsArray = Array.from(innerMap, ([name, value]) => ({ name, value }));
-
-        currMax = Math.max(innerMapAsArray[0].value, innerMapAsArray[1].value);
-        if( currMax > vis.max_num) {
-          vis.max_num = currMax;
-        }
-        nextMapValues = mapValuesIterator.next();
-      } 
-      return vis.max_num;
-    }
+    // counts how many interracial and sameRace couples we have.
+    vis.maxInterracialCount = vis.data.filter(d => whetherInterracialOrSameRace(d) == "yes").length;
+    vis.maxSameRaceCount = vis.data.filter(d => whetherInterracialOrSameRace(d) == "no").length;
 
     // Specificy x- and y-value accessor functions
     vis.xValue = d => vis.relationshipRanking(d);
@@ -165,7 +147,8 @@ class BarChart {
   
     // set the domain of xScale to be the relationship rankings
     vis.xScale.domain(["Very Poor", "Poor", "Fair", "Good", "Excellent"]);
-    vis.yScale.domain ([0,(vis.maxOccurenceCount(vis.groupedData))]);
+    vis.yScale.domain ([0,100]);
+
 
     vis.renderVis();
   }
@@ -202,9 +185,9 @@ class BarChart {
       });
 
       // checks if the bar is less than 4% of the max number in the y-axis.
-      vis.barHeightTooSmall = d => d[1] < (0.04 * vis.max_num);
+      vis.barHeightTooSmall = d => vis.getBarHeightByRace(d[1], d) < 6;
       // Gives the bars a minimum height (of 4% of the max number in the y-axis) so that the smallest bars are still visible.
-      vis.addMinBarHeight = Math.round(0.04 * vis.max_num);
+      vis.addMinBarHeight = 6;
 
       vis.checkIfActive = d => {
         if (d[0] == barValues.get("name") && d[1] == barValues.get("nVal")) {
@@ -213,6 +196,15 @@ class BarChart {
           return "";
         }
       };
+
+      vis.getBarHeightByRace = (x,d) => {
+        if(d[0] == "yes") {
+          return (x/vis.maxInterracialCount) * 100;
+        } else {
+          return (x/vis.maxSameRaceCount) * 100;
+        }
+        
+      }; 
 
     const individualBars = barGroup.selectAll('.bar')
         .data(d => d[1], d => d[0]) 
@@ -223,15 +215,15 @@ class BarChart {
             if(vis.barHeightTooSmall(d)) {
               return vis.yScale(vis.addMinBarHeight);
             } else {
-              return vis.yScale(d[1]);
+              return vis.yScale(vis.getBarHeightByRace(d[1],d));
             }
-            })
+          })
           .attr('width', 20)
           .attr('height', d => {
             if(vis.barHeightTooSmall(d)) {
-              return vis.height - vis.yScale(vis.addMinBarHeight);
+              return vis.height - vis.yScale(vis.addMinBarHeight)
             } else {
-              return vis.height -  vis.yScale(d[1]);
+              return vis.height - vis.yScale(vis.getBarHeightByRace(d[1],d));
             }
           })
           .attr('class', d =>  `bar ${d[0]} ${vis.checkIfActive(d)}`)
@@ -290,9 +282,9 @@ class BarChart {
   let getCount = d => {
     if (vis.barHeightTooSmall(d))
     {
-      return `< ${vis.addMinBarHeight}`;
+      return `< ${vis.addMinBarHeight}%`;
     } else {
-      return `${d[1]}`;
+      return `${Math.round(vis.getBarHeightByRace(d[1], d))}%`;
     }
   }
 
