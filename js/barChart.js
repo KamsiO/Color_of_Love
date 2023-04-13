@@ -140,11 +140,8 @@ class BarChart {
     });
 
     // counts how many interracial and sameRace couples we have.
-    vis.tempData = vis.data; 
-    vis.maxInterracialCount = vis.tempData.filter(d => whetherInterracialOrSameRace(d) == "yes").length;
-
-    vis.tempData = vis.data; 
-    vis.maxSameRaceCount = vis.tempData.filter(d => whetherInterracialOrSameRace(d) == "no").length;
+    vis.maxInterracialCount = vis.data.filter(d => whetherInterracialOrSameRace(d) == "yes").length;
+    vis.maxSameRaceCount = vis.data.filter(d => whetherInterracialOrSameRace(d) == "no").length;
 
     // Specificy x- and y-value accessor functions
     vis.xValue = d => vis.relationshipRanking(d);
