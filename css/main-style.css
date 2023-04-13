@@ -119,5 +119,10 @@ body {
   z-index: 100000;
 }
 
+#study-link {
+  position: relative;
+
+  z-index: 1000000000000;
+}
 
 
