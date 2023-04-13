@@ -131,6 +131,8 @@ class BarChart {
     vis.groupedData = d3.rollup(vis.data, v => v.length, d => d.Q34, d => d.interracial_5cat);
     vis.groupedData.delete('');
     vis.groupedData.delete("Refused");
+ 
+
 
     // Add a ranking entry at the same level as the subcategories ("yes"/"no")
     vis.groupedData.forEach((value, key) => {
@@ -138,8 +140,11 @@ class BarChart {
     });
 
     // counts how many interracial and sameRace couples we have.
-    vis.maxInterracialCount = vis.data.filter(d => whetherInterracialOrSameRace(d) == "yes").length;
-    vis.maxSameRaceCount = vis.data.filter(d => whetherInterracialOrSameRace(d) == "no").length;
+    vis.tempData = vis.data; 
+    vis.maxInterracialCount = vis.tempData.filter(d => whetherInterracialOrSameRace(d) == "yes").length;
+
+    vis.tempData = vis.data; 
+    vis.maxSameRaceCount = vis.tempData.filter(d => whetherInterracialOrSameRace(d) == "no").length;
 
     // Specificy x- and y-value accessor functions
     vis.xValue = d => vis.relationshipRanking(d);
@@ -203,7 +208,6 @@ class BarChart {
         } else {
           return (x/vis.maxSameRaceCount) * 100;
         }
-        
       }; 
 
     const individualBars = barGroup.selectAll('.bar')
@@ -304,8 +308,8 @@ class BarChart {
  */
 preprocessData() {
   let vis = this;
-  vis.data = vis.data.filter(d => relationshipRanking(d) !="" || relationshipRanking(d) != "Refused" ||
-   whetherInterracialOrSameRace(d) != "" || whetherInterracialOrSameRace(d) != "Refused");
+  vis.data = vis.data.filter(d => relationshipRanking(d) !="" && relationshipRanking(d) != "Refused" &&
+   whetherInterracialOrSameRace(d) != "" && whetherInterracialOrSameRace(d) != "Refused");
 }
 
 
